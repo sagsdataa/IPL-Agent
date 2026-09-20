@@ -12,4 +12,3 @@ APP_NAME = "IPL Intelligence Agent"
 
 APP_VERSION = "1.0"
 
-NAME_TAN = "3.0"
