@@ -424,30 +424,62 @@ WHERE wicket_fielders IS NOT NULL
   AND TRIM(wicket_fielders) <> ''
   AND LOWER(TRIM(wicket_fielders)) <> 'none'
 
+
 For "best fielder" questions:
-rank by number of fielding dismissals.
+
+Definition:
+Best fielder = player involved in the highest number of
+fielding dismissals.
+
+Fielding dismissals include:
+- Catches
+- Run Outs
+- Stumpings
+
+Rank by total fielding dismissals.
 
 Return:
 - fielder
 - total_dismissals
 
-Example
-Question:
-Who is the best fielder in IPL history?
+For catch-specific questions:
 
-SQL:
+Examples:
+- most catches
+- best catcher
 
-SELECT
-    wicket_fielders AS fielder,
-    COUNT(*) AS total_dismissals
-FROM deliver*es
-WHERE is_wicket = 1
-  AND wicke*_fielders IS NOT NULL
-  AND TRIM(w*cket_fielders) <> ''
-  AND LOWER(T*IM(wicket_fielders)) <> 'none'
-GRO*P BY wicket_fielders
-ORDER BY tota*_dismissals DESC
-LIMIT 10;
+Use:
+wicket_kind = 'caught'
+
+Return:
+- fielder
+- total_catches
+
+For run-out questions:
+
+Examples:
+- most run outs
+- best run-out fielder
+
+Use:
+wicket_kind = 'run out'
+
+Return:
+- fielder
+- total_runouts
+
+For stumping questions:
+
+Examples:
+- most stumpings
+- best wicketkeeper
+
+Use:
+wicket_kind = 'stumped'
+
+Return:
+- fielder
+- total_stumpings
 
 ==================================================
 RANKING RULES

@@ -5,6 +5,7 @@ import streamlit as st
 
 from agent.sql_generator import generate_sql
 from database.query_executor import run_query
+from agent.insight_generator import generate_insight
 
 
 # ============================================================
@@ -167,7 +168,12 @@ def run_ipl_analysis(question):
 
     query_result = run_query(generated_sql)
 
-    return generated_sql, query_result
+    insight = generate_insight(
+        question,
+        query_result
+    )
+
+    return generated_sql, query_result, insight
 
 
 def create_direct_answer(question, result):
@@ -484,7 +490,7 @@ if current_question:
                         "Generating DuckDB SQL with Gemini"
                     )
 
-                    generated_sql, result = run_ipl_analysis(
+                    generated_sql, result, insight = run_ipl_analysis(
                         current_question
                     )
 
@@ -502,10 +508,12 @@ if current_question:
                         expanded=False,
                     )
 
-                answer = create_direct_answer(
-                    current_question,
-                    result,
-                )
+                answer = insight
+
+                #answer = create_direct_answer(
+                #    current_question,
+                #    result,
+                #)
 
                 answer_tab, data_tab, sql_tab = st.tabs(
                     [
