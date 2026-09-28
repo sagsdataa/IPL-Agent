@@ -1,12 +1,10 @@
 from pathlib import Path
-
 import duckdb
 import streamlit as st
-
 from agent.sql_generator import generate_sql
 from database.query_executor import run_query
 from agent.insight_generator import generate_insight
-
+from agent.insight_generator import generate_followup_insight
 
 # ============================================================
 # PAGE CONFIGURATION
@@ -100,8 +98,8 @@ def get_database_statistics():
 # SESSION STATE
 # ============================================================
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+#if "messages" not in st.session_state:
+#    st.session_state.messages = []
 
 if "selected_question" not in st.session_state:
     st.session_state.selected_question = None
@@ -115,6 +113,8 @@ if "last_result" not in st.session_state:
 if "last_question" not in st.session_state:
     st.session_state.last_question = None
 
+if "last_answer" not in st.session_state:
+    st.session_state.last_answer = None
 
 # ============================================================
 # LOAD DATASET STATISTICS
@@ -156,7 +156,35 @@ def clean_question(question):
 
     return question.strip()
 
+# the following function is used to detect simple follow-up questions that ask for reasoning behind a previous answer. It checks if the question matches common follow-up phrases like "why", "how", or "explain".
+def is_followup_question(question: str):
+    """
+    Detect simple follow-up questions.
+    """
 
+    if not question:
+        return False
+
+    question = question.strip().lower()
+
+    followup_keywords = [
+        "why",
+        "explain",
+        "more",
+        "reason",
+        "agree",
+        "justify",
+        "prove",
+        "sure"
+    ]
+
+    return any(
+        keyword in question
+        for keyword in followup_keywords
+    )
+
+
+# The following function to generate insights.
 def run_ipl_analysis(question):
     """
     Send the question to Gemini, generate SQL,
@@ -400,8 +428,8 @@ st.info(
 # WELCOME AREA
 # ============================================================
 
-if not st.session_state.messages:
-    st.write("")
+#if not st.session_state.messages:
+#    st.write("")
 
     #st.header("What would you like to discover?")
 
@@ -466,139 +494,201 @@ if current_question:
     current_question = clean_question(current_question)
 
     if current_question:
-        st.session_state.messages.append(
-            {
-                "role": "user",
-                "content": current_question,
-            }
-        )
 
-        with st.chat_message("user"):
-            st.markdown(current_question)
+        # --------------------------------------------
+        # FOLLOW-UP QUESTION WORKFLOW
+        # --------------------------------------------
 
-        with st.chat_message("assistant"):
-            try:
-                with st.status(
-                    "Analyzing IPL data...",
-                    expanded=True,
-                ) as status:
-                    st.write(
-                        "Understanding the cricket question"
-                    )
+        if is_followup_question(current_question):
 
-                    st.write(
-                        "Generating DuckDB SQL with Gemini"
-                    )
+            if (
+                st.session_state.last_question
+                and st.session_state.last_result is not None
+            ):
+                with st.chat_message("user"):
+                    st.markdown(current_question)
 
-                    generated_sql, result, insight = run_ipl_analysis(
-                        current_question
-                    )
+                with st.chat_message("assistant"):
+                    try:
+                        with st.status(
+                            "Reviewing the previous analysis...",
+                            expanded=True,
+                        ) as status:
 
-                    st.write(
-                        "Validating and executing the SQL"
-                    )
+                            st.write(
+                                "Using the previous question and results"
+                            )
 
-                    st.write(
-                        "Preparing the analysis result"
-                    )
+                            followup_answer = generate_followup_insight(
+                                st.session_state.last_question,
+                                st.session_state.last_result
+                            )
 
-                    status.update(
-                        label="IPL analysis completed",
-                        state="complete",
-                        expanded=False,
-                    )
+                            status.update(
+                                label="Follow-up analysis completed",
+                                state="complete",
+                                expanded=False,
+                            )
 
-                answer = insight
+                        st.markdown("### 🏏 Answer")
+                        st.markdown(followup_answer)
 
-                #answer = create_direct_answer(
-                #    current_question,
-                #    result,
-                #)
+                        st.session_state.last_answer = followup_answer
 
-                answer_tab, data_tab, sql_tab = st.tabs(
-                    [
-                        "Answer",
-                        "Data",
-                        "Generated SQL",
-                    ]
+                        if st.session_state.last_result is not None:
+                            with st.expander(
+                                "View supporting data",
+                                expanded=False,
+                            ):
+                                st.dataframe(
+                                    st.session_state.last_result,
+                                    use_container_width=True,
+                                    hide_index=True,
+                                )
+
+                        if st.session_state.last_sql:
+                            with st.expander(
+                                "View generated SQL",
+                                expanded=False,
+                            ):
+                                st.code(
+                                    st.session_state.last_sql,
+                                    language="sql",
+                                )
+
+                    except Exception as error:
+                        display_error(error)
+
+            else:
+                st.warning(
+                    "Please ask an IPL statistics question first. "
+                    "I need a previous result before I can explain why."
                 )
 
-                with answer_tab:
-                    st.markdown(answer)
+        # --------------------------------------------
+        # NEW QUESTION WORKFLOW
+        # --------------------------------------------
 
-                    if result is not None and not result.empty:
-                        if len(result) == 1:
-                            st.success(
-                                "One leading result identified."
+        else:
+            with st.chat_message("user"):
+                st.markdown(current_question)
+
+            with st.chat_message("assistant"):
+                try:
+                    with st.status(
+                        "Analyzing IPL data...",
+                        expanded=True,
+                    ) as status:
+
+                        st.write(
+                            "Understanding the cricket question"
+                        )
+
+                        st.write(
+                            "Generating DuckDB SQL with Gemini"
+                        )
+
+                        generated_sql = generate_sql(
+                            current_question
+                        )
+
+                        st.write(
+                            "Validating and executing the SQL"
+                        )
+
+                        result = run_query(
+                            generated_sql
+                        )
+
+                        st.write(
+                            "Generating the cricket insight"
+                        )
+
+                        try:
+                            insight = generate_insight(
+                                current_question,
+                                result
                             )
+
+                        except Exception:
+                            insight = create_direct_answer(
+                                current_question,
+                                result
+                            )
+
+                        status.update(
+                            label="IPL analysis completed",
+                            state="complete",
+                            expanded=False,
+                        )
+
+                    answer = insight
+
+                    # Save context for follow-up questions
+                    st.session_state.last_question = current_question
+                    st.session_state.last_sql = generated_sql
+                    st.session_state.last_result = result
+                    st.session_state.last_answer = answer
+
+                    answer_tab, data_tab, sql_tab = st.tabs(
+                        [
+                            "Answer",
+                            "Data",
+                            "Generated SQL",
+                        ]
+                    )
+
+                    with answer_tab:
+                        st.markdown(answer)
+
+                        if result is not None and not result.empty:
+                            if len(result) == 1:
+                                st.success(
+                                    "One leading result identified."
+                                )
+                            else:
+                                st.success(
+                                    f"{len(result):,} ranked results identified."
+                                )
+
+                    with data_tab:
+                        if result is None or result.empty:
+                            st.warning(
+                                "No matching IPL records were found."
+                            )
+
                         else:
-                            st.success(
-                                f"{len(result):,} ranked results identified."
+                            st.dataframe(
+                                result,
+                                use_container_width=True,
+                                hide_index=True,
                             )
 
-                with data_tab:
-                    if result is None or result.empty:
-                        st.warning(
-                            "No matching IPL records were found."
+                            csv_data = result.to_csv(
+                                index=False
+                            ).encode("utf-8")
+
+                            st.download_button(
+                                label="Download results as CSV",
+                                data=csv_data,
+                                file_name="ipl_intelligence_results.csv",
+                                mime="text/csv",
+                                use_container_width=True,
+                            )
+
+                    with sql_tab:
+                        st.code(
+                            generated_sql,
+                            language="sql",
                         )
 
-                    else:
-                        st.dataframe(
-                            result,
-                            use_container_width=True,
-                            hide_index=True,
+                        st.caption(
+                            "Generated by Gemini and executed through "
+                            "the read-only DuckDB query tool."
                         )
 
-                        csv_data = result.to_csv(
-                            index=False
-                        ).encode("utf-8")
-
-                        st.download_button(
-                            label="Download results as CSV",
-                            data=csv_data,
-                            file_name="ipl_intelligence_results.csv",
-                            mime="text/csv",
-                            use_container_width=True,
-                        )
-
-                with sql_tab:
-                    st.code(
-                        generated_sql,
-                        language="sql",
-                    )
-
-                    st.caption(
-                        "Generated by Gemini and executed through "
-                        "the read-only DuckDB query tool."
-                    )
-
-                st.session_state.last_question = current_question
-                st.session_state.last_sql = generated_sql
-                st.session_state.last_result = result
-
-                st.session_state.messages.append(
-                    {
-                        "role": "assistant",
-                        "content": answer,
-                        "data": result,
-                        "sql": generated_sql,
-                    }
-                )
-
-            except Exception as error:
-                display_error(error)
-
-                st.session_state.messages.append(
-                    {
-                        "role": "assistant",
-                        "content": (
-                            "I could not complete that IPL analysis. "
-                            "Please review the displayed error or try "
-                            "a more specific question."
-                        ),
-                    }
-                )
-
+                except Exception as error:
+                    display_error(error)
 # ============================================================
 # FOOTER
 # ============================================================
