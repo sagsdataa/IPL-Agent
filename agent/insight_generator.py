@@ -74,7 +74,7 @@ def generate_insight(
             "for this question."
         )
 
-    context = result_df.head(10).to_string(
+    table_context = result_df.head(10).to_string(
         index=False
     )
 
@@ -83,9 +83,8 @@ def generate_insight(
     second_result = context["second_result"]
 
     query_type = context["query_type"]
-    
-    if len(result_df) > 1:
-        second_result = result_df.iloc[1].to_dict()
+
+    row_count = context["row_count"]
 
     prompt = f"""
 You are an IPL Cricket Analyst.
@@ -100,7 +99,13 @@ Second Result:
 {second_result}
 
 Top Results Table:
-{context}
+{table_context}
+
+Query Type:
+{query_type}
+
+Row Count:
+{row_count}
 
 Instructions:
 

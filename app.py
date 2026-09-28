@@ -18,7 +18,6 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-
 # ============================================================
 # PROJECT PATHS
 # ============================================================
@@ -117,6 +116,9 @@ if "last_question" not in st.session_state:
 if "last_answer" not in st.session_state:
     st.session_state.last_answer = None
 
+if "last_context" not in st.session_state:
+    st.session_state.last_context = None
+
 # ============================================================
 # LOAD DATASET STATISTICS
 # ============================================================
@@ -190,24 +192,40 @@ def run_ipl_analysis(question):
     """
     Send the question to Gemini, generate SQL,
     execute it through the DuckDB tool and return
-    the SQL and results.
+    the SQL and generate an insight when required.
     """
 
     generated_sql = generate_sql(question)
 
     query_result = run_query(generated_sql)
 
-    insight = generate_insight(
-        question,
-        query_result
-    )
-
-    return generated_sql, query_result, insight
-
     context = build_context(
         question,
         query_result
     )
+
+    if context["needs_insight"]:
+        try:
+            insight = generate_insight(
+                question,
+                query_result,
+                context
+            )
+
+        except Exception:
+            insight = create_direct_answer(
+                question,
+                query_result
+            )
+    else:
+        insight = create_direct_answer(
+            question,
+            query_result
+        )
+
+    return generated_sql, query_result, insight, context
+
+
 
 
 def create_direct_answer(question, result):
@@ -309,6 +327,16 @@ def display_error(error):
             "The query was blocked by the SQL safety validator."
         )
 
+    elif (
+        "503" in error_text
+        or "UNAVAILABLE" in error_text
+        or "high demand" in error_text.lower()
+    ):
+        st.error(
+            "Gemini is currently experiencing high demand. "
+            "Please try again in a few moments."
+        )
+
     else:
         st.error(
             "The IPL question could not be processed."
@@ -371,9 +399,9 @@ with st.sidebar:
 
     #    st.rerun()
 
-    st.caption(
-        "Powered by Gemini • DuckDB • Streamlit"
-        )
+    #st.caption(
+    #    "Powered by Gemini • DuckDB • Streamlit"
+    #    )
 
 
 # ============================================================
@@ -436,9 +464,15 @@ st.markdown(
         font-size:16px;
         font-weight:450;
     ">
-        <div>📅 Coverage: {coverage}</div>
-        <div>🏏 Matches: {matches:,}</div>
-        <div>📊 Deliveries: {deliveries:,}</div>
+        <div style="flex:1; text-align:left;">
+            📅 Coverage: {coverage}
+        </div>
+        <div style="flex:1; text-align:center;">
+            🏏 Matches: {matches:,}
+        </div>
+        <div style="flex:1; text-align:right;">
+            📊 Deliveries: {deliveries:,}
+        </div>
     </div>
     """,
     unsafe_allow_html=True
@@ -595,8 +629,8 @@ if current_question:
             with st.chat_message("assistant"):
                 try:
                     with st.status(
-                        "Analyzing IPL data...",
-                        expanded=True,
+                    "Analyzing IPL data...",
+                    expanded=True,
                     ) as status:
 
                         st.write(
@@ -607,32 +641,25 @@ if current_question:
                             "Generating DuckDB SQL with Gemini"
                         )
 
-                        generated_sql = generate_sql(
-                            current_question
-                        )
-
                         st.write(
                             "Validating and executing the SQL"
                         )
 
-                        result = run_query(
-                            generated_sql
-                        )
-
                         st.write(
-                            "Generating the cricket insight"
+                            "Building analytical context"
                         )
 
-                        try:
-                            insight = generate_insight(
-                                current_question,
-                                result
-                            )
+                        generated_sql, result, insight, context = run_ipl_analysis(
+                            current_question
+                        )
 
-                        except Exception:
-                            insight = create_direct_answer(
-                                current_question,
-                                result
+                        if context["needs_insight"]:
+                            st.write(
+                                "Generating the cricket insight"
+                            )
+                        else:
+                            st.write(
+                                "Preparing the retrieved records"
                             )
 
                         status.update(
@@ -648,6 +675,7 @@ if current_question:
                     st.session_state.last_sql = generated_sql
                     st.session_state.last_result = result
                     st.session_state.last_answer = answer
+                    st.session_state.last_context = context
 
                     answer_tab, data_tab, sql_tab = st.tabs(
                         [
@@ -706,6 +734,12 @@ if current_question:
                             "the read-only DuckDB query tool."
                         )
 
+                        with st.expander(
+                            "View Context Builder Output",
+                            expanded=False,
+                        ):
+                            st.json(context)
+
                 except Exception as error:
                     display_error(error)
 # ============================================================
@@ -718,10 +752,10 @@ footer_left, footer_right = st.columns(2)
 
 with footer_left:
     st.caption(
-        "IPL Intelligence Agent • Ask. Analyze. Discover."
+        "Powered by Gemini • DuckDB • Streamlit"
     )
 
 with footer_right:
     st.caption(
-        "Architected & Designed by Sagir"
+        " "
     )
