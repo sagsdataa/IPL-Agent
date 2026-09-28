@@ -60,7 +60,8 @@ Keep the response under 120 words.
 
 def generate_insight(
     question: str,
-    result_df
+    result_df,
+    context
 ):
     """
     Generate a grounded cricket insight
@@ -77,10 +78,12 @@ def generate_insight(
         index=False
     )
 
-    top_result = result_df.iloc[0].to_dict()
+    top_result = context["top_result"]
 
-    second_result = None
+    second_result = context["second_result"]
 
+    query_type = context["query_type"]
+    
     if len(result_df) > 1:
         second_result = result_df.iloc[1].to_dict()
 

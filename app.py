@@ -5,6 +5,7 @@ from agent.sql_generator import generate_sql
 from database.query_executor import run_query
 from agent.insight_generator import generate_insight
 from agent.insight_generator import generate_followup_insight
+from agent.context_builder import build_context
 
 # ============================================================
 # PAGE CONFIGURATION
@@ -202,6 +203,11 @@ def run_ipl_analysis(question):
     )
 
     return generated_sql, query_result, insight
+
+    context = build_context(
+        question,
+        query_result
+    )
 
 
 def create_direct_answer(question, result):
@@ -418,12 +424,25 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.info(
-    f"📅 Coverage: {coverage} | "
-    f"🏏 Matches: {matches:,} | "
-    f"📊 Deliveries: {deliveries:,}"
+st.markdown(
+    f"""
+    <div style="
+        background-color:#e8f0fe;
+        padding:14px;
+        border-radius:8px;
+        display:flex;
+        justify-content:space-around;
+        align-items:center;
+        font-size:16px;
+        font-weight:450;
+    ">
+        <div>📅 Coverage: {coverage}</div>
+        <div>🏏 Matches: {matches:,}</div>
+        <div>📊 Deliveries: {deliveries:,}</div>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
-
 # ============================================================
 # WELCOME AREA
 # ============================================================

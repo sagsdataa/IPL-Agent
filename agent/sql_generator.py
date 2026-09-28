@@ -482,6 +482,15 @@ Return:
 - total_stumpings
 
 ==================================================
+PLAYER NAME MAPPING RULES:
+==================================================
+Virat Kohli -> V Kohli
+MS Dhoni -> MS Dhoni
+Rohit Sharma -> RG Sharma
+Jasprit Bumrah -> J Bumrah
+AB de Villiers -> AB de Villiers
+
+==================================================
 RANKING RULES
 ==================================================
 
