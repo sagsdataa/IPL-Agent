@@ -172,12 +172,17 @@ def is_followup_question(question: str):
 
     followup_keywords = [
         "why",
+        "how",
         "explain",
         "more",
         "reason",
         "agree",
         "justify",
         "prove",
+        "disagree",
+        "really",
+        "evidence",
+        "are you sure",
         "sure"
     ]
 
@@ -224,8 +229,6 @@ def run_ipl_analysis(question):
         )
 
     return generated_sql, query_result, insight, context
-
-
 
 
 def create_direct_answer(question, result):
@@ -380,30 +383,7 @@ with st.sidebar:
 
 🏟 Which venue hosted the most matches?
     """)
-
-    #st.divider()
-
-    #st.subheader("About")
-
-    #st.divider()
-
-   # if st.button(
-   #     "Clear conversation",
-    #    use_container_width=True,
-    #):
-    #    st.session_state.messages = []
-    #    st.session_state.last_sql = None
-    #    st.session_state.last_result = None
-    #    st.session_state.last_question = None
-    #    st.session_state.selected_question = None
-
-    #    st.rerun()
-
-    #st.caption(
-    #    "Powered by Gemini • DuckDB • Streamlit"
-    #    )
-
-
+    
 # ============================================================
 # PRODUCT HEADER
 # ============================================================
@@ -573,8 +553,10 @@ if current_question:
                             )
 
                             followup_answer = generate_followup_insight(
+                                current_question,
                                 st.session_state.last_question,
-                                st.session_state.last_result
+                                st.session_state.last_result,
+                                st.session_state.last_context,
                             )
 
                             status.update(
