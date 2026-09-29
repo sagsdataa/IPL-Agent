@@ -1,5 +1,6 @@
 
 from google import genai
+import streamlit as st
 
 from config import (
     GEMINI_API_KEY,
@@ -96,6 +97,12 @@ Results:
     - or any other technical details.
     - calculations.
 """
+    st.write("Pre Questions:", previous_question)
+    st.write("Followup Questions:", followup_question)
+    st.write("Top Results:", top_result)
+    st.write("Query Type:", query_type)
+    st.write("table context:", table_context)
+
     response = client.models.generate_content(
         model=MODEL_NAME,
         contents=prompt

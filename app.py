@@ -168,10 +168,21 @@ def is_followup_question(question: str):
     if not question:
         return False
 
-    question = question.strip().lower()
+    question = (
+        question.strip()
+                .lower()
+                .replace("?", "")
+                .replace(".", "")
+                .replace("!", "")
+                .replace(",", "")
+                .replace("'", "")
+    )
 
     followup_keywords = [
         "why",
+        "why?",
+        "how?",
+        "explain?",
         "how",
         "explain",
         "more",
@@ -186,10 +197,7 @@ def is_followup_question(question: str):
         "sure"
     ]
 
-    return any(
-        keyword in question
-        for keyword in followup_keywords
-    )
+    return question in followup_keywords
 
 
 # The following function to generate insights.
@@ -457,20 +465,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-# ============================================================
-# WELCOME AREA
-# ============================================================
-
-#if not st.session_state.messages:
-#    st.write("")
-
-    #st.header("What would you like to discover?")
-
-    #st.write(
-    #    "Ask a natural-language question about IPL players, "
-    #    "teams, seasons, venues, batting, bowling, match phases "
-    #    "or chasing performance."
-    #)
 
 # ============================================================
 # CONVERSATION HISTORY
@@ -531,7 +525,7 @@ if current_question:
         # --------------------------------------------
         # FOLLOW-UP QUESTION WORKFLOW
         # --------------------------------------------
-
+   
         if is_followup_question(current_question):
 
             if (
