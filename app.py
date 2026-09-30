@@ -1,11 +1,15 @@
+
 from pathlib import Path
 import duckdb
 import streamlit as st
 from agent.sql_generator import generate_sql
 from database.query_executor import run_query
-from agent.insight_generator import generate_insight
-from agent.insight_generator import generate_followup_insight
 from agent.context_builder import build_context
+from agent.insight_generator import (
+    generate_insight,
+    generate_followup_insight
+)
+
 
 # ============================================================
 # PAGE CONFIGURATION
@@ -199,6 +203,41 @@ def is_followup_question(question: str):
 
     return question in followup_keywords
 
+def is_acknowledgement(
+    question: str
+):
+    """
+    Detect acknowledgement messages.
+    """
+
+    if not question:
+        return False
+
+    question = (
+        question.strip()
+                .lower()
+                .replace("?", "")
+                .replace(".", "")
+                .replace("!", "")
+                .replace(",", "")
+                .replace("'", "")
+    )
+
+    acknowledgements = [
+        "ok",
+        "okay",
+        "thanks",
+        "thank you",
+        "got it",
+        "understood",
+        "cool",
+        "nice",
+        "great",
+        "perfect",
+        "makes sense"
+    ]
+
+    return question in acknowledgements
 
 # The following function to generate insights.
 def run_ipl_analysis(question):
@@ -521,16 +560,26 @@ if current_question:
     current_question = clean_question(current_question)
 
     if current_question:
+      
+        if is_acknowledgement(current_question):
+
+            with st.chat_message("user"):
+                st.markdown(current_question)
+
+            with st.chat_message("assistant"):
+                st.markdown("Glad that helped. 🏏")
 
         # --------------------------------------------
         # FOLLOW-UP QUESTION WORKFLOW
         # --------------------------------------------
    
-        if is_followup_question(current_question):
+        elif is_followup_question(current_question):
 
             if (
                 st.session_state.last_question
+                and st.session_state.last_answer
                 and st.session_state.last_result is not None
+                and st.session_state.last_context is not None
             ):
                 with st.chat_message("user"):
                     st.markdown(current_question)
@@ -543,12 +592,13 @@ if current_question:
                         ) as status:
 
                             st.write(
-                                "Using the previous question and results"
+                                "Using the previous question, answer and results"
                             )
 
                             followup_answer = generate_followup_insight(
                                 current_question,
                                 st.session_state.last_question,
+                                st.session_state.last_answer,
                                 st.session_state.last_result,
                                 st.session_state.last_context,
                             )
