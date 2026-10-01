@@ -5,7 +5,7 @@ import streamlit as st
 from agent.sql_generator import generate_sql
 from database.query_executor import run_query
 from agent.context_builder import build_context
-from guardrails.input_validator import validate_sql
+from guardrails.sql_validator import validate_sql
 from agent.insight_generator import (
     generate_insight,
     generate_followup_insight
