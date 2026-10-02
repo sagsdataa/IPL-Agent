@@ -6,6 +6,10 @@ from agent.sql_generator import generate_sql
 from database.query_executor import run_query
 from agent.context_builder import build_context
 from guardrails.sql_validator import validate_sql
+from guardrails.context_validator import validate_context
+from guardrails.answer_validator import validate_answer
+from guardrails.hallucination_checker import check_hallucination
+from guardrails.result_validator import validate_result
 from agent.insight_generator import (
     generate_insight,
     generate_followup_insight
@@ -254,9 +258,15 @@ def run_ipl_analysis(question):
 
     query_result = run_query(generated_sql)
 
+    validate_result(query_result)
+
     context = build_context(
         question,
         query_result
+    )
+
+    validate_context(
+        context
     )
 
     if context["needs_insight"]:
@@ -265,6 +275,17 @@ def run_ipl_analysis(question):
                 question,
                 query_result,
                 context
+            )
+
+            validate_answer(insight)
+
+            hallucination_result = (
+                check_hallucination(insight, context)
+            )
+
+            print(
+                "Hallucination check result: ",
+                hallucination_result
             )
 
         except Exception:

@@ -5,3 +5,7 @@
 /test_sql_generator.py
 /test_insight_generator.py
 /test_sql_validator.py
+/test_result_validator.py
+/test_context_validator.py
+/test_answer_validator.py
+/test_hallucination_checker.py
