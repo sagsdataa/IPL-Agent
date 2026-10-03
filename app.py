@@ -12,11 +12,12 @@ from guardrails.answer_validator import validate_answer
 from guardrails.hallucination_checker import check_hallucination
 from guardrails.result_validator import validate_result
 from agent.contextual_question_builder import build_contextual_question
+from agent.metric_resolver import detect_metric_followup
+from agent.metric_question_builder import build_metric_question
 from agent.insight_generator import (
     generate_insight,
     generate_followup_insight
 )
-
 
 # ============================================================
 # PAGE CONFIGURATION
@@ -191,9 +192,6 @@ def is_followup_question(question: str):
 
     followup_keywords = [
         "why",
-        "why?",
-        "how?",
-        "explain?",
         "how",
         "explain",
         "more",
@@ -294,7 +292,12 @@ def run_ipl_analysis(question):
                 hallucination_result
             )
 
-        except Exception:
+        except Exception as error:
+
+            print(
+                "Insight generation fallback: ",
+                error
+            )
             insight = create_direct_answer(
                 question,
                 query_result
@@ -447,19 +450,22 @@ with st.sidebar:
 
     st.subheader("Popular Questions")
 
-    st.markdown("""
-🏏 Who scored the most runs?
+    st.markdown(
+        """
+        🏏 Who scored the most runs?
 
-🎯 Who took the most wickets?
+        🎯 Who took the most wickets?
 
-⚡ Best death-over batter?
+        ⚡ Best death-over batter?
 
-🔥 Top powerplay wicket takers?
+        🔥 Top powerplay wicket takers?
 
-🏆 Most Player of the Match awards?
+        🏆 Most Player of the Match awards?
 
-🏟 Which venue hosted the most matches?
-    """)
+        🏟 Which venue hosted the most matches?
+            """,
+        unsafe_allow_html=True
+    )
     
 # ============================================================
 # PRODUCT HEADER
@@ -571,6 +577,12 @@ if current_question:
             )
         )
 
+        metric_result = (
+            detect_metric_followup(
+                current_question
+            )
+        )
+
         if is_acknowledgement(current_question):
 
             with st.chat_message("user"):
@@ -579,36 +591,173 @@ if current_question:
             with st.chat_message("assistant"):
                 st.markdown("Glad that helped. 🏏")
 
-        elif ( 
-            #st.session_state.last_context 
-            entity_result["is_entity_followup"]
+        # --------------------------------------------
+        # METRIC-AWARE FOLLOW-UP WORKFLOW
+        # --------------------------------------------
+
+        elif (
+            metric_result["is_metric_followup"]
             and st.session_state.last_context is not None
         ):
 
-            #entity_result = (
-            #    detect_entity_followup(
-            #        current_question
-            #    )
-            #)
+            rewritten_question = (
+                build_metric_question(
+                    metric_result,
+                    st.session_state.last_context
+                )
+            )
 
-            #if entity_result[
-            #    "is_entity_followup"
-            #]:
-
-                rewritten_question = (
-                    build_contextual_question(
-                        entity_result,
-                        st.session_state.last_context
-                    )
+            with st.chat_message("user"):
+                st.markdown(
+                    current_question
                 )
 
-                with st.chat_message("user"):
+            with st.chat_message("assistant"):
 
-                    st.markdown(
-                        current_question
+                if not rewritten_question:
+
+                    st.warning(
+                        "I detected a metric follow-up, "
+                        "but the previous context does not "
+                        "contain enough information to build "
+                        "a new analytical question."
                     )
 
-                with st.chat_message("assistant"):
+                else:
+
+                    try:
+
+                        with st.status(
+                            "Analyzing the new metric...",
+                            expanded=True,
+                        ) as status:
+
+                            st.write(
+                                "Metric Follow-up Detected"
+                            )
+
+                            st.write(
+                                "New metric:",
+                                metric_result["metric"]
+                            )
+
+                            st.write(
+                                "Rewritten Question:",
+                                rewritten_question
+                            )
+
+                            (
+                                generated_sql,
+                                result,
+                                insight,
+                                context,
+                            ) = run_ipl_analysis(
+                                rewritten_question
+                            )
+
+                            status.update(
+                                label="Metric analysis completed",
+                                state="complete",
+                                expanded=False,
+                            )
+
+                        st.markdown(
+                            "### 🏏 Answer"
+                        )
+
+                        st.markdown(
+                            insight
+                        )
+
+                        # Save the fresh metric result
+                        # as the latest conversation context.
+                        st.session_state.last_question = (
+                            rewritten_question
+                        )
+
+                        st.session_state.last_sql = (
+                            generated_sql
+                        )
+
+                        st.session_state.last_result = (
+                            result
+                        )
+
+                        st.session_state.last_answer = (
+                            insight
+                        )
+
+                        st.session_state.last_context = (
+                            context
+                        )
+
+                        with st.expander(
+                            "View supporting data",
+                            expanded=False,
+                        ):
+
+                            st.dataframe(
+                                result,
+                                use_container_width=True,
+                                hide_index=True,
+                            )
+
+                        with st.expander(
+                            "View generated SQL",
+                            expanded=False,
+                        ):
+
+                            st.code(
+                                generated_sql,
+                                language="sql",
+                            )
+
+                        with st.expander(
+                            "View Context Builder Output",
+                            expanded=False,
+                        ):
+
+                            st.json(
+                                context
+                            )
+
+                    except Exception as error:
+
+                        display_error(
+                            error
+                        )
+        # --------------------------------------------
+        # ENTITY FOLLOW-UP WORKFLOW
+        # --------------------------------------------  
+
+        elif ( 
+            entity_result["is_entity_followup"]
+            and st.session_state.last_context is not None
+        ):                
+            rewritten_question = (
+                build_contextual_question(
+                    entity_result,
+                    st.session_state.last_context
+                )
+            )
+
+            with st.chat_message("user"):
+
+                st.markdown(
+                    current_question
+                )
+
+            with st.chat_message("assistant"):
+
+                if not rewritten_question:
+
+                    st.warning(
+                    "I detected an entity follow-up, "
+                    "but the previous context does not "
+                    "contain enough information to build "
+                    "a comparison."
+                    )
+                else:
 
                     try:
 
@@ -617,8 +766,8 @@ if current_question:
                         )
 
                         st.write(
-                            f"Rewritten Question: "
-                            f"{rewritten_question}"
+                            "Rewritten Question",
+                            rewritten_question
                         )
 
                         generated_sql, result, insight, context = (
@@ -627,18 +776,40 @@ if current_question:
                             )
                         )
 
-                        st.write("Rewritten Question")
-                        st.write(rewritten_question)
                         st.write("Generated SQL")
                         st.code(
                             generated_sql,
                             language="sql"
                         )
                         st.write("Returned Data")
-                        st.dataframe(result)
+                        st.dataframe(
+                            result,
+                            use_container_width=True,
+                            hide_index=True
+                        )
 
                         st.markdown(
                             insight
+                        )
+
+                        st.session_state.last_question = (
+                            rewritten_question
+                        )
+
+                        st.session_state.last_sql = (
+                            generated_sql
+                        )
+
+                        st.session_state.last_result = (
+                            result
+                        )
+
+                        st.session_state.last_answer = (
+                            insight
+                        )
+
+                        st.session_state.last_context = (
+                            context
                         )
 
                     except Exception as error:
@@ -646,7 +817,27 @@ if current_question:
                         display_error(
                             error
                         )
+  
+        # --------------------------------------------
+        # FOLLOW-UP WITHOUT PREVIOUS CONTEXT
+        # --------------------------------------------
 
+        elif (
+            entity_result["is_entity_followup"]
+            or metric_result["is_metric_followup"]
+        ):
+
+            with st.chat_message("user"):
+                st.markdown(
+                    current_question
+                )
+
+            with st.chat_message("assistant"):
+                st.warning(
+                    "Please ask an IPL statistics question first. "
+                    "I need previous analytical context before "
+                    "processing this follow-up."
+                )
         # --------------------------------------------
         # FOLLOW-UP QUESTION WORKFLOW
         # --------------------------------------------
@@ -680,6 +871,8 @@ if current_question:
                                 st.session_state.last_result,
                                 st.session_state.last_context,
                             )
+
+                            validate_answer(followup_answer)
 
                             status.update(
                                 label="Follow-up analysis completed",
