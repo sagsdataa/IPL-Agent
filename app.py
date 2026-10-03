@@ -265,6 +265,10 @@ def run_ipl_analysis(question):
         query_result
     )
 
+    print("############################")
+    print(context)
+    print("############################\n")
+
     validate_context(
         context
     )

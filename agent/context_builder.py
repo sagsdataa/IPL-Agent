@@ -6,158 +6,315 @@
 # agent/context_builder.py
 
 
-def classify_query(question: str):
-    """
-    Classify the user's question into a query type.
-    """
+"""
+Context Builder
 
-    question = question.lower().strip()
+Converts query results into a rich,
+structured analytical context.
+"""
 
-    if any(
-        phrase in question
-        for phrase in [
-            "compare",
-            "versus",
-            "vs",
-            "difference",
-        ]
-    ):
-        return "comparison"
+import pandas as pd
 
-    if any(
-        phrase in question
-        for phrase in [
-            "trend",
-            "over time",
-            "season wise",
-            "season-wise",
-            "year wise",
-            "year-wise",
-        ]
-    ):
-        return "trend"
-
-    if any(
-        phrase in question
-        for phrase in [
-            "why",
-            "explain",
-            "reason",
-            "justify",
-            "prove",
-        ]
-    ):
-        return "explanation"
-
-    if any(
-        phrase in question
-        for phrase in [
-            "average",
-            "avg",
-            "sum",
-            "total",
-            "percentage",
-            "rate",
-        ]
-    ):
-        return "aggregation"
-
-    return "ranking"
-
-
-def determine_insight_need(
-    question: str,
-    query_type: str,
-    row_count: int,
+def detect_query_type(
+    question: str
 ):
     """
-    Decide whether Gemini insight generation
-    is required.
+    Detect the analytical query type.
     """
+
+    if not question:
+        return "unknown"
 
     question = question.lower()
 
-    if query_type in [
-        "comparison",
+    # -------------------------
+    # Comparison
+    # -------------------------
+
+    comparison_keywords = [
+        "compare",
+        "vs",
+        "versus",
+        "difference between"
+    ]
+
+    if any(
+        keyword in question
+        for keyword in comparison_keywords
+    ):
+        return "comparison"
+
+    # -------------------------
+    # Trend
+    # -------------------------
+
+    trend_keywords = [
         "trend",
-        "explanation",
-        "aggregation",
-     ]:
-        return True
+        "over time",
+        "by season",
+        "season wise",
+        "year wise"
+    ]
 
-    if query_type == "ranking":
+    if any(
+        keyword in question
+        for keyword in trend_keywords
+    ):
+        return "trend"
 
-        if any(
-            keyword in question
-            for keyword in [
-                "best",
-                "highest",
-                "most",
-                "leading",
-                "top performer",
-            ]
-        ):
-            return True
+    # -------------------------
+    # Ranking
+    # -------------------------
 
-        if row_count <= 5:
-            return True
+    ranking_keywords = [
+        "best",
+        "top",
+        "highest",
+        "most",
+        "leading"
+    ]
 
-    return False
+    if any(
+        keyword in question
+        for keyword in ranking_keywords
+    ):
+        return "ranking"
 
+    # -------------------------
+    # Aggregation
+    # -------------------------
+
+    aggregation_keywords = [
+        "total",
+        "sum",
+        "average",
+        "avg",
+        "count",
+        "how many"
+    ]
+
+    if any(
+        keyword in question
+        for keyword in aggregation_keywords
+    ):
+        return "aggregation"
+
+    # -------------------------
+    # Explanation
+    # -------------------------
+
+    explanation_keywords = [
+        "why",
+        "how",
+        "explain"
+    ]
+
+    if any(
+        keyword in question
+        for keyword in explanation_keywords
+    ):
+        return "explanation"
+
+    return "unknown"
+
+def detect_entity_column(df):
+    """
+    Detect the entity column.
+    """
+
+    candidates = [
+        "player",
+        "batter",
+        "bowler",
+        "batter_name",
+        "bowler_name",
+        "team",
+        "venue"
+    ]
+
+    for column in candidates:
+
+        if column in df.columns:
+            return column
+
+    return None
+
+
+def detect_metric_column(df):
+    """
+    Detect the metric column.
+    """
+
+    candidates = [
+        "total_runs",
+        "runs",
+        "total_wickets",
+        "wickets",
+        "strike_rate",
+        "average",
+        "matches",
+        "wins"
+    ]
+
+    for column in candidates:
+
+        if column in df.columns:
+            return column
+
+    return None
 
 def build_context(
     question,
-    result_df,
+    result_df
 ):
     """
-    Build a structured context object from
-    the query and DuckDB results.
+    Build analytical context for
+    insight generation and future
+    conversational follow-ups.
     """
-
-    query_type = classify_query(question)
-
-    context = {
-        "question": question,
-        "query_type": query_type,
-        "needs_insight": False,
-        "row_count": 0,
-        "columns": [],
-        "top_result": None,
-        "second_result": None,
-    }
 
     if result_df is None or result_df.empty:
 
-        context["needs_insight"] = (
-            determine_insight_need(
-            question,
-            query_type,
-            0,
-            )
-        )
-        return context
+        return {
+            "question": question,
+            "query_type": "unknown",
+            "row_count": 0,
+            "needs_insight": False,
+            "top_result": None,
+            "second_result": None,
+            "top_entity": None,
+            "second_entity": None,
+            "top_value": None,
+            "second_value": None,
+            "metric": None,
+            "gap": None,
+            "entities": []
+        }
 
-    context["row_count"] = len(result_df)
+    row_count = len(result_df)
 
-    context["columns"] = list(
-        result_df.columns
-    )
-
-    context["top_result"] = (
+    top_result = (
         result_df.iloc[0].to_dict()
+        if row_count >= 1
+        else None
     )
 
-    if len(result_df) > 1:
-        context["second_result"] = (
-            result_df.iloc[1].to_dict()
+    second_result = (
+        result_df.iloc[1].to_dict()
+        if row_count >= 2
+        else None
+    )
+
+    entity_column = detect_entity_column(
+        result_df
+    )
+
+    metric_column = detect_metric_column(
+        result_df
+    )
+
+    entity_type = None
+
+    if entity_column in [
+        "batter",
+        "bowler",
+        "player",
+        "player_name",
+        "batter_name",
+        "bowler_name"
+    ]:
+        entity_type = "player"
+
+    elif entity_column == "team":
+        entity_type = "team"
+
+    elif entity_column == "venue":
+        entity_type = "venue"
+
+    top_entity = None
+    second_entity = None
+    top_value = None
+    second_value = None
+
+    if entity_column:
+
+        top_entity = (
+            top_result.get(entity_column)
         )
 
-    context["needs_insight"] = (
-        determine_insight_need(
-            question,
-            query_type,
-            len(result_df),
+        if second_result:
+            second_entity = (
+                second_result.get(
+                    entity_column
+                )
+            )
+
+    if metric_column:
+
+        top_value = (
+            top_result.get(metric_column)
         )
-    )
+
+        if second_result:
+            second_value = (
+                second_result.get(
+                    metric_column
+                )
+            )
+
+    gap = None
+
+    if (
+        isinstance(top_value, (int, float))
+        and isinstance(
+            second_value,
+            (int, float)
+        )
+    ):
+        gap = (
+            top_value - second_value
+        )
+
+    context = {
+
+        "question": question,
+
+        "query_type": detect_query_type(
+            question
+        ),
+
+        "row_count": row_count,
+
+        "needs_insight": True,
+
+        "top_result": top_result,
+
+        "second_result": second_result,
+
+        "entity_column": entity_column,
+
+        "entity_type": entity_type,
+
+        "metric": metric_column,
+
+        "top_entity": top_entity,
+
+        "second_entity": second_entity,
+
+        "top_value": top_value,
+
+        "second_value": second_value,
+
+        "gap": gap,
+
+        "entities": [
+            entity
+            for entity in [
+                top_entity,
+                second_entity
+            ]
+            if entity
+        ]
+    }
 
     return context
