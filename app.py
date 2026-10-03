@@ -2,6 +2,7 @@
 from pathlib import Path
 import duckdb
 import streamlit as st
+from agent.entity_resolver import detect_entity_followup
 from agent.sql_generator import generate_sql
 from database.query_executor import run_query
 from agent.context_builder import build_context
@@ -10,6 +11,7 @@ from guardrails.context_validator import validate_context
 from guardrails.answer_validator import validate_answer
 from guardrails.hallucination_checker import check_hallucination
 from guardrails.result_validator import validate_result
+from agent.contextual_question_builder import build_contextual_question
 from agent.insight_generator import (
     generate_insight,
     generate_followup_insight
@@ -534,31 +536,6 @@ st.markdown(
 )
 
 # ============================================================
-# CONVERSATION HISTORY
-# ============================================================
-
-#for message in st.session_state.messages:
-#    with st.chat_message(message["role"]):
-#        st.markdown(message["content"])
-#
-#        if message.get("data") is not None:
-#            st.dataframe(
-#                message["data"],
-#                use_container_width=True,
-#                hide_index=True,
-#            )
-
-#        if message.get("sql"):
-#            with st.expander(
-#                "View generated SQL",
-#                expanded=False,
-#            ):
-#                st.code(
-#                    message["sql"],
-#                    language="sql",
-#                )
-
-# ============================================================
 # QUESTION INPUT
 # ============================================================
 
@@ -587,7 +564,13 @@ if current_question:
     current_question = clean_question(current_question)
 
     if current_question:
-      
+
+        entity_result = (
+            detect_entity_followup(
+                current_question
+            )
+        )
+
         if is_acknowledgement(current_question):
 
             with st.chat_message("user"):
@@ -595,6 +578,74 @@ if current_question:
 
             with st.chat_message("assistant"):
                 st.markdown("Glad that helped. 🏏")
+
+        elif ( 
+            #st.session_state.last_context 
+            entity_result["is_entity_followup"]
+            and st.session_state.last_context is not None
+        ):
+
+            #entity_result = (
+            #    detect_entity_followup(
+            #        current_question
+            #    )
+            #)
+
+            #if entity_result[
+            #    "is_entity_followup"
+            #]:
+
+                rewritten_question = (
+                    build_contextual_question(
+                        entity_result,
+                        st.session_state.last_context
+                    )
+                )
+
+                with st.chat_message("user"):
+
+                    st.markdown(
+                        current_question
+                    )
+
+                with st.chat_message("assistant"):
+
+                    try:
+
+                        st.write(
+                            "Entity Follow-up Detected"
+                        )
+
+                        st.write(
+                            f"Rewritten Question: "
+                            f"{rewritten_question}"
+                        )
+
+                        generated_sql, result, insight, context = (
+                            run_ipl_analysis(
+                                rewritten_question
+                            )
+                        )
+
+                        st.write("Rewritten Question")
+                        st.write(rewritten_question)
+                        st.write("Generated SQL")
+                        st.code(
+                            generated_sql,
+                            language="sql"
+                        )
+                        st.write("Returned Data")
+                        st.dataframe(result)
+
+                        st.markdown(
+                            insight
+                        )
+
+                    except Exception as error:
+
+                        display_error(
+                            error
+                        )
 
         # --------------------------------------------
         # FOLLOW-UP QUESTION WORKFLOW

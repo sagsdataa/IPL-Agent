@@ -9,3 +9,5 @@
 /test_context_validator.py
 /test_answer_validator.py
 /test_hallucination_checker.py
+/test_entity_resolver.py
+/test_contextual_question_builder.py
