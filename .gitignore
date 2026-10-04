@@ -13,3 +13,4 @@
 /test_contextual_question_builder.py
 /test_metric_resolver.py
 /test_metric_question_builder.py
+/test_time_resolver.py

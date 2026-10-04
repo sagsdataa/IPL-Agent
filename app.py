@@ -14,6 +14,8 @@ from guardrails.result_validator import validate_result
 from agent.contextual_question_builder import build_contextual_question
 from agent.metric_resolver import detect_metric_followup
 from agent.metric_question_builder import build_metric_question
+from agent.time_resolver import detect_time_followup
+from agent.time_question_builder import build_time_question
 from agent.insight_generator import (
     generate_insight,
     generate_followup_insight
@@ -110,9 +112,6 @@ def get_database_statistics():
 # SESSION STATE
 # ============================================================
 
-#if "messages" not in st.session_state:
-#    st.session_state.messages = []
-
 if "selected_question" not in st.session_state:
     st.session_state.selected_question = None
 
@@ -158,7 +157,8 @@ coverage = f"{first_season}–{last_season}"
 
 
 # ============================================================
-# HELPER FUNCTIONS
+# HELPER FUNCTIONS FOR QUESTION PROCESSING, FOLLOW-UP DETECTION, 
+# AND INSIGHT GENERATION.
 # ============================================================
 
 def clean_question(question):
@@ -171,7 +171,11 @@ def clean_question(question):
 
     return question.strip()
 
-# the following function is used to detect simple follow-up questions that ask for reasoning behind a previous answer. It checks if the question matches common follow-up phrases like "why", "how", or "explain".
+# ********************************************************
+# the following function is used to detect simple follow-up questions 
+# that ask for reasoning behind a previous answer. 
+# It checks if the question matches common follow-up phrases like "why", "how", or "explain".
+
 def is_followup_question(question: str):
     """
     Detect simple follow-up questions.
@@ -208,6 +212,8 @@ def is_followup_question(question: str):
 
     return question in followup_keywords
 
+# ********************************************************
+# The following function is used to detect acknowledgement messages
 def is_acknowledgement(
     question: str
 ):
@@ -244,7 +250,9 @@ def is_acknowledgement(
 
     return question in acknowledgements
 
+# ********************************************
 # The following function to generate insights.
+
 def run_ipl_analysis(question):
     """
     Send the question to Gemini, generate SQL,
@@ -265,9 +273,9 @@ def run_ipl_analysis(question):
         query_result
     )
 
-    print("############################")
-    print(context)
-    print("############################\n")
+    #print("############################")
+    #print(context)
+    #print("############################\n")
 
     validate_context(
         context
@@ -310,6 +318,9 @@ def run_ipl_analysis(question):
 
     return generated_sql, query_result, insight, context
 
+# The following function is used to create a simple human-readable 
+# answer from the retrieved result. It does not use Gemini for 
+# narrative insight yet.
 
 def create_direct_answer(question, result):
     """
@@ -350,6 +361,9 @@ def create_direct_answer(question, result):
         "The leading results are shown in the Data tab."
     )
 
+# The following function is used to display user-friendly error messages. 
+# It checks the error message and provides a more understandable 
+# explanation to the user, along with suggestions for resolving the issue.
 
 def display_error(error):
     """
@@ -431,7 +445,6 @@ def display_error(error):
         ):
             st.exception(error)
 
-
 # ============================================================
 # SIDEBAR
 # ============================================================
@@ -443,10 +456,6 @@ with st.sidebar:
         "Your AI-powered analyst for the "
         "Indian Premier League."
     )
-
-  #  st.divider()
-
-  #  st.subheader("Explore")
 
     st.subheader("Popular Questions")
 
@@ -541,9 +550,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ============================================================
-# QUESTION INPUT
-# ============================================================
+# =====================================================================
+# USERS QUESTION INPUT...
+# =====================================================================
 
 typed_question = st.chat_input(
     "Ask anything about IPL cricket..."
@@ -562,9 +571,9 @@ else:
     current_question = None
 
 
-# ============================================================
-# EXECUTE AGENT WORKFLOW
-# ============================================================
+# =====================================================================
+# ************ EXECUTE AGENTS WORKFLOW ***********************
+# =====================================================================
 
 if current_question:
     current_question = clean_question(current_question)
@@ -583,6 +592,12 @@ if current_question:
             )
         )
 
+        time_result = (
+            detect_time_followup(
+                current_question
+            )
+        )
+
         if is_acknowledgement(current_question):
 
             with st.chat_message("user"):
@@ -591,9 +606,145 @@ if current_question:
             with st.chat_message("assistant"):
                 st.markdown("Glad that helped. 🏏")
 
-        # --------------------------------------------
-        # METRIC-AWARE FOLLOW-UP WORKFLOW
-        # --------------------------------------------
+# ------------------------------------------------------------
+#       TIME FOLLOW-UP WORKFLOW
+# ------------------------------------------------------------
+
+        elif (
+            time_result["is_time_followup"]
+            and st.session_state.last_context is not None
+        ):
+
+            rewritten_question = (
+                build_time_question(
+                    time_result,
+                    st.session_state.last_context
+                )
+            )
+
+            with st.chat_message("user"):
+                st.markdown(
+                    current_question
+                )
+
+            with st.chat_message("assistant"):
+
+                if not rewritten_question:
+
+                    st.warning(
+                        "I detected a time-aware follow-up, "
+                        "but the previous analytical context does not "
+                        "support a time-filtered rewrite."
+                        
+                    )
+
+                else:
+
+                    try:
+
+                        with st.status(
+                            "Analyzing the selected period...",
+                            expanded=True,
+                        ) as status:
+
+                            st.write(
+                                "Time-Aware Follow-up Detected"
+                            )
+
+                            st.write(
+                                "Time Filter:",
+                                time_result
+                            )
+
+                            st.write(
+                                "Rewritten Question:",
+                                rewritten_question
+                            )
+
+                            (
+                                generated_sql,
+                                result,
+                                insight,
+                                context,
+                            ) = run_ipl_analysis(
+                                rewritten_question
+                            )
+
+                            status.update(
+                                label="Time analysis completed",
+                                state="complete",
+                                expanded=False,
+                            )
+
+                        st.markdown(
+                            "### 🏏 Answer"
+                        )
+
+                        st.markdown(
+                            insight
+                        )
+
+                        # Save the fresh metric result
+                        # as the latest conversation context.
+                        st.session_state.last_question = (
+                            rewritten_question
+                        )
+
+                        st.session_state.last_sql = (
+                            generated_sql
+                        )
+
+                        st.session_state.last_result = (
+                            result
+                        )
+
+                        st.session_state.last_answer = (
+                            insight
+                        )
+
+                        st.session_state.last_context = (
+                            context
+                        )
+
+                        with st.expander(
+                            "View supporting data",
+                            expanded=False,
+                        ):
+
+                            st.dataframe(
+                                result,
+                                use_container_width=True,
+                                hide_index=True,
+                            )
+
+                        with st.expander(
+                            "View generated SQL",
+                            expanded=False,
+                        ):
+
+                            st.code(
+                                generated_sql,
+                                language="sql",
+                            )
+
+                        with st.expander(
+                            "View Context Builder Output",
+                            expanded=False,
+                        ):
+
+                            st.json(
+                                context
+                            )
+
+                    except Exception as error:
+
+                        display_error(
+                            error
+                        )
+  
+# -----------------------------------------------------------------
+#       METRIC-AWARE FOLLOW-UP WORKFLOW
+# -----------------------------------------------------------------
 
         elif (
             metric_result["is_metric_followup"]
@@ -726,9 +877,9 @@ if current_question:
                         display_error(
                             error
                         )
-        # --------------------------------------------
-        # ENTITY FOLLOW-UP WORKFLOW
-        # --------------------------------------------  
+# -----------------------------------------------------------------
+#               ENTITY FOLLOW-UP WORKFLOW
+# -----------------------------------------------------------------
 
         elif ( 
             entity_result["is_entity_followup"]
@@ -817,14 +968,15 @@ if current_question:
                         display_error(
                             error
                         )
-  
-        # --------------------------------------------
-        # FOLLOW-UP WITHOUT PREVIOUS CONTEXT
-        # --------------------------------------------
+
+# -------------------------------------------------------------------
+# FOLLOW-UP WITHOUT PREVIOUS CONTEXT
+# -------------------------------------------------------------------
 
         elif (
-            entity_result["is_entity_followup"]
+            time_result["is_time_followup"]
             or metric_result["is_metric_followup"]
+            or entity_result["is_entity_followup"]
         ):
 
             with st.chat_message("user"):
@@ -838,9 +990,9 @@ if current_question:
                     "I need previous analytical context before "
                     "processing this follow-up."
                 )
-        # --------------------------------------------
-        # FOLLOW-UP QUESTION WORKFLOW
-        # --------------------------------------------
+# -------------------------------------------------------------------
+#           SIMPLE FOLLOW-UP QUESTION WORKFLOW
+# -------------------------------------------------------------------
    
         elif is_followup_question(current_question):
 
@@ -915,9 +1067,9 @@ if current_question:
                     "I need a previous result before I can explain why."
                 )
 
-        # --------------------------------------------
-        # NEW QUESTION WORKFLOW
-        # --------------------------------------------
+# ------------------------------------------------------------------
+#                   NEW QUESTION WORKFLOW
+# ------------------------------------------------------------------
 
         else:
             with st.chat_message("user"):
@@ -1039,11 +1191,10 @@ if current_question:
 
                 except Exception as error:
                     display_error(error)
-# ============================================================
-# FOOTER
-# ============================================================
 
-#st.divider()
+# ============================================================
+#                      PAGE FOOTER
+# ============================================================
 
 footer_left, footer_right = st.columns(2)
 
@@ -1056,3 +1207,7 @@ with footer_right:
     st.caption(
         " "
     )
+
+# ============================================================
+#                      END OF PAGE
+# ============================================================
