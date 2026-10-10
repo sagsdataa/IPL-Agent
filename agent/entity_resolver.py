@@ -7,11 +7,46 @@ Examples:
 
 Why not Bumrah?
 What about Dhoni?
-How does Rohit compare?
+How about Rohit Sharma?
 Compare with Kohli.
+
+Reject:
+
+What about 2020?
+What about bowler?
+What about team?
+What about season?
 """
 
 import re
+
+
+COMMON_CRICKET_TERMS = {
+    "bowler",
+    "bowlers",
+    "batter",
+    "batters",
+    "batsman",
+    "batsmen",
+    "player",
+    "players",
+    "captain",
+    "captains",
+    "team",
+    "teams",
+    "venue",
+    "venues",
+    "stadium",
+    "ground",
+    "season",
+    "seasons",
+    "match",
+    "matches",
+    "playoff",
+    "playoffs",
+    "final",
+    "finals"
+}
 
 
 def detect_entity_followup(
@@ -19,7 +54,7 @@ def detect_entity_followup(
 ):
     """
     Detect whether a follow-up introduces
-    a new entity.
+    a new player entity.
 
     Returns:
 
@@ -64,19 +99,50 @@ def detect_entity_followup(
             question_lower
         )
 
-        if match:
+        if not match:
+            continue
 
-            entity = (
-                match.group(1)
-                .strip()
-                .title()
-            )
+        entity = (
+            match.group(1)
+            .strip()
+        )
+
+        # ---------------------------------
+        # Reject years
+        # ---------------------------------
+
+        if re.fullmatch(
+            r"20\d{2}",
+            entity
+        ):
 
             return {
-                "is_entity_followup": True,
-                "entity": entity,
-                "intent": "entity_followup"
+                "is_entity_followup": False,
+                "entity": None,
+                "intent": None
             }
+
+        # ---------------------------------
+        # Reject generic cricket concepts
+        # ---------------------------------
+
+        if entity in COMMON_CRICKET_TERMS:
+
+            return {
+                "is_entity_followup": False,
+                "entity": None,
+                "intent": None
+            }
+
+        # ---------------------------------
+        # Valid entity
+        # ---------------------------------
+
+        return {
+            "is_entity_followup": True,
+            "entity": entity.title(),
+            "intent": "entity_followup"
+        }
 
     return {
         "is_entity_followup": False,

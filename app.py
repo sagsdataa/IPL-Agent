@@ -16,11 +16,17 @@ from agent.metric_resolver import detect_metric_followup
 from agent.metric_question_builder import build_metric_question
 from agent.time_resolver import detect_time_followup
 from agent.time_question_builder import build_time_question
+from agent.context_continuation_resolver import detect_context_continuation
+from agent.context_continuation_builder import build_context_continuation_question
 from agent.insight_generator import (
     generate_insight,
     generate_followup_insight
 )
-
+from agent.conversation_state import (
+    create_conversation_state,
+    update_conversation_state
+)
+#DEBUG_MODE = False
 # ============================================================
 # PAGE CONFIGURATION
 # ============================================================
@@ -129,6 +135,10 @@ if "last_answer" not in st.session_state:
 
 if "last_context" not in st.session_state:
     st.session_state.last_context = None
+if "conversation_state" not in st.session_state:
+    st.session_state.conversation_state = (
+        create_conversation_state()
+    )
 
 # ============================================================
 # LOAD DATASET STATISTICS
@@ -211,6 +221,49 @@ def is_followup_question(question: str):
     ]
 
     return question in followup_keywords
+
+#****************************************************************
+# SAVE ANALYSIS STATE
+
+def save_analysis_state(
+    question,
+    generated_sql,
+    result,
+    insight,
+    context,
+):
+    """
+    Save the latest successful analytical result
+    and update accumulated conversation state.
+    """
+
+    st.session_state.last_question = (
+        question
+    )
+
+    st.session_state.last_sql = (
+        generated_sql
+    )
+
+    st.session_state.last_result = (
+        result
+    )
+
+    st.session_state.last_answer = (
+        insight
+    )
+
+    st.session_state.last_context = (
+        context
+    )
+
+    st.session_state.conversation_state = (
+        update_conversation_state(
+            st.session_state.conversation_state,
+            question,
+            context,
+        )
+    )
 
 # ********************************************************
 # The following function is used to detect acknowledgement messages
@@ -598,6 +651,13 @@ if current_question:
             )
         )
 
+        continuation_result = (
+            detect_context_continuation(
+                current_question
+            )
+        )
+        print("Continuation Result: ", continuation_result)
+
         if is_acknowledgement(current_question):
 
             with st.chat_message("user"):
@@ -607,7 +667,8 @@ if current_question:
                 st.markdown("Glad that helped. 🏏")
 
 # ------------------------------------------------------------
-#       TIME FOLLOW-UP WORKFLOW
+#      ********** ROUTER STARTING FROM HERE ********
+#           TIME FOLLOW-UP WORKFLOW
 # ------------------------------------------------------------
 
         elif (
@@ -618,7 +679,7 @@ if current_question:
             rewritten_question = (
                 build_time_question(
                     time_result,
-                    st.session_state.last_context
+                    st.session_state.conversation_state
                 )
             )
 
@@ -647,9 +708,10 @@ if current_question:
                             expanded=True,
                         ) as status:
 
-                            st.write(
-                                "Time-Aware Follow-up Detected"
-                            )
+                        
+                            #st.write(
+                            #    "Time-Aware Follow-up Detected"
+                            #)
 
                             st.write(
                                 "Time Filter:",
@@ -658,7 +720,7 @@ if current_question:
 
                             st.write(
                                 "Rewritten Question:",
-                                rewritten_question
+                               rewritten_question
                             )
 
                             (
@@ -686,23 +748,12 @@ if current_question:
 
                         # Save the fresh metric result
                         # as the latest conversation context.
-                        st.session_state.last_question = (
-                            rewritten_question
-                        )
 
-                        st.session_state.last_sql = (
-                            generated_sql
-                        )
-
-                        st.session_state.last_result = (
-                            result
-                        )
-
-                        st.session_state.last_answer = (
-                            insight
-                        )
-
-                        st.session_state.last_context = (
+                        save_analysis_state(
+                            rewritten_question,
+                            generated_sql,
+                            result,
+                            insight,
                             context
                         )
 
@@ -750,11 +801,11 @@ if current_question:
             metric_result["is_metric_followup"]
             and st.session_state.last_context is not None
         ):
-
+            
             rewritten_question = (
                 build_metric_question(
                     metric_result,
-                    st.session_state.last_context
+                    st.session_state.conversation_state
                 )
             )
 
@@ -783,19 +834,19 @@ if current_question:
                             expanded=True,
                         ) as status:
 
-                            st.write(
-                                "Metric Follow-up Detected"
-                            )
+                            #st.write(
+                            #    "Metric Follow-up Detected"
+                            #)
 
                             st.write(
                                 "New metric:",
                                 metric_result["metric"]
                             )
 
-                            st.write(
-                                "Rewritten Question:",
-                                rewritten_question
-                            )
+                            #st.write(
+                            #    "Rewritten Question:",
+                            #    rewritten_question
+                            #)
 
                             (
                                 generated_sql,
@@ -822,23 +873,32 @@ if current_question:
 
                         # Save the fresh metric result
                         # as the latest conversation context.
-                        st.session_state.last_question = (
-                            rewritten_question
-                        )
+                        
+                        #st.session_state.last_question = (
+                        #    rewritten_question
+                        #)
 
-                        st.session_state.last_sql = (
-                            generated_sql
-                        )
+                        #st.session_state.last_sql = (
+                        #    generated_sql
+                        #)
 
-                        st.session_state.last_result = (
-                            result
-                        )
+                        #st.session_state.last_result = (
+                        #    result
+                        #)
 
-                        st.session_state.last_answer = (
-                            insight
-                        )
+                        #st.session_state.last_answer = (
+                        #    insight
+                        #)
 
-                        st.session_state.last_context = (
+                        #st.session_state.last_context = (
+                        #    context
+                        #)
+                        
+                        save_analysis_state(
+                            rewritten_question,
+                            generated_sql,
+                            result,
+                            insight,
                             context
                         )
 
@@ -888,7 +948,7 @@ if current_question:
             rewritten_question = (
                 build_contextual_question(
                     entity_result,
-                    st.session_state.last_context
+                    st.session_state.conversation_state
                 )
             )
 
@@ -912,26 +972,28 @@ if current_question:
 
                     try:
 
-                        st.write(
-                            "Entity Follow-up Detected"
-                        )
+                        #st.write(
+                        #    "Entity Follow-up Detected"
+                        #)
 
-                        st.write(
-                            "Rewritten Question",
-                            rewritten_question
-                        )
+                        #st.write(
+                        #    "Rewritten Question",
+                        #    rewritten_question
+                        #)
 
                         generated_sql, result, insight, context = (
                             run_ipl_analysis(
                                 rewritten_question
                             )
                         )
+                        #print("Generated Context: ", context)
 
-                        st.write("Generated SQL")
-                        st.code(
-                            generated_sql,
-                            language="sql"
-                        )
+                        #st.write("Generated SQL")
+                        #st.code(
+                        #    generated_sql,
+                        #    language="sql"
+                        #)
+
                         st.write("Returned Data")
                         st.dataframe(
                             result,
@@ -942,27 +1004,93 @@ if current_question:
                         st.markdown(
                             insight
                         )
-
-                        st.session_state.last_question = (
-                            rewritten_question
-                        )
-
-                        st.session_state.last_sql = (
-                            generated_sql
-                        )
-
-                        st.session_state.last_result = (
-                            result
-                        )
-
-                        st.session_state.last_answer = (
-                            insight
-                        )
-
-                        st.session_state.last_context = (
+                        
+                        save_analysis_state(
+                            rewritten_question,
+                            generated_sql,
+                            result,
+                            insight,
                             context
                         )
 
+                    except Exception as error:
+
+                        display_error(
+                            error
+                        )
+# -------------------------------------------------------------------
+# ROUTERS FOR CONTEXTUAL FOLLOW-UP QUESTIONS
+# -------------------------------------------------------------------
+
+        elif ( 
+            continuation_result["is_context_continuation"]
+            and st.session_state.last_context is not None
+        ):                
+            rewritten_question = (
+                build_context_continuation_question(
+                    continuation_result,
+                    st.session_state.conversation_state
+                )
+            )
+
+            with st.chat_message("user"):
+
+                st.markdown(
+                    current_question
+                )
+
+            with st.chat_message("assistant"):
+
+                if not rewritten_question:
+
+                    st.warning(
+                    "I detected a contextual follow-up, "
+                    "but the previous context is not "
+                    "sufficient to build a new question."                    
+                    )
+                else:
+
+                    try:
+
+                        #st.write(
+                        #    "Context Continuation Detected"
+                        #)
+
+                        #st.write(
+                        #    "Rewritten Question",
+                        #    rewritten_question
+                        #)
+
+                        generated_sql, result, insight, context = (
+                            run_ipl_analysis(
+                                rewritten_question
+                            )
+                        )
+
+                        #st.write("Generated SQL")
+                        #st.code(
+                        #    generated_sql,
+                        #    language="sql"
+                        #)
+
+                        st.write("Returned Data")
+                        st.dataframe(
+                            result,
+                            use_container_width=True,
+                            hide_index=True
+                        )
+
+                        st.markdown(
+                            insight
+                        )
+                        
+                        save_analysis_state(
+                            rewritten_question,
+                            generated_sql,
+                            result,
+                            insight,
+                            context
+                        )
                     except Exception as error:
 
                         display_error(
@@ -977,6 +1105,7 @@ if current_question:
             time_result["is_time_followup"]
             or metric_result["is_metric_followup"]
             or entity_result["is_entity_followup"]
+            or continuation_result["is_context_continuation"]
         ):
 
             with st.chat_message("user"):
@@ -1120,11 +1249,20 @@ if current_question:
                     answer = insight
 
                     # Save context for follow-up questions
-                    st.session_state.last_question = current_question
-                    st.session_state.last_sql = generated_sql
-                    st.session_state.last_result = result
-                    st.session_state.last_answer = answer
-                    st.session_state.last_context = context
+                    
+                    #st.session_state.last_question = current_question
+                    #st.session_state.last_sql = generated_sql
+                    #st.session_state.last_result = result
+                    #st.session_state.last_answer = answer
+                    #st.session_state.last_context = context
+                    
+                    save_analysis_state(
+                        current_question,
+                        generated_sql,
+                        result,
+                        insight,
+                        context
+                    )
 
                     answer_tab, data_tab, sql_tab = st.tabs(
                         [

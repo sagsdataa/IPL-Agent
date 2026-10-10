@@ -59,7 +59,6 @@ def classify_followup_type(
     if any(
         phrase in question
         for phrase in [
-            "why not",
             "i disagree",
             "dont agree",
             "do not agree",
@@ -165,7 +164,6 @@ Do NOT explain reasons.
             "i disagree",
             "dont agree",
             "do not agree",
-            "why not",
             "prove it",
             "justify",
             "evidence"
@@ -302,7 +300,7 @@ def generate_followup_insight(
             "The previous analytical context is unavailable."
         )
 
-    table_context = result_df.head(10).to_string(
+    table_context = result_df.head(5).to_string(
         index=False
     )
 
@@ -383,8 +381,6 @@ FOLLOW-UP-SPECIFIC INSTRUCTIONS
 
 {followup_instructions}
 
-
-
 ORIGINAL QUERY-TYPE INSTRUCTIONS
 
 {query_type_instructions}
@@ -435,17 +431,22 @@ Do not add a heading, disclaimer or closing offer.
 Return only the final response.
 """
 
-    st.write("Pre Questions:", previous_question)
-    st.write("Followup Questions:", followup_question)
-    st.write("Top Results:", top_result)
-    st.write("Query Type:", query_type)
-    st.write("table context:", table_context)
+    #st.write("Pre Questions:", previous_question)
+    #st.write("Followup Questions:", followup_question)
+    #st.write("Top Results:", top_result)
+    #st.write("Query Type:", query_type)
+    #st.write("table context:", table_context)
 
     response = client.models.generate_content(
         model=MODEL_NAME,
         contents=prompt
     )
 
+    if not response.text:
+        return (
+            "An analytical insight could not "
+            "be generated from the available data."
+        )
     return response.text.strip()
 
 
@@ -467,17 +468,17 @@ def generate_insight(
             "for this question."
         )
 
-    table_context = result_df.head(10).to_string(
+    table_context = result_df.head(5).to_string(
         index=False
     )
 
-    top_result = context["top_result"]
+    top_result = context.get("top_result")
 
-    second_result = context["second_result"]
+    second_result = context.get("second_result")
 
-    query_type = context["query_type"]
+    query_type = context.get("query_type")
 
-    row_count = context["row_count"]
+    row_count = context.get("row_count")
 
     query_type_instructions = (
         get_query_type_instructions(

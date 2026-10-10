@@ -1,29 +1,61 @@
 """
 Time Question Builder
 
-Builds a fresh analytical question using
-the previous metric and a new time filter.
+Applies a time filter while preserving
+all existing conversational filters.
 """
+
+
+METRIC_QUESTIONS = {
+    "total_runs": "Who scored the most runs",
+    "runs": "Who scored the most runs",
+    "total_wickets": "Who took the most wickets",
+    "wickets": "Who took the most wickets",
+    "strike_rate": "Who has the highest strike rate",
+    "average": "Who has the highest batting average",
+    "sixes": "Who hit the most sixes",
+    "fours": "Who hit the most fours",
+    "matches_played": "Who played the most matches",
+}
 
 
 def build_time_question(
     time_result,
-    context,
+    conversation_state,
 ):
     """
-    Build a time-filtered analytical question.
+    Apply a time filter while preserving
+    all active conversational filters.
     """
 
     if not time_result:
         return None
 
-    if not context:
+    if not conversation_state:
         return None
 
     if not time_result.get(
         "is_time_followup"
     ):
         return None
+
+    metric = conversation_state.get(
+        "metric"
+    )
+
+    base_question = (
+        METRIC_QUESTIONS.get(
+            metric
+        )
+    )
+
+    if not base_question:
+        return None
+
+    filters = conversation_state.get(
+        "filters",
+        {}
+    )
 
     time_type = time_result.get(
         "time_type"
@@ -33,86 +65,59 @@ def build_time_question(
         "time_value"
     )
 
-    metric = context.get(
-        "metric"
+    #
+    # Override time-related filters
+    #
+    season = filters.get(
+        "season"
     )
 
-    entity_column = context.get(
-        "entity_column"
+    team = filters.get(
+        "team"
     )
 
-    query_type = context.get(
-        "query_type"
+    venue = filters.get(
+        "venue"
     )
 
-    if query_type != "ranking":
-        return None
-
-    metric_questions = {
-        "total_runs": (
-            "Who scored the most runs"
-        ),
-        "runs": (
-            "Who scored the most runs"
-        ),
-        "total_wickets": (
-            "Who took the most wickets"
-        ),
-        "wickets": (
-            "Who took the most wickets"
-        ),
-        "strike_rate": (
-            "Who has the highest strike rate"
-        ),
-        "average": (
-            "Who has the highest batting average"
-        ),
-        "sixes": (
-            "Who hit the most sixes"
-        ),
-        "fours": (
-            "Who hit the most fours"
-        ),
-        "matches_played": (
-            "Who played the most matches"
-        ),
-    }
-
-    base_question = metric_questions.get(
-        metric
+    phase = filters.get(
+        "phase"
     )
-
-    if not base_question:
-
-        if entity_column == "bowler":
-            base_question = (
-                f"Who has the highest {metric}"
-            )
-        else:
-            base_question = (
-                f"Who has the highest {metric}"
-            )
 
     if time_type == "season":
+        season = time_value
 
-        return (
-            f"{base_question} "
-            f"in IPL season {time_value}?"
+    elif time_type == "playoffs":
+        phase = "playoff"
+
+    clauses = []
+
+    if season:
+        clauses.append(
+            f"in IPL season {season}"
         )
 
-    if time_type == "last_n_seasons":
-
-        return (
-            f"{base_question} "
-            f"in the last {time_value} "
-            f"IPL seasons?"
+    if team:
+        clauses.append(
+            f"for {team}"
         )
 
-    if time_type == "playoffs":
-
-        return (
-            f"{base_question} "
-            f"in IPL playoff matches?"
+    if venue:
+        clauses.append(
+            f"at {venue}"
         )
 
-    return None
+    if phase:
+        clauses.append(
+            f"during {phase}"
+        )
+
+    question = base_question
+
+    if clauses:
+        question += (
+            " "
+            + " ".join(clauses)
+        )
+
+    return f"{question}?"
