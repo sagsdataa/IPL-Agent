@@ -26,6 +26,13 @@ from agent.conversation_state import (
     create_conversation_state,
     update_conversation_state
 )
+from agent.chart_generator import (
+    should_generate_chart,
+    get_chart_config,
+    prepare_chart_dataframe
+)
+
+
 #DEBUG_MODE = False
 # ============================================================
 # PAGE CONFIGURATION
@@ -1268,13 +1275,15 @@ if current_question:
                     )
                     #st.write(st.session_state.conversation_state)
 
-                    answer_tab, data_tab, sql_tab = st.tabs(
+                    answer_tab, chart_tab,data_tab, sql_tab = st.tabs(
                         [
                             "Answer",
+                            "Chart",
                             "Data",
                             "Generated SQL",
                         ]
                     )
+#******************* answer_tab is always shown. ******************
 
                     with answer_tab:
                         st.markdown(answer)
@@ -1288,6 +1297,54 @@ if current_question:
                                 st.success(
                                     f"{len(result):,} ranked results identified."
                                 )
+
+#********** chart_tab is only shown when a result is returned. **********
+
+                    with chart_tab:
+
+                        st.subheader("📊 Visual Analysis")
+
+                        if should_generate_chart(result):
+
+                            chart_config = get_chart_config(result)
+
+                            st.write("chart config", chart_config)
+                            st.write("columns",result.columns.tolist())
+                            st.write(result.head())
+
+                            chart_df = prepare_chart_dataframe(
+                                result,
+                                chart_config
+                            )
+
+                            if chart_config["type"] == "line":
+
+                                st.line_chart(
+                                    chart_df,
+                                    width="stretch"
+                                )
+
+                            elif chart_config["type"] == "bar":
+
+                                st.bar_chart(
+                                    chart_df,
+                                    width="stretch"
+                                )
+
+                            else:
+
+                                st.dataframe(
+                                    chart_df,
+                                    width="stretch"
+                                )
+
+                        else:
+
+                            st.info(
+                                "Not enough data available to generate a chart."
+                            )
+
+# ********** Data and SQL tabs are only shown when a result is returned. **********
 
                     with data_tab:
                         if result is None or result.empty:

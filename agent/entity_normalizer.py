@@ -2,26 +2,19 @@
 Entity Normalizer
 
 Normalizes IPL player names,
-team names and venue names.
+team names and venue names
+to the names stored in the database.
 """
 
 from difflib import get_close_matches
 
 
-TEAMS = [
-    "Chennai Super Kings",
-    "Mumbai Indians",
-    "Sunrisers Hyderabad",
-    "Royal Challengers Bangalore",
-    "Kolkata Knight Riders",
-    "Rajasthan Royals",
-    "Delhi Capitals",
-    "Punjab Kings",
-    "Lucknow Super Giants",
-    "Gujarat Titans",
-]
+# --------------------------------------------------
+# Teams
+# --------------------------------------------------
 
 TEAM_ALIASES = {
+
     "csk": "Chennai Super Kings",
     "mi": "Mumbai Indians",
     "srh": "Sunrisers Hyderabad",
@@ -34,16 +27,57 @@ TEAM_ALIASES = {
     "gt": "Gujarat Titans",
 }
 
-PLAYERS = [
-    "Virat Kohli",
-    "Rohit Sharma",
-    "MS Dhoni",
-    "KL Rahul",
-    "Jasprit Bumrah",
-    "Abhishek Sharma",
-    "Travis Head",
-    "David Warner",
-]
+
+# --------------------------------------------------
+# Players
+# Normalize to database names
+# --------------------------------------------------
+
+PLAYER_ALIASES = {
+
+    # Bumrah
+
+    "bumrah": "JJ Bumrah",
+    "jj bumrah": "JJ Bumrah",
+    "j bumrah": "JJ Bumrah",
+    "jasprit bumrah": "JJ Bumrah",
+
+    # Kohli
+
+    "kohli": "V Kohli",
+    "virat": "V Kohli",
+    "virat kohli": "V Kohli",
+
+    # Rohit
+
+    "rohit": "RG Sharma",
+    "rohit sharma": "RG Sharma",
+
+    # Dhoni
+
+    "dhoni": "MS Dhoni",
+    "ms dhoni": "MS Dhoni",
+
+    # Rahul
+
+    "rahul": "KL Rahul",
+    "kl rahul": "KL Rahul",
+
+    # Head
+
+    "travis head": "TM Head",
+    "head": "TM Head",
+
+    # Abhishek
+
+    "abhishek": "Abhishek Sharma",
+    "abhishek sharma": "Abhishek Sharma",
+}
+
+
+# --------------------------------------------------
+# Venues
+# --------------------------------------------------
 
 VENUES = [
     "Wankhede Stadium",
@@ -53,42 +87,58 @@ VENUES = [
 ]
 
 
-def normalize_entity(
-    text: str
-):
+# --------------------------------------------------
+# Normalize Entity
+# --------------------------------------------------
+
+def normalize_entity(text: str):
+
     """
-    Return the best matching IPL entity.
+    Convert user entity
+    to the database entity.
     """
 
     if not text:
         return text
 
-    cleaned = text.strip()
+    cleaned = text.strip().lower()
 
-    #
-    # Team aliases
-    #
-    alias = TEAM_ALIASES.get(
-        cleaned.lower()
-    )
+    # Team alias
 
-    if alias:
-        return alias
+    if cleaned in TEAM_ALIASES:
+        return TEAM_ALIASES[cleaned]
 
-    candidates = (
-        TEAMS
-        + PLAYERS
-        + VENUES
-    )
+    # Player alias
 
-    matches = get_close_matches(
+    if cleaned in PLAYER_ALIASES:
+        return PLAYER_ALIASES[cleaned]
+
+    # Fuzzy match teams
+
+    team_matches = get_close_matches(
         cleaned,
-        candidates,
+        TEAM_ALIASES.keys(),
         n=1,
-        cutoff=0.7,
+        cutoff=0.7
     )
 
-    if matches:
-        return matches[0]
+    if team_matches:
+        return TEAM_ALIASES[
+            team_matches[0]
+        ]
 
-    return text
+    # Fuzzy match players
+
+    player_matches = get_close_matches(
+        cleaned,
+        PLAYER_ALIASES.keys(),
+        n=1,
+        cutoff=0.7
+    )
+
+    if player_matches:
+        return PLAYER_ALIASES[
+            player_matches[0]
+        ]
+
+    return text.strip()
