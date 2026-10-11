@@ -113,8 +113,7 @@ def detect_team(
     question: str
 ):
     """
-    Lightweight team extraction.
-    Replace later with entity normalization.
+    Detect IPL team from question.
     """
 
     if not question:
@@ -123,6 +122,7 @@ def detect_team(
     q = question.lower()
 
     TEAM_MAP = {
+        # aliases
         "srh": "Sunrisers Hyderabad",
         "csk": "Chennai Super Kings",
         "mi": "Mumbai Indians",
@@ -131,15 +131,31 @@ def detect_team(
         "rr": "Rajasthan Royals",
         "dc": "Delhi Capitals",
         "pbks": "Punjab Kings",
+
+        # full names
+        "sunrisers hyderabad": "Sunrisers Hyderabad",
+        "chennai super kings": "Chennai Super Kings",
+        "mumbai indians": "Mumbai Indians",
+        "royal challengers bangalore": "Royal Challengers Bangalore",
+        "kolkata knight riders": "Kolkata Knight Riders",
+        "rajasthan royals": "Rajasthan Royals",
+        "delhi capitals": "Delhi Capitals",
+        "punjab kings": "Punjab Kings",
     }
 
-    for alias, team in TEAM_MAP.items():
+    #
+    # Prefer longest match first
+    #
+    for key in sorted(
+        TEAM_MAP,
+        key=len,
+        reverse=True
+    ):
 
-        if alias in q:
-            return team
+        if key in q:
+            return TEAM_MAP[key]
 
     return None
-
 
 def detect_venue(
     question: str

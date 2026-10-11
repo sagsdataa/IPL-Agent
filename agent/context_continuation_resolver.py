@@ -158,6 +158,21 @@ def detect_context_continuation(
             "not_standalone"
         )
 
+    # ----------------------------------
+    # Short noun-phrase fragment
+    # ----------------------------------
+
+    if (
+        1 <= len(words) <= 3
+        and words[0] not in QUESTION_WORDS
+        and not analytical_terms_found
+    ):
+        score += 0.10
+
+        reasons.append(
+        "short_noun_phrase"
+        )
+
     confidence = min(
         score,
         1.0

@@ -236,6 +236,7 @@ def save_analysis_state(
     Save the latest successful analytical result
     and update accumulated conversation state.
     """
+    #st.write(st.session_state.conversation_state)
 
     st.session_state.last_question = (
         question
@@ -326,10 +327,6 @@ def run_ipl_analysis(question):
         query_result
     )
 
-    #print("############################")
-    #print(context)
-    #print("############################\n")
-
     validate_context(
         context
     )
@@ -348,10 +345,10 @@ def run_ipl_analysis(question):
                 check_hallucination(insight, context)
             )
 
-            print(
-                "Hallucination check result: ",
-                hallucination_result
-            )
+            #print(
+            #    "Hallucination check result: ",
+            #    hallucination_result
+            #)
 
         except Exception as error:
 
@@ -656,7 +653,7 @@ if current_question:
                 current_question
             )
         )
-        print("Continuation Result: ", continuation_result)
+        #st.write("Continuation Result: ", continuation_result)
 
         if is_acknowledgement(current_question):
 
@@ -718,10 +715,10 @@ if current_question:
                                 time_result
                             )
 
-                            st.write(
-                                "Rewritten Question:",
-                               rewritten_question
-                            )
+                            #st.write(
+                            #    "Rewritten Question:",
+                            #   rewritten_question
+                            #)
 
                             (
                                 generated_sql,
@@ -757,6 +754,8 @@ if current_question:
                             context
                         )
 
+                        #st.write(st.session_state.conversation_state)
+
                         with st.expander(
                             "View supporting data",
                             expanded=False,
@@ -764,7 +763,7 @@ if current_question:
 
                             st.dataframe(
                                 result,
-                                use_container_width=True,
+                                width="stretch",
                                 hide_index=True,
                             )
 
@@ -838,10 +837,10 @@ if current_question:
                             #    "Metric Follow-up Detected"
                             #)
 
-                            st.write(
-                                "New metric:",
-                                metric_result["metric"]
-                            )
+                            #st.write(
+                            #    "New metric:",
+                            #    metric_result["metric"]
+                            #)
 
                             #st.write(
                             #    "Rewritten Question:",
@@ -901,6 +900,7 @@ if current_question:
                             insight,
                             context
                         )
+                        #st.write(st.session_state.conversation_state)
 
                         with st.expander(
                             "View supporting data",
@@ -909,7 +909,7 @@ if current_question:
 
                             st.dataframe(
                                 result,
-                                use_container_width=True,
+                                width="stretch",
                                 hide_index=True,
                             )
 
@@ -994,10 +994,10 @@ if current_question:
                         #    language="sql"
                         #)
 
-                        st.write("Returned Data")
+                        st.write("Analytical Data")
                         st.dataframe(
                             result,
-                            use_container_width=True,
+                            width="stretch",
                             hide_index=True
                         )
 
@@ -1012,6 +1012,7 @@ if current_question:
                             insight,
                             context
                         )
+                        #st.write(st.session_state.conversation_state)
 
                     except Exception as error:
 
@@ -1073,10 +1074,10 @@ if current_question:
                         #    language="sql"
                         #)
 
-                        st.write("Returned Data")
+                        st.write("Analytical Data")
                         st.dataframe(
                             result,
-                            use_container_width=True,
+                            width="stretch",
                             hide_index=True
                         )
 
@@ -1091,6 +1092,8 @@ if current_question:
                             insight,
                             context
                         )
+                        #st.write(st.session_state.conversation_state)
+
                     except Exception as error:
 
                         display_error(
@@ -1173,7 +1176,7 @@ if current_question:
                             ):
                                 st.dataframe(
                                     st.session_state.last_result,
-                                    use_container_width=True,
+                                    width="stretch",
                                     hide_index=True,
                                 )
 
@@ -1263,6 +1266,7 @@ if current_question:
                         insight,
                         context
                     )
+                    #st.write(st.session_state.conversation_state)
 
                     answer_tab, data_tab, sql_tab = st.tabs(
                         [
@@ -1294,7 +1298,7 @@ if current_question:
                         else:
                             st.dataframe(
                                 result,
-                                use_container_width=True,
+                                width="stretch",
                                 hide_index=True,
                             )
 
@@ -1307,7 +1311,7 @@ if current_question:
                                 data=csv_data,
                                 file_name="ipl_intelligence_results.csv",
                                 mime="text/csv",
-                                use_container_width=True,
+                                width="stretch",
                             )
 
                     with sql_tab:

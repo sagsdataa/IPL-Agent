@@ -20,8 +20,12 @@ Your response must:
 4. If a second result is provided, compare the leader with
    the second-ranked entity using exact supplied values.
 5. Do not claim overall superiority beyond the supplied metric.
-6. Do not infer consistency, longevity, dominance or quality
+6. Do not mention missing second results.
+7. Only compare against second place when second-place data is explicitly required for the explanation.
+8. Do not infer consistency, longevity, dominance or quality
    unless those factors are explicitly present in the data.
+9. Mention the metric value.
+10. Mention the top result.
 
 Recommended structure:
 
