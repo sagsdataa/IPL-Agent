@@ -16,6 +16,7 @@ client = genai.Client(
 # SQL GENERATOR
 # --------------------------------------------------
 
+
 def generate_sql(question: str) -> str:
     """
     Convert a natural-language IPL question into
@@ -487,7 +488,7 @@ PLAYER NAME MAPPING RULES:
 Virat Kohli -> V Kohli
 MS Dhoni -> MS Dhoni
 Rohit Sharma -> RG Sharma
-Jasprit Bumrah -> J Bumrah
+Jasprit Bumrah -> JJ Bumrah
 AB de Villiers -> AB de Villiers
 
 ==================================================
@@ -636,6 +637,11 @@ USER QUESTION
     )
 
     sql = response.text.strip()
+
+    #print("=" * 20)
+    #print("question", question)
+    #print("=" * 20)
+    #print(sql)
 
     # Remove code fences if Gemini adds them despite the instruction.
     sql = sql.replace("```sql", "")

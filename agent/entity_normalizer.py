@@ -41,7 +41,7 @@ PLAYER_ALIASES = {
     "jj bumrah": "JJ Bumrah",
     "j bumrah": "JJ Bumrah",
     "jasprit bumrah": "JJ Bumrah",
-
+    
     # Kohli
 
     "kohli": "V Kohli",

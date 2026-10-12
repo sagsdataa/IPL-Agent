@@ -31,6 +31,10 @@ from agent.chart_generator import (
     get_chart_config,
     prepare_chart_dataframe
 )
+from agent.plotly_chart_renderer import (
+    render_bar_chart,
+    render_line_chart
+)
 
 
 #DEBUG_MODE = False
@@ -1319,17 +1323,30 @@ if current_question:
 
                             if chart_config["type"] == "line":
 
-                                st.line_chart(
-                                    chart_df,
-                                    width="stretch"
+                                fig = render_line_chart(chart_df)
+
+                                st.plotly_chart(
+                                    fig,
+                                    use_container_width= True
                                 )
+                                #st.line_chart(
+                                #    chart_df,
+                                #    width="stretch"
+                                #)
 
                             elif chart_config["type"] == "bar":
 
-                                st.bar_chart(
-                                    chart_df,
-                                    width="stretch"
+                                fig = render_bar_chart(chart_df)
+
+                                st.plotly_chart(
+                                    fig,
+                                    use_container_width= True
                                 )
+
+                                #st.bar_chart(
+                                #    chart_df,
+                                #    width="stretch"
+                                #)
 
                             else:
 
