@@ -35,6 +35,9 @@ from agent.plotly_chart_renderer import (
     render_bar_chart,
     render_line_chart
 )
+from guardrails.relevance_validator import (
+    is_ipl_relevant
+)
 
 
 #DEBUG_MODE = False
@@ -324,6 +327,8 @@ def run_ipl_analysis(question):
     execute it through the DuckDB tool and return
     the SQL and generate an insight when required.
     """
+
+    #validate_relevance(question)
 
     generated_sql = generate_sql(question)
 
@@ -640,6 +645,23 @@ if current_question:
     current_question = clean_question(current_question)
 
     if current_question:
+
+        #
+        # Relevance Check
+        #
+
+        if not is_ipl_relevant(current_question):
+
+            with st.chat_message("user"):
+                st.markdown(current_question)
+
+            with st.chat_message("assistant"):
+                st.warning(
+                    "I couldn't identify any IPL-related concept in the question. "
+                    "Please ask about IPL players, teams, seasons, venues, matches, or statistics."
+                )
+
+            st.stop()
 
         entity_result = (
             detect_entity_followup(
