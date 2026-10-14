@@ -13,7 +13,8 @@ def detect_ontology_elements(question: str):
         "phase": False,
         "concept": False,
         "role": False,
-        "season": False
+        "season": False,
+        "question": False
     }
 
     #
@@ -49,7 +50,7 @@ def detect_ontology_elements(question: str):
             detected["concept"] = True
             break
 
-    for word in IPL_ONTOLOGY["questions_words"]:
+    for word in IPL_ONTOLOGY["question_words"]:
 
         if word in question:
 

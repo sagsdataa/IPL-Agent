@@ -54,5 +54,17 @@ IPL_ONTOLOGY = {
         "fielder",
         "captain",
         "team"
+    ],
+    "question_words": [
+        
+        "who",
+        "which",
+        "what",
+        "when",
+        "where",
+        "best",
+        "top",
+        "highest",
+        "most"
     ]
 }
