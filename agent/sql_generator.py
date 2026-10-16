@@ -258,6 +258,13 @@ WHERE TRY_CAST(SUBSTRING(season, 1, 4) AS INTEGER)
 
 Use the same rule for both matches.season and deliveries.season.
 
+For question using "from YEAR onward", "since YEAR",
+or "YEAR" and later", use:
+
+TRY_CAST(SUBSTRING(season,1,4) AS INTEGER) >= YEAR
+
+Do not convert an onwardrange into an equality filter.
+
 ==================================================
 METRIC-SELECTION RULES
 ==================================================
@@ -492,6 +499,142 @@ Jasprit Bumrah -> JJ Bumrah
 AB de Villiers -> AB de Villiers
 
 ==================================================
+SUCCESSFUL CHASE RULES
+==================================================
+A successful chase is one match won by the batting team
+while that team was chasing.
+
+Never sum batting_team_won directly over delivery rows.
+
+When using deliveries, count distinct matches:
+
+COUNT(
+    DISTINCT CASE
+        WHEN is_chasing = 1
+         AND batting_team_won = 1
+        THEN match_id
+    END
+) AS successful_chases
+
+Group by batting_team.
+
+A match must contribute no more than one successful chase
+to a team's count.
+
+==================================================
+STRIKE RATE RANKING ELIGIBILITY
+==================================================
+
+For highest strike rate rankings:
+
+MUST include only batters who faced
+at least 100 legal balls.
+
+The HAVING clause is mandatory.
+
+Example:
+
+HAVING SUM(
+    CASE
+        WHEN legal_ball = 1
+        AND wides = 0
+        THEN 1
+        ELSE 0
+    END
+) >= 100
+
+==================================================
+ECONOMY RATE RANKING ELIGIBILITY
+==================================================
+For economy-rate ranking:
+
+Must include only bowlers with at least 120 legal deliveries.
+
+The HAVING clause is mandatory.
+
+==================================================
+TEAM WIN PERCENTAGE RULES
+==================================================
+
+Only include valid IPL teams.
+
+Exclude NULL, empty strings, and 'No Result'
+from team names and winners.
+
+Team matches played:
+Count distinct match_id where the team appears as team1 or team2.
+
+Team wins:
+Count distinct match_id where winner equals the team.
+
+Win percentage:
+team wins * 100.0 / matches played
+
+Use NULLIF(matches_played, 0).
+
+Never divide wins by delivery rows.
+Never return infinite values.
+
+==================================================
+VALID TEAM FILTERING
+==================================================
+
+Exclude:
+
+NULL
+''
+'No Result'
+
+from all team rankings.
+
+Use:
+
+WHERE team IS NOT NULL
+AND TRIM(team) <> ''
+AND LOWER(TRIM(team)) <> 'no result'
+
+==================================================
+IPL SEASON WINNER RULES
+==================================================
+
+Questions such as:
+
+- IPL 2020 winner
+- Who won IPL 2020?
+- Winner of IPL 2020
+- Which team won IPL 2020?
+
+refer to the team that won the final match
+of that IPL season.
+
+Use the matches table.
+
+Filter season using:
+
+TRY_CAST(
+    SUBSTRING(season,1,4)
+    AS INTEGER
+)
+
+Return:
+
+winner
+
+Example:
+
+SELECT
+    winner
+FROM matches
+WHERE
+TRY_CAST(
+    SUBSTRING(season,1,4)
+    AS INTEGER
+) = 2020
+AND LOWER(TRIM(match_type)) = 'final'
+LIMIT 1;
+
+
+==================================================
 RANKING RULES
 ==================================================
 
@@ -623,6 +766,50 @@ WHERE winner IS NOT NULL
 GROUP BY winner
 ORDER BY total_wins DESC
 LIMIT 1;
+
+==================================================
+FOLLOW-UP QUESTION RULES
+==================================================
+
+Questions may already be rewritten by
+a follow-up processor.
+
+Examples:
+
+Show strike rate for V Kohli
+
+Top wicket takers for Chennai Super Kings
+
+Who scored the most runs in IPL season 2020
+
+Bumrah wickets by season from IPL season 2020 onward
+
+Treat rewritten questions exactly like
+normal analytical questions.
+
+Do not assume the question is incomplete.
+
+Preserve all entities already present
+in the rewritten question.
+
+==================================================
+ENTITY PRESERVATION RULES
+==================================================
+
+If a player, team, venue, season,
+or bowling/batting entity is explicitly
+present in the question:
+
+Examples:
+
+- Show strike rate for V Kohli
+- Economy rate for JJ Bumrah
+- Wickets for Chennai Super Kings
+
+Use the supplied entity.
+
+Do not replace the supplied entity
+with a global ranking.
 
 ==================================================
 USER QUESTION

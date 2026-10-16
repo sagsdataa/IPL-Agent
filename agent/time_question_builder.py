@@ -1,123 +1,157 @@
 """
 Time Question Builder
 
-Applies a time filter while preserving
-all existing conversational filters.
+Applies a new season or year range to the
+previous analytical question.
 """
 
 
-METRIC_QUESTIONS = {
-    "total_runs": "Who scored the most runs",
-    "runs": "Who scored the most runs",
-    "total_wickets": "Who took the most wickets",
-    "wickets": "Who took the most wickets",
-    "strike_rate": "Who has the highest strike rate",
-    "average": "Who has the highest batting average",
-    "sixes": "Who hit the most sixes",
-    "fours": "Who hit the most fours",
-    "matches_played": "Who played the most matches",
-}
+def _get_previous_question(
+    conversation_state
+):
+
+    if not conversation_state:
+        return None
+
+    candidate_keys = (
+        "last_question",
+        "question",
+        "previous_question",
+        "current_question",
+        "original_question",
+    )
+
+    for key in candidate_keys:
+
+        value = conversation_state.get(
+            key
+        )
+
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+
+    return None
+
+
+def _remove_existing_time_phrase(
+    question: str
+):
+    """
+    Keep this conservative.
+
+    For now, the SQL generator receives both the
+    prior analytical question and the new explicit
+    time instruction.
+    """
+
+    return question.strip().rstrip(
+        "?.!"
+    )
 
 
 def build_time_question(
     time_result,
     conversation_state,
 ):
-    """
-    Apply a time filter while preserving
-    all active conversational filters.
-    """
 
     if not time_result:
         return None
 
-    if not conversation_state:
-        return None
-
     if not time_result.get(
-        "is_time_followup"
+        "is_time_followup",
+        False,
     ):
         return None
 
-    metric = conversation_state.get(
-        "metric"
-    )
-
-    base_question = (
-        METRIC_QUESTIONS.get(
-            metric
+    previous_question = (
+        _get_previous_question(
+            conversation_state
         )
     )
 
-    if not base_question:
+    print("=" * 30)
+    print("TIME BUILDER")
+    print("conversation state", conversation_state)
+    print("previous question", previous_question)
+    print("=" * 30)
+
+    if not previous_question:
+        print(
+            "time builder failed: "
+            "No previous question found"
+        )
+
         return None
 
-    filters = conversation_state.get(
-        "filters",
-        {}
+    previous_question = (
+        _remove_existing_time_phrase(
+            previous_question
+        )
     )
 
     time_type = time_result.get(
         "time_type"
     )
 
-    time_value = time_result.get(
-        "time_value"
-    )
-
-    #
-    # Override time-related filters
-    #
-    season = filters.get(
-        "season"
-    )
-
-    team = filters.get(
-        "team"
-    )
-
-    venue = filters.get(
-        "venue"
-    )
-
-    phase = filters.get(
-        "phase"
-    )
-
     if time_type == "season":
-        season = time_value
 
-    elif time_type == "playoffs":
-        phase = "playoff"
-
-    clauses = []
-
-    if season:
-        clauses.append(
-            f"in IPL season {season}"
+        season = time_result.get(
+            "time_value"
         )
 
-    if team:
-        clauses.append(
-            f"for {team}"
+        if not season:
+            return None
+
+        return (
+            f"{previous_question} "
+            f"in IPL season {season}?"
         )
 
-    if venue:
-        clauses.append(
-            f"at {venue}"
+    if time_type == "start_year":
+
+        start_year = time_result.get(
+            "start_year"
         )
 
-    if phase:
-        clauses.append(
-            f"during {phase}"
+        if not start_year:
+            return None
+
+        return (
+            f"{previous_question} "
+            f"from IPL season {start_year} onward?"
         )
 
-    question = base_question
+    if time_type == "end_year":
 
-    if clauses:
-        question += (
-            " "
-            + " ".join(clauses)
+        end_year = time_result.get(
+            "end_year"
         )
 
-    return f"{question}?"
+        if not end_year:
+            return None
+
+        return (
+            f"{previous_question} "
+            f"through IPL season {end_year}?"
+        )
+
+    if time_type == "range":
+
+        start_year = time_result.get(
+            "start_year"
+        )
+
+        end_year = time_result.get(
+            "end_year"
+        )
+
+        if not start_year or not end_year:
+            return None
+
+        return (
+            f"{previous_question} "
+            f"from IPL season {start_year} "
+            f"through IPL season {end_year}?"
+        )
+
+    return None

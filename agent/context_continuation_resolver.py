@@ -71,7 +71,7 @@ def detect_context_continuation(
         return {
             "is_context_continuation": False,
             "confidence": 0.0,
-            "fragment": None,
+            "fragment": question,
             "reasons": []
         }
 

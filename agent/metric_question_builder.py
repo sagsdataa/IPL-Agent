@@ -1,149 +1,111 @@
 """
 Metric Question Builder
 
-Changes the analytical metric while preserving
-all active conversational filters.
+Changes the metric while preserving as much
+previous analytical context as possible.
 """
 
-METRIC_QUESTIONS = {
-    "strike_rate": "Who has the highest strike rate",
-    "average": "Who has the highest batting average",
-    "sixes": "Who hit the most sixes",
-    "fours": "Who hit the most fours",
-    "wickets": "Who took the most wickets",
-    "total_wickets": "Who took the most wickets",
-    "economy": "Who has the best economy rate",
-    "matches_played": "Who played the most matches",
-    "total_runs": "Who scored the most runs",
-    "runs": "Who scored the most runs",
-}
+
+def _get_state_value(
+    state,
+    keys,
+):
+
+    for key in keys:
+
+        value = state.get(key)
+
+        if value:
+            return value
+
+    return None
 
 
 def build_metric_question(
     metric_result,
     conversation_state,
 ):
-    """
-    Build a fresh analytical question using
-    the requested metric while preserving
-    conversational filters.
-
-    Example
-
-    Conversation State:
-
-    {
-        "query_type": "ranking",
-        "entity_type": "player",
-        "filters": {
-            "season": "2019",
-            "team": "Sunrisers Hyderabad",
-            "venue": "Wankhede Stadium"
-        }
-    }
-
-    Follow-up:
-
-        What about strike rate?
-
-    Output:
-
-        Who has the highest strike rate
-        in IPL season 2019
-        for Sunrisers Hyderabad
-        at Wankhede Stadium?
-    """
 
     if not metric_result:
         return None
 
-    if not conversation_state:
-        return None
-
-    if not metric_result.get(
-        "is_metric_followup"
-    ):
-        return None
-
-    new_metric = metric_result.get(
+    metric = metric_result.get(
         "metric"
     )
 
-    query_type = conversation_state.get(
-        "query_type"
-    )
-
-    entity_type = conversation_state.get(
-        "entity_type"
-    )
-
-    if query_type not in {
-        "ranking",
-        "comparison",
-    }:
+    if not metric:
         return None
 
-    if entity_type != "player":
-        return None
+    state = conversation_state or {}
 
-    base_question = (
-        METRIC_QUESTIONS.get(
-            new_metric
+    player = _get_state_value(
+        state,
+        (
+            "player",
+            "batter",
+            "bowler",
+            "primary_entity",
+            "entity",
+        ),
+    )
+
+    team = _get_state_value(
+        state,
+        (
+            "team",
+            "batting_team",
+            "bowling_team",
+        ),
+    )
+
+    season = _get_state_value(
+        state,
+        (
+            "season",
+            "year",
+            "time_value",
+        ),
+    )
+
+    previous_question = _get_state_value(
+        state,
+        (
+            "last_question",
+            "question",
+            "previous_question",
+        ),
+    )
+
+    if player:
+
+        rewritten = (
+            f"Show the {metric} for {player}"
         )
-    )
 
-    if not base_question:
+    elif team:
+
+        rewritten = (
+            f"Show the {metric} for {team}"
+        )
+
+    elif previous_question:
+
+        rewritten = (
+            f"{previous_question.rstrip('?.!')}. "
+            f"Now show the {metric} for the same "
+            f"player, team, or result entity"
+        )
+
+    else:
+
         return None
-
-    filters = conversation_state.get(
-        "filters",
-        {}
-    )
-
-    clauses = []
-
-    season = filters.get(
-        "season"
-    )
-
-    team = filters.get(
-        "team"
-    )
-
-    venue = filters.get(
-        "venue"
-    )
-
-    phase = filters.get(
-        "phase"
-    )
 
     if season:
-        clauses.append(
-            f"in IPL season {season}"
+
+        rewritten += (
+            f" in IPL season {season}"
         )
 
-    if team:
-        clauses.append(
-            f"for {team}"
-        )
-
-    if venue:
-        clauses.append(
-            f"at {venue}"
-        )
-
-    if phase:
-        clauses.append(
-            f"during {phase}"
-        )
-
-    question = base_question
-
-    if clauses:
-        question += (
-            " "
-            + " ".join(clauses)
-        )
-
-    return f"{question}?"
+    return rewritten.rstrip(
+        "?.!"
+    ) + "?"

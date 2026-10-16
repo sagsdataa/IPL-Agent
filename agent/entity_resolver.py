@@ -1,145 +1,90 @@
-from agent.entity_normalizer import normalize_entity
-
 """
-Entity Resolver
+Entity Follow-Up Resolver
 
-Detect entity-aware follow-up questions.
+Examples:
+
+For CSK?
+For MI?
+What about Bumrah?
+How about Kohli?
 """
 
 import re
 
-
-COMMON_CRICKET_TERMS = {
-    "bowler",
-    "bowlers",
-    "batter",
-    "batters",
-    "batsman",
-    "batsmen",
-    "player",
-    "players",
-    "captain",
-    "captains",
-    "team",
-    "teams",
-    "venue",
-    "venues",
-    "stadium",
-    "ground",
-    "season",
-    "seasons",
-    "match",
-    "matches",
-    "playoff",
-    "playoffs",
-    "final",
-    "finals",
-}
+from agent.entity_normalizer import (
+    normalize_entity,
+)
 
 
-def detect_entity_followup(
-    question: str
-):
-    """
-    Detect whether a follow-up introduces
-    a new entity.
+ENTITY_FOLLOWUP_PREFIXES = (
+    "for ",
+    "what about ",
+    "how about ",
+    "and ",
+)
 
-    Examples:
-        Why not Bumrah?
-        What about Dhoni?
-        How about Rohit Sharma?
-        Compare with Kohli?
-    """
 
-    if not question:
-
-        return {
-            "is_entity_followup": False,
-            "entity": None,
-            "intent": None,
-        }
-
-    question_clean = (
-        question.strip()
-        .replace("?", "")
-    )
-
-    question_lower = (
-        question_clean.lower()
-    )
-
-    patterns = [
-
-        r"why not (.+)",
-
-        r"what about (.+)",
-
-        r"how about (.+)",
-
-        r"compare with (.+)",
-
-        r"versus (.+)",
-
-        r"vs (.+)",
-    ]
-
-    for pattern in patterns:
-
-        match = re.search(
-            pattern,
-            question_lower
-        )
-
-        if not match:
-            continue
-
-        entity = (
-            match.group(1)
-            .strip()
-        )
-
-        #
-        # Reject years
-        #
-        if re.fullmatch(
-            r"20\d{2}",
-            entity
-        ):
-
-            return {
-                "is_entity_followup": False,
-                "entity": None,
-                "intent": None,
-            }
-
-        #
-        # Reject generic cricket concepts
-        #
-        if entity in COMMON_CRICKET_TERMS:
-
-            return {
-                "is_entity_followup": False,
-                "entity": None,
-                "intent": None,
-            }
-
-        #
-        # Normalize entity
-        #
-        normalized_entity = (
-            normalize_entity(
-                entity
-            )
-        )
-
-        return {
-            "is_entity_followup": True,
-            "entity": normalized_entity,
-            "intent": "entity_followup",
-        }
+def _empty_result():
 
     return {
         "is_entity_followup": False,
         "entity": None,
         "intent": None,
+    }
+
+
+def detect_entity_followup(question: str):
+
+    if not question or not question.strip():
+        return _empty_result()
+
+    cleaned = (
+        question
+        .strip()
+        .lower()
+    )
+
+    cleaned = re.sub(
+        r"[?.,!]+$",
+        "",
+        cleaned
+    ).strip()
+
+    matched_prefix = None
+    entity_text = None
+
+    for prefix in ENTITY_FOLLOWUP_PREFIXES:
+
+        if cleaned.startswith(prefix):
+
+            matched_prefix = prefix.strip()
+
+            entity_text = (
+                cleaned[len(prefix):]
+                .strip()
+            )
+
+            break
+
+    if not entity_text:
+        return _empty_result()
+
+    normalized_entity = normalize_entity(
+        entity_text
+    )
+
+    print(
+        "ENTITY FOLLOWUP:",
+        entity_text,
+        "→",
+        normalized_entity
+    )
+
+    if not normalized_entity:
+        return _empty_result()
+
+    return {
+        "is_entity_followup": True,
+        "entity": normalized_entity,
+        "intent": matched_prefix,
     }

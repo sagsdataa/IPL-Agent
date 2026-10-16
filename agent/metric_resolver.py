@@ -1,80 +1,94 @@
-
 """
 Metric Follow-Up Resolver
 
-Detects when a user changes the metric
-within an existing conversation.
+Detects short metric-only follow-ups such as:
+
+- Strike rate?
+- Economy?
+- Average?
+- Wickets?
+- Sixes?
 """
 
-METRICS = {
-    "strike rate": "strike_rate",
-    "batting average": "average",
-    "average": "average",
-    "sixes": "sixes",
-    "fours": "fours",
+import re
+
+
+METRIC_ALIASES = {
+    "run": "runs",
+    "runs": "runs",
+    "total runs": "runs",
+
+    "wicket": "wickets",
     "wickets": "wickets",
-    "economy rate": "economy",
-    "economy": "economy",
-    "matches played": "matches_played",
-    "matches": "matches_played",
+    "total wickets": "wickets",
+
+    "strike rate": "strike rate",
+    "batting strike rate": "strike rate",
+
+    "economy": "economy rate",
+    "economy rate": "economy rate",
+    "bowling economy": "economy rate",
+
+    "average": "average",
+    "batting average": "batting average",
+    "bowling average": "bowling average",
+
+    "six": "sixes",
+    "sixes": "sixes",
+
+    "four": "fours",
+    "fours": "fours",
+
+    "dot ball": "dot balls",
+    "dot balls": "dot balls",
+
+    "catch": "catches",
+    "catches": "catches",
+
+    "win percentage": "win percentage",
+    "wins": "wins",
 }
 
 
-FOLLOWUP_PATTERNS = [
-    "what about",
-    "how about",
-    "what if",
-    "instead",
-    "only",
-]
-
-
-def detect_metric_followup(
-    question: str
-):
-    """
-    Detect a metric-aware follow-up.
-
-    A metric keyword alone is not enough.
-    The message must also contain follow-up wording.
-    """
-
-    if not question:
-        return {
-            "is_metric_followup": False,
-            "metric": None,
-        }
-
-    normalized_question = (
-        question
-        .strip()
-        .lower()
-        .replace("?", "")
-        .replace(".", "")
-        .replace("!", "")
-        .replace(",", "")
-    )
-
-    has_followup_pattern = any(
-        pattern in normalized_question
-        for pattern in FOLLOWUP_PATTERNS
-    )
-
-    if not has_followup_pattern:
-        return {
-            "is_metric_followup": False,
-            "metric": None,
-        }
-
-    for metric_text, metric_name in METRICS.items():
-
-        if metric_text in normalized_question:
-            return {
-                "is_metric_followup": True,
-                "metric": metric_name,
-            }
+def _empty_result():
 
     return {
         "is_metric_followup": False,
         "metric": None,
+    }
+
+
+def detect_metric_followup(question: str):
+
+    if not question or not question.strip():
+        return _empty_result()
+
+    cleaned = question.lower().strip()
+
+    cleaned = re.sub(
+        r"[?.,!]+$",
+        "",
+        cleaned,
+    ).strip()
+
+    # Only treat short metric phrases as follow-ups.
+    # A complete question such as
+    # "Who has the highest strike rate?"
+    # must remain a standalone analytical question.
+
+    words = cleaned.split()
+
+    if len(words) > 4:
+        return _empty_result()
+
+    metric = METRIC_ALIASES.get(
+        cleaned
+    )
+
+    if not metric:
+        return _empty_result()
+
+    return {
+        "is_metric_followup": True,
+        "metric": metric,
     }
