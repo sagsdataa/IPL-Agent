@@ -47,10 +47,19 @@ STANDALONE_ANALYTICAL_WORDS = {
     "lowest",
     "best",
     "most",
+    "team",
     "player",
     "venue"
 }
 
+ANALYTICAL_PHRASES = {
+    "who won",
+    "winner of",
+    "who scored",
+    "who took",
+    "which team",
+    "top 10",
+}
 
 def detect_context_continuation(
     question: str
@@ -93,7 +102,7 @@ def detect_context_continuation(
 
     if len(words) <= 4:
 
-        score += 0.30
+        score += 0.20
         reasons.append(
             "short_fragment"
         )
@@ -146,9 +155,15 @@ def detect_context_continuation(
     # Lacks analytical structure
     # ----------------------------------
 
-    analytical_terms_found = any(
+    analytical_terms_found = (
+        any(
         word in STANDALONE_ANALYTICAL_WORDS
         for word in words
+        )
+        or 
+        any(
+            phrase in normalized for phrase in ANALYTICAL_PHRASES
+        )
     )
 
     if not analytical_terms_found:

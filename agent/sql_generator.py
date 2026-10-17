@@ -601,13 +601,18 @@ Questions such as:
 
 - IPL 2020 winner
 - Who won IPL 2020?
-- Winner of IPL 2020
-- Which team won IPL 2020?
+- Winner of IPL 2021
+- Which team won IPL 2022?
 
 refer to the team that won the final match
 of that IPL season.
 
-Use the matches table.
+The dataset does not contain a dedicated
+final-match indicator.
+
+Therefore:
+
+Use the latest match played in the requested season.
 
 Filter season using:
 
@@ -616,23 +621,24 @@ TRY_CAST(
     AS INTEGER
 )
 
-Return:
+Order matches by date descending.
 
-winner
+Return the winner from the latest match.
 
 Example:
 
 SELECT
+    season,
     winner
 FROM matches
-WHERE
-TRY_CAST(
+WHERE TRY_CAST(
     SUBSTRING(season,1,4)
     AS INTEGER
 ) = 2020
-AND LOWER(TRIM(match_type)) = 'final'
+AND winner IS NOT NULL
+AND winner <> 'No Result'
+ORDER BY date DESC
 LIMIT 1;
-
 
 ==================================================
 RANKING RULES

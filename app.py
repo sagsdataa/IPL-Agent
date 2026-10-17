@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import re
 import duckdb
 import streamlit as st
 
@@ -106,8 +106,24 @@ coverage = f"{stats['first_season']}–{stats['last_season']}"
 
 
 def clean_question(question):
-    return "" if question is None else question.strip()
+    if question is None:
+        return""
+    
+    question = question.strip()
 
+    # collapse multiple spaces
+    question = re.sub(
+        r"\+$",
+        "",
+        question
+    )
+    #Remove trailing punctuation
+    question = re.sub(
+        r"[^\w\s]+$",
+        "",
+        question
+    )
+    return question.strip()
 
 def _normalize_short_message(question):
     return (
@@ -118,6 +134,8 @@ def _normalize_short_message(question):
         .replace("!", "")
         .replace(",", "")
         .replace("'", "")
+        .replace(">", "")
+        .replace("<", "")
     )
 
 
@@ -682,16 +700,6 @@ if current_question:
                     "I need previous analytical context before processing this follow-up."
                 )
 
-        elif not question_is_relevant:
-
-            with st.chat_message("user"):
-                st.markdown(current_question)
-            with st.chat_message("assistant"):
-                st.warning(
-                    "I couldn't identify an IPL-related concept, player, team, season, "
-                    "venue, match, or statistic in the question."
-                )
-
         elif is_followup_question(current_question):
             if (
                 st.session_state.last_question
@@ -735,6 +743,15 @@ if current_question:
                     "I need a previous result before I can explain why."
                 )
 
+        elif not question_is_relevant:
+
+            with st.chat_message("user"):
+                st.markdown(current_question)
+            with st.chat_message("assistant"):
+                st.warning(
+                    "I couldn't identify an IPL-related concept, player, team, season, "
+                    "venue, match, or statistic in the question."
+                )
         else:
             with st.chat_message("user"):
                 st.markdown(current_question)
