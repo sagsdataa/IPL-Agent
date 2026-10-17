@@ -469,4 +469,4 @@ IPL_Historical_Intelligence_Agent_V1_Documentation.docx
 
 **Sagir Mohd**
 
-Global Lead Data Analyst focused on analytics, data transformation, Microsoft Fabric, Power BI, and practical AI-enabled decision-support solutions.
+Global Lead Data and practical AI-enabled decision-support solutions.
