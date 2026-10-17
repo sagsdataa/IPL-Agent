@@ -231,6 +231,200 @@ is_chasing BIGINT
 - 0 means it was not chasing.
 
 ==================================================
+PLAYER DIMENSION
+==================================================
+
+Table:
+player_dimension
+
+Columns:
+- player_name
+- batting_hand
+- bowling_style
+- role
+
+Joins:
+
+For batting questions:
+
+deliveries.batter = player_dimension.player_name
+
+For bowling questions:
+
+deliveries.bowler = player_dimension.player_name
+
+Use player_dimension whenever the user asks about:
+
+- left-handed batters
+- right-handed batters
+- batting hand
+- bowling style
+- fast bowlers
+- medium-fast bowlers
+- medium bowlers
+- spinners
+- bowlers
+- batters
+- wicketkeepers
+- allrounders
+- player roles
+
+Examples:
+
+Left-handed batter:
+WHERE batting_hand = 'Left-hand Bat'
+
+Right-handed batter:
+WHERE batting_hand = 'Right-hand Bat'
+
+Allrounder:
+WHERE role = 'Allrounder'
+
+Bowler:
+WHERE role = 'Bowler'
+
+Wicketkeeper:
+WHERE LOWER(role) LIKE '%wicketkeeper%'
+
+Fast bowler:
+WHERE LOWER(bowling_style) LIKE '%fast%'
+
+Medium-fast bowler:
+WHERE LOWER(bowling_style) LIKE '%medium-fast%'
+
+Spinner:
+WHERE
+    LOWER(bowling_style) LIKE '%spin%'
+    OR LOWER(bowling_style) LIKE '%orthodox%'
+    OR LOWER(bowling_style) LIKE '%legbreak%'
+    OR LOWER(bowling_style) LIKE '%offbreak%'
+
+Leg Spinner:
+
+Use bowlers whose bowling_style contains:
+
+- legbreak
+- legbreak googly
+- right-arm legbreak
+- left-arm wrist-spin
+
+Example:
+WHERE
+    LOWER(bowling_style) LIKE '%legbreak%'
+    OR LOWER(bowling_style) LIKE '%wrist%'
+
+Pace Bowler:
+- Fast
+- Medium-fast
+- Medium
+
+When player attributes are requested,
+always join player_dimension first before
+applying filters.
+
+==================================================
+BOWLING STYLE MAPPINGS
+==================================================
+
+Leg Spinner:
+
+Use bowling_style values:
+
+- Legbreak
+- Legbreak Googly
+- Right-arm legbreak
+- Right-arm Legbreak Googly
+
+Example:
+
+WHERE
+    LOWER(p.bowling_style) LIKE '%legbreak%'
+
+--------------------------------------------------
+
+Off Spinner:
+
+Use bowling_style values:
+
+- Right-arm offbreak
+- Right-arm Offbreak, Legbreak Googly
+
+Example:
+
+WHERE
+    LOWER(p.bowling_style) LIKE '%offbreak%'
+
+--------------------------------------------------
+
+Left-arm Orthodox Spinner:
+
+Use bowling_style values:
+
+- Slow left-arm orthodox
+
+Example:
+
+WHERE
+    LOWER(p.bowling_style) LIKE '%orthodox%'
+
+--------------------------------------------------
+
+Chinaman Bowler:
+
+Use bowling_style values:
+
+- Left-arm Chinaman
+- Slow Left-arm Chinaman
+
+Example:
+
+WHERE
+    LOWER(p.bowling_style) LIKE '%chinaman%'
+
+--------------------------------------------------
+
+Left-arm Pace Bowler:
+
+Use bowling_style values:
+
+- Left-arm medium
+- Left-arm medium-fast
+- Left-arm fast-medium
+- Left-arm Fast
+
+Example:
+
+WHERE
+    LOWER(p.bowling_style) LIKE 'left-arm%'
+
+--------------------------------------------------
+
+Right-arm Pace Bowler:
+
+Use bowling_style values:
+
+- Right-arm fast
+- Right-arm fast-medium
+- Right-arm medium-fast
+- Right-arm medium
+
+Example:
+
+WHERE
+    LOWER(p.bowling_style) LIKE 'right-arm%'
+    AND LOWER(p.bowling_style) NOT LIKE '%offbreak%'
+    AND LOWER(p.bowling_style) NOT LIKE '%legbreak%'
+
+For bowling style question, ALWAYS filter using
+player_dimension.bowling_style.
+
+Do not infer bowling style from player name.
+
+JOIN:
+
+deliveries.bowler = player_dimension.player_name
+
+==================================================
 SEASON-HANDLING RULES
 ==================================================
 
@@ -497,6 +691,57 @@ MS Dhoni -> MS Dhoni
 Rohit Sharma -> RG Sharma
 Jasprit Bumrah -> JJ Bumrah
 AB de Villiers -> AB de Villiers
+ZA Khan -> Z Khan
+Zaheer Khan -> Z Khan
+
+==================================================
+COUNTRY DIMENSION
+==================================================
+
+Table:
+player_dimension
+
+Column:
+country
+
+Join:
+
+deliveries.batter = player_dimension.player_name
+
+or
+
+deliveries.bowler = player_dimension.player_name
+
+Use country whenever the user asks about:
+
+- Indian players
+- Overseas players
+- Foreign players
+- Australian players
+- South African players
+- English players
+- New Zealand players
+- West Indies players
+- Sri Lankan players
+- Afghan players
+- Pakistani players (if present)
+
+Examples:
+
+Indian players:
+WHERE country = 'India'
+
+Australian players:
+WHERE country = 'Australia'
+
+South African players:
+WHERE country = 'South Africa'
+
+English players:
+WHERE country = 'England'
+
+Overseas players:
+WHERE country <> 'India'
 
 ==================================================
 SUCCESSFUL CHASE RULES

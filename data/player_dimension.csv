@@ -1,0 +1,795 @@
+player_name,country,batting_hand,bowling_style,role
+A Ashish Reddy,India,Right-hand Bat,Right-arm medium-fast,Allrounder
+A Badoni,India,Right-hand Bat,Right-arm offbreak,Batter
+A Chandila,India,Right-hand Bat,Right-arm offbreak,Bowler
+A Chopra,India,Right-hand Bat,Right-arm legbreak,Batter
+A Choudhary,India,Right-hand Bat,Left-arm medium-fast,Bowler
+A Dananjaya,Sri Lanka,Left-hand Bat,Right-arm offbreak,Bowler
+A Flintoff,England,Right-hand Bat,Right-arm fast-medium,Allrounder
+A Kamboj,India,Right-hand Bat,Right-arm medium,Bowler
+A Kumble,India,Right-hand Bat,Right-arm legbreak,Bowler
+A Manohar,India,Right-hand Bat,Right-arm legbreak,Batter
+A Mhatre,India,Right-hand Bat,Right-arm medium,Batter
+A Mishra,India,Right-hand Bat,Right-arm legbreak,Bowler
+A Mithun,India,Right-hand Bat,Right-arm medium-fast,Bowler
+A Mukund,India,Left-hand Bat,Legbreak,Batter
+A Nehra,India,Right-hand Bat,Left-arm medium-fast,Bowler
+A Nel,South Africa,Right-hand Bat,Right-arm fast-medium,Bowler
+A Nortje,South Africa,Right-hand Bat,Right-arm fast,Bowler
+A Raghuvanshi,India,Right-hand Bat,Slow left-arm orthodox,Batter
+A Singh,India,Left-hand Bat,Left-arm medium-fast,Bowler
+A Symonds,Australia,Right-hand Bat,Right-arm offbreak,Allrounder
+A Tomar,India,Right-hand Bat,Right-arm medium,Batter
+A Uniyal,India,Right-hand Bat,Right-arm medium,Bowler
+A Zampa,Australia,Right-hand Bat,Right-arm legbreak,Bowler
+AA Bilakhia,India,Right-hand Bat,Right-arm offbreak,Batter
+AA Chavan,India,Left-hand Bat,Slow left-arm orthodox,Allrounder
+AA Jhunjhunwala,India,Right-hand Bat,Right-arm offbreak,Allrounder
+AA Kazi,India,Left-hand Bat,Slow left-arm orthodox,Allrounder
+AA Kulkarni,India,Right-hand Bat,None,Wicketkeeper
+AA Noffke,Australia,Right-hand Bat,Right-arm fast-medium,Allrounder
+AB Agarkar,India,Right-hand Bat,Right-arm fast-medium,Allrounder
+AB Barath,West Indies,Right-hand Bat,Right-arm offbreak,Batter
+AB Dinda,India,Right-hand Bat,Right-arm medium-fast,Bowler
+AB McDonald,Australia,Right-hand Bat,Right-arm fast-medium,Allrounder
+AB de Villiers,South Africa,Right-hand Bat,Right-arm medium,Wicketkeeper Batter
+AC Blizzard,Australia,Left-hand Bat,Left-arm medium,Batter
+AC Gilchrist,Australia,Left-hand Bat,Right-arm offbreak,Wicketkeeper Batter
+AC Thomas,South Africa,Right-hand Bat,Right-arm fast-medium,Bowler
+AC Voges,Australia,Right-hand Bat,Slow left-arm orthodox,Allrounder
+AD Hales,England,Right-hand Bat,Right-arm medium,Batter
+AD Mascarenhas,England,Right-hand Bat,Right-arm medium-fast,Allrounder
+AD Mathews,Sri Lanka,Right-hand Bat,Right-arm medium-fast,Allrounder
+AD Nath,India,Right-hand Bat,Right-arm medium,Allrounder
+AD Russell,West Indies,Right-hand Bat,Right-arm fast,Allrounder
+AF Milne,New Zealand,Right-hand Bat,Right-arm fast,Bowler
+AG Murtaza,India,Left-hand Bat,Slow left-arm orthodox,Bowler
+AG Paunikar,India,Right-hand Bat,None,Wicketkeeper
+AJ Finch,Australia,Right-hand Bat,Slow left-arm orthodox,Batter
+AJ Hosein,West Indies,Left-hand Bat,Slow left-arm orthodox,Bowler
+AJ Turner,Australia,Right-hand Bat,Right-arm offbreak,Batter
+AJ Tye,Australia,Right-hand Bat,Right-arm medium-fast,Bowler
+AK Markram,South Africa,Right-hand Bat,Right-arm Offbreak,Batter
+AL Menaria,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+AM Ghazanfar,Afghanistan,Right-hand Bat,Right-arm Offbreak,Bowler
+AM Nayar,India,Left-hand Bat,Right-arm Medium,Allrounder
+AM Rahane,India,Right-hand Bat,Right-arm Medium,Batter
+AM Salvi,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+AN Ahmed,Pakistan,Right-hand Bat,Right-arm Medium,Wicketkeeper
+AN Ghosh,India,Right-hand Bat,Right-arm Offbreak,Batter
+AP Dole,India,Right-hand Bat,Right-arm Medium,Bowler
+AP Majumdar,India,Right-hand Bat,Right-arm Offbreak,Batter
+AP Tare,India,Right-hand Bat,,Wicketkeeper
+AR Bawne,India,Right-hand Bat,Right-arm Offbreak,Batter
+AR Patel,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+AS Joseph,West Indies,Right-hand Bat,Right-arm Fast,Bowler
+AS Rajpoot,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+AS Raut,India,Right-hand Bat,Legbreak,Allrounder
+AS Roy,India,Right-hand Bat,Right-arm Legbreak,Allrounder
+AS Yadav,India,Right-hand Bat,Right-arm Medium,Batter
+AT Carey,Australia,Left-hand Bat,Right-arm Medium,Wicketkeeper
+AT Rayudu,India,Right-hand Bat,Right-arm Offbreak,Batter
+AU Rashid,England,Right-hand Bat,Legbreak Googly,Bowler
+AUK Pathan,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+Abdul Basith,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+Abdul Samad,India,Right-hand Bat,Legbreak,Allrounder
+Abdur Razzak,Bangladesh,Left-hand Bat,Slow Left-arm Orthodox,Bowler
+Abhinandan Singh,India,Right-hand Bat,Right-arm Medium,Bowler
+Abhishek Sharma,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+Abishek Porel,India,Left-hand Bat,,Wicketkeeper
+Akash Deep,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Akash Madhwal,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Akash Singh,India,Right-hand Bat,Left-arm Medium-fast,Bowler
+Aman Hakim Khan,India,Right-hand Bat,Right-arm Medium-fast,Allrounder
+Anand Rajan,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Aniket Verma,India,Right-hand Bat,,Batter
+Anirudh Singh,India,Left-hand Bat,Legbreak,Allrounder
+Ankit Sharma,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+Ankit Soni,India,Right-hand Bat,Legbreak Googly,Bowler
+Anmolpreet Singh,India,Right-hand Bat,Right-arm Offbreak,Batter
+Anuj Rawat,India,Left-hand Bat,,Wicketkeeper
+Anureet Singh,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Arjun Tendulkar,India,Left-hand Bat,Left-arm Medium-fast,Allrounder
+Arshad Khan,India,Left-hand Bat,Left-arm Medium,Allrounder
+Arshad Khan (2),India,Right-hand Bat,Right-arm Medium,Bowler
+Arshdeep Singh,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+Ashok Sharma,India,Right-hand Bat,Right-arm Medium,Bowler
+Ashutosh Sharma,India,Right-hand Bat,Right-arm Offbreak,Batter
+Ashwani Kumar,India,Right-hand Bat,Right-arm Medium,Bowler
+Atharva Taide,India,Left-hand Bat,Slow Left-arm Orthodox,Batter
+Auqib Nabi,India,Right-hand Bat,Right-arm Medium,Bowler
+Avesh Khan,India,Right-hand Bat,Right-arm Fast-medium,Bowler
+Azhar Mahmood,Pakistan,Right-hand Bat,Right-arm medium-fast,Allrounder
+Azmatullah Omarzai,Afghanistan,Right-hand Bat,Right-arm medium-fast,Allrounder
+B Akhil,India,Right-hand Bat,Right-arm medium,Allrounder
+B Chipli,India,Right-hand Bat,Right-arm offbreak,Batter
+B Geeves,Australia,Right-hand Bat,Right-arm medium-fast,Bowler
+B Indrajith,India,Right-hand Bat,Right-arm legbreak,Wicketkeeper Batter
+B Kumar,India,Right-hand Bat,Right-arm medium,Bowler
+B Laughlin,Australia,Right-hand Bat,Right-arm fast-medium,Bowler
+B Lee,Australia,Right-hand Bat,Right-arm fast,Bowler
+B Muzarabani,Zimbabwe,Right-hand Bat,Right-arm fast-medium,Bowler
+B Sai Sudharsan,India,Left-hand Bat,Legbreak googly,Batter
+B Stanlake,Australia,Left-hand Bat,Right-arm fast,Bowler
+B Sumanth,India,Right-hand Bat,Right-arm offbreak,Batter
+BA Bhatt,India,Left-hand Bat,Slow left-arm orthodox,Bowler
+BA Stokes,England,Left-hand Bat,Right-arm fast-medium,Allrounder
+BAW Mendis,Sri Lanka,Right-hand Bat,Right-arm offbreak,Bowler
+BB McCullum,New Zealand,Right-hand Bat,Right-arm medium,Wicketkeeper Batter
+BB Samantray,India,Right-hand Bat,Right-arm medium,Allrounder
+BB Sran,India,Left-hand Bat,Left-arm medium-fast,Bowler
+BCJ Cutting,Australia,Right-hand Bat,Right-arm medium-fast,Allrounder
+BE Hendricks,South Africa,Right-hand Bat,Left-arm fast-medium,Bowler
+BJ Haddin,Australia,Right-hand Bat,Right-arm offbreak,Wicketkeeper Batter
+BJ Hodge,Australia,Right-hand Bat,Right-arm offbreak,Batter
+BJ Rohrer,Australia,Left-hand Bat,Right-arm legbreak,Batter
+BKG Mendis,Sri Lanka,Right-hand Bat,Right-arm legbreak,Wicketkeeper Batter
+BMAJ Mendis,Sri Lanka,Left-hand Bat,Slow left-arm orthodox,Allrounder
+BR Dunk,Australia,Left-hand Bat,None,Wicketkeeper Batter
+BR Sharath,India,Right-hand Bat,None,Wicketkeeper Batter
+BW Hilfenhaus,Australia,Right-hand Bat,Right-arm fast-medium,Bowler
+Basil Thampi,India,Right-hand Bat,Right-arm fast-medium,Bowler
+Bipul Sharma,India,Left-hand Bat,Slow left-arm orthodox,Allrounder
+Brijesh Sharma,India,Right-hand Bat,Right-arm medium,Batter
+C Bosch,South Africa,Right-hand Bat,Right-arm medium-fast,Allrounder
+C Connolly,Australia,Left-hand Bat,Slow left-arm orthodox,Allrounder
+C Ganapathy,India,Right-hand Bat,Right-arm medium,Allrounder
+C Green,Australia,Right-hand Bat,Right-arm fast-medium,Allrounder
+C Madan,India,Right-hand Bat,None,Wicketkeeper Batter
+C Munro,New Zealand,Left-hand Bat,Right-arm medium,Batter
+C Nanda,India,Right-hand Bat,Legbreak googly,Bowler
+C Sakariya,India,Left-hand Bat,Left-arm medium-fast,Bowler
+C de Grandhomme,New Zealand,Right-hand Bat,Right-arm medium-fast,Allrounder
+CA Ingram,South Africa,Right-hand Bat,Legbreak googly,Batter
+CA Lynn,Australia,Right-hand Bat,Slow left-arm orthodox,Batter
+CA Pujara,India,Right-hand Bat,Right-arm legbreak,Batter
+CH Gayle,West Indies,Left-hand Bat,Right-arm offbreak,Allrounder
+CH Morris,South Africa,Right-hand Bat,Right-arm fast-medium,Allrounder
+CJ Anderson,New Zealand,Left-hand Bat,Left-arm medium-fast,Allrounder
+CJ Dala,South Africa,Right-hand Bat,Right-arm medium-fast,Bowler
+CJ Ferguson,Australia,Right-hand Bat,Right-arm medium,Batter
+CJ Green,South Africa,Right-hand Bat,Right-arm offbreak,Allrounder
+CJ Jordan,England,Right-hand Bat,Right-arm Fast-medium,Bowler
+CJ McKay,Australia,Right-hand Bat,Right-arm Medium-fast,Bowler
+CK Kapugedera,Sri Lanka,Right-hand Bat,Right-arm Medium,Batter
+CK Langeveldt,South Africa,Right-hand Bat,Right-arm Fast-medium,Bowler
+CL White,Australia,Right-hand Bat,Right-arm Legbreak,Batter
+CM Gautam,India,Right-hand Bat,None,Wicketkeeper
+CR Brathwaite,West Indies,Right-hand Bat,Right-arm Medium-fast,Allrounder
+CR Woakes,England,Right-hand Bat,Right-arm Fast-medium,Allrounder
+CRD Fernando,Sri Lanka,Right-hand Bat,Right-arm Fast-medium,Bowler
+CV Varun,India,Right-hand Bat,Right-arm Legbreak Googly,Bowler
+D Brevis,South Africa,Right-hand Bat,Legbreak,Batter
+D Ferreira,South Africa,Right-hand Bat,Right-arm Offbreak,Wicketkeeper
+D Jansen,South Africa,Right-hand Bat,Left-arm Medium-fast,Allrounder
+D Kalyankrishna,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+D Madushanka,Sri Lanka,Right-hand Bat,Left-arm Fast-medium,Bowler
+D Padikkal,India,Left-hand Bat,Right-arm Offbreak,Batter
+D Pretorius,South Africa,Right-hand Bat,Right-arm Medium-fast,Allrounder
+D Salunkhe,India,Right-hand Bat,Legbreak Googly,Allrounder
+D Wiese,Namibia,Right-hand Bat,Right-arm Medium-fast,Allrounder
+D du Preez,South Africa,Right-hand Bat,Right-arm Fast-medium,Bowler
+DA Miller,South Africa,Left-hand Bat,Right-arm Offbreak,Batter
+DA Payne,England,Right-hand Bat,Left-arm Fast-medium,Bowler
+DA Warner,Australia,Left-hand Bat,Legbreak,Batter
+DAJ Bracewell,New Zealand,Right-hand Bat,Right-arm Medium-fast,Bowler
+DB Das,India,Right-hand Bat,Right-arm Offbreak,Batter
+DB Ravi Teja,India,Right-hand Bat,Legbreak,Batter
+DE Bollinger,Australia,Left-hand Bat,Left-arm Fast-medium,Bowler
+DG Nalkande,India,Right-hand Bat,Right-arm Medium,Allrounder
+DH Yagnik,India,Left-hand Bat,None,Wicketkeeper
+DJ Bravo,West Indies,Right-hand Bat,Right-arm Medium-fast,Allrounder
+DJ Harris,Australia,Right-hand Bat,Right-arm Offbreak,Batter
+DJ Hooda,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+DJ Hussey,Australia,Right-hand Bat,Right-arm Offbreak,Allrounder
+DJ Jacobs,South Africa,Right-hand Bat,None,Wicketkeeper
+DJ Malan,England,Left-hand Bat,Right-arm Legbreak,Batter
+DJ Mitchell,New Zealand,Right-hand Bat,Right-arm Medium,Allrounder
+DJ Muthuswami,South Africa,Right-hand Bat,Right-arm Medium-fast,Bowler
+DJ Thornely,Australia,Right-hand Bat,Right-arm Medium,Allrounder
+DJ Willey,England,Left-hand Bat,Left-arm Fast-medium,Allrounder
+DJG Sammy,West Indies,Right-hand Bat,Right-arm Medium-fast,Allrounder
+DJM Short,Australia,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+DL Chahar,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+DL Vettori,New Zealand,Left-hand Bat,Slow Left-arm Orthodox,Bowler
+DM Bravo,West Indies,Left-hand Bat,Right-arm Medium-fast,Batter
+DNT Zoysa,Sri Lanka,Left-hand Bat,Left-arm Fast-medium,Bowler
+DP Conway,New Zealand,Left-hand Bat,Right-arm Medium,Wicketkeeper
+DP Nannes,Australia,Right-hand Bat,Left-arm Fast-medium,Bowler
+DP Vijaykumar,India,Right-hand Bat,Right-arm Medium,Bowler
+DPMD Jayawardene,Sri Lanka,Right-hand Bat,Right-arm Medium,Batter
+DR Martyn,Australia,Right-hand Bat,Right-arm Medium,Batter
+DR Sams,Australia,Right-hand Bat,Left-arm Fast-medium,Allrounder
+DR Shorey,India,Right-hand Bat,Right-arm Offbreak,Batter
+DR Smith,West Indies,Right-hand Bat,Right-arm Medium,Allrounder
+DS Kulkarni,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+DS Lehmann,Australia,Left-hand Bat,Slow Left-arm Orthodox,Batter
+DS Rathi,India,Right-hand Bat,Right-arm Medium,Allrounder
+DT Christian,Australia,Right-hand Bat,Right-arm Medium-fast,Allrounder
+DT Patil,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+DV Malewar,India,Right-hand Bat,Right-arm Offbreak,Batter
+DW Steyn,South Africa,Right-hand Bat,Right-arm Fast,Bowler
+Dhruv Jurel,India,Right-hand Bat,None,Wicketkeeper Batter
+E Lewis,West Indies,Left-hand Bat,Right-arm Medium,Batter
+E Malinga,Sri Lanka,Right-hand Bat,Right-arm Fast,Bowler
+EJG Morgan,England,Left-hand Bat,Right-arm Medium,Batter
+ER Dwivedi,India,Right-hand Bat,None,Wicketkeeper Batter
+F Behardien,South Africa,Right-hand Bat,Right-arm Medium-fast,Batter
+F du Plessis,South Africa,Right-hand Bat,Legbreak,Batter
+FA Allen,West Indies,Right-hand Bat,Slow Left-arm Orthodox,Allrounder
+FH Allen,New Zealand,Right-hand Bat,Right-arm Medium,Wicketkeeper Batter
+FH Edwards,West Indies,Right-hand Bat,Right-arm Fast,Bowler
+FY Fazal,India,Left-hand Bat,Right-arm Medium-fast,Batter
+Fazalhaq Farooqi,Afghanistan,Right-hand Bat,Left-arm Fast-medium,Bowler
+G Coetzee,South Africa,Right-hand Bat,Right-arm Fast,Bowler
+G Gambhir,India,Left-hand Bat,Legbreak,Batter
+GB Hogg,Australia,Left-hand Bat,Slow Left-arm Chinaman,Bowler
+GC Smith,South Africa,Left-hand Bat,Right-arm Offbreak,Batter
+GC Viljoen,South Africa,Right-hand Bat,Right-arm Fast-medium,Wicketkeeper Batter
+GD McGrath,Australia,Right-hand Bat,Right-arm Medium-fast,Bowler
+GD Phillips,New Zealand,Right-hand Bat,Right-arm Offbreak,Wicketkeeper Batter
+GF Linde,South Africa,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+GH Vihari,India,Right-hand Bat,Right-arm Offbreak,Batter
+GHS Garton,England,Left-hand Bat,Left-arm Fast-medium,Allrounder
+GJ Bailey,Australia,Right-hand Bat,Right-arm Medium,Batter
+GJ Maxwell,Australia,Right-hand Bat,Right-arm Offbreak,Allrounder
+GR Napier,England,Right-hand Bat,Right-arm Medium-fast,Allrounder
+GS Sandhu,Australia,Right-hand Bat,Right-arm Medium-fast,Bowler
+Gagandeep Singh,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Gulbadin Naib,Afghanistan,Right-hand Bat,Right-arm Medium-fast,Allrounder
+Gurjapneet Singh,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+Gurkeerat Singh,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+Gurnoor Brar,India,Left-hand Bat,Right-arm Medium,Bowler
+H Das,India,Right-hand Bat,None,Wicketkeeper Batter
+H Klaasen,South Africa,Right-hand Bat,Right-arm Offbreak,Wicketkeeper Batter
+H Sharma,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+HC Brook,England,Right-hand Bat,Right-arm Medium,Batter
+HE van der Dussen,South Africa,Right-hand Bat,Legbreak,Batter
+HF Gurney,England,Right-hand Bat,Left-arm Medium-fast,Bowler
+HH Gibbs,South Africa,Right-hand Bat,Right-arm Legbreak,Batter
+HH Pandya,India,Right-hand Bat,Right-arm Medium-fast,Allrounder
+HM Amla,South Africa,Right-hand Bat,Right-arm Medium,Batter
+HR Shokeen,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+HV Patel,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Harbhajan Singh,India,Right-hand Bat,Right-arm Offbreak,Bowler
+Harmeet Singh,India,Left-hand Bat,Slow Left-arm Orthodox,Bowler
+Harpreet Brar,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+Harpreet Singh,India,Left-hand Bat,Right-arm Medium,Batter
+Harsh Dubey,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+Harshit Rana,India,Right-hand Bat,Right-arm Fast-medium,Bowler
+Himmat Singh,India,Right-hand Bat,Right-arm Offbreak,Batter
+I Malhotra,India,Right-hand Bat,Right-arm Medium,Allrounder
+I Sharma,India,Right-hand Bat,Right-arm Fast-medium,Bowler
+I Udana,Sri Lanka,Right-hand Bat,Left-arm Medium-fast,Allrounder
+IC Pandey,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+IC Porel,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+IK Pathan,India,Left-hand Bat,Left-arm Medium-fast,Allrounder
+IR Jaggi,India,Right-hand Bat,Right-arm Legbreak,Batter
+IS Sodhi,New Zealand,Right-hand Bat,Right-arm Legbreak,Bowler
+Imran Tahir,South Africa,Right-hand Bat,Right-arm Legbreak Googly,Bowler
+Iqbal Abdulla,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+Ishan Kishan,India,Left-hand Bat,,Wicketkeeper Batter
+J Arunkumar,India,Right-hand Bat,Right-arm Offbreak,Batter
+J Botha,South Africa,Right-hand Bat,Right-arm Offbreak,Allrounder
+J Fraser-McGurk,Australia,Right-hand Bat,Right-arm Legbreak,Batter
+J Little,Ireland,Right-hand Bat,Left-arm Fast-medium,Bowler
+J Overton,England,Right-hand Bat,Right-arm Fast-medium,Allrounder
+J Suchith,India,Left-hand Bat,Slow Left-arm Orthodox,Bowler
+J Syed Mohammad,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+J Theron,South Africa,Right-hand Bat,Right-arm Medium-fast,Bowler
+J Yadav,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+JA Duffy,New Zealand,Right-hand Bat,Right-arm Medium-fast,Bowler
+JA Morkel,South Africa,Left-hand Bat,Right-arm Medium-fast,Allrounder
+JA Richardson,Australia,Right-hand Bat,Right-arm Fast-medium,Bowler
+JC Archer,England,Right-hand Bat,Right-arm Fast,Bowler
+JC Buttler,England,Right-hand Bat,,Wicketkeeper Batter
+JD Ryder,New Zealand,Left-hand Bat,Right-arm Medium,Allrounder
+JD Unadkat,India,Right-hand Bat,Left-arm Fast-medium,Bowler
+JDP Oram,New Zealand,Left-hand Bat,Right-arm Medium-fast,Allrounder
+JDS Neesham,New Zealand,Left-hand Bat,Right-arm Medium-fast,Allrounder
+JE Root,England,Right-hand Bat,Right-arm Offbreak,Batter
+JE Taylor,West Indies,Right-hand Bat,Right-arm Fast-medium,Bowler
+JEC Franklin,New Zealand,Left-hand Bat,Left-arm Medium-fast,Allrounder
+JG Bethell,England,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+JH Kallis,South Africa,Right-hand Bat,Right-arm Medium-fast,Allrounder
+JJ Bumrah,India,Right-hand Bat,Right-arm Fast,Bowler
+JJ Roy,England,Right-hand Bat,Right-arm Medium,Batter
+JJ van der Wath,South Africa,Right-hand Bat,Right-arm Medium-fast,Allrounder
+JL Denly,England,Right-hand Bat,Right-arm Legbreak,Batter
+JL Pattinson,Australia,Left-hand Bat,Right-arm Fast-medium,Bowler
+JM Bairstow,England,Right-hand Bat,,Wicketkeeper Batter
+JM Kemp,South Africa,Right-hand Bat,Right-arm Medium-fast,Allrounder
+JM Sharma,India,Right-hand Bat,None,Wicketkeeper Batter
+JO Holder,West Indies,Right-hand Bat,Right-arm Medium-fast,Allrounder
+JP Behrendorff,Australia,Right-hand Bat,Left-arm Fast-medium,Bowler
+JP Duminy,South Africa,Left-hand Bat,Right-arm Offbreak,Allrounder
+JP Faulkner,Australia,Right-hand Bat,Left-arm Medium-fast,Allrounder
+JP Inglis,Australia,Right-hand Bat,None,Wicketkeeper Batter
+JPR Scantlebury-Searles,West Indies,Right-hand Bat,Right-arm Medium,Allrounder
+JR Hazlewood,Australia,Left-hand Bat,Right-arm Fast-medium,Bowler
+JR Hopes,Australia,Right-hand Bat,Right-arm Medium,Allrounder
+JR Philippe,Australia,Right-hand Bat,None,Wicketkeeper Batter
+JW Hastings,Australia,Right-hand Bat,Right-arm Fast-medium,Allrounder
+Jalaj S Saxena,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+Jaskaran Singh,India,Right-hand Bat,Right-arm Medium,Bowler
+Joginder Sharma,India,Right-hand Bat,Right-arm Medium,Allrounder
+K Goel,India,Left-hand Bat,Right-arm Offbreak,Batter
+K Gowtham,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+K Kartikeya,India,Left-hand Bat,Slow Left-arm Orthodox,Bowler
+K Khejroliya,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+K Rabada,South Africa,Left-hand Bat,Right-arm Fast,Bowler
+K Santokie,West Indies,Left-hand Bat,Left-arm Medium-fast,Bowler
+K Upadhyay,India,Right-hand Bat,Right-arm Medium,Bowler
+K Yadav,India,Left-hand Bat,Left-arm Chinaman,Bowler
+KA Jamieson,New Zealand,Right-hand Bat,Right-arm Fast-medium,Allrounder
+KA Maharaj,South Africa,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+KA Pollard,West Indies,Right-hand Bat,Right-arm Medium-fast,Allrounder
+KAJ Roach,West Indies,Right-hand Bat,Right-arm Fast,Bowler
+KB Arun Karthik,India,Right-hand Bat,Legbreak,Wicketkeeper Batter
+KC Cariappa,India,Right-hand Bat,Legbreak,Bowler
+KC Sangakkara,Sri Lanka,Left-hand Bat,Right-arm Offbreak,Wicketkeeper Batter
+KD Karthik,India,Right-hand Bat,Right-arm Offbreak,Wicketkeeper Batter
+KH Pandya,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+KJ Abbott,South Africa,Right-hand Bat,Right-arm Medium-fast,Bowler
+KK Ahmed,India,Right-hand Bat,Left-arm Medium-fast,Bowler
+KK Cooper,West Indies,Right-hand Bat,Right-arm Medium,Allrounder
+KK Nair,India,Right-hand Bat,Right-arm Legbreak,Batter
+KL Nagarkoti,India,Right-hand Bat,Right-arm Fast,Allrounder
+KL Rahul,India,Right-hand Bat,None,Wicketkeeper Batter
+KM Asif,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+KM Jadhav,India,Right-hand Bat,Right-arm Offbreak,Batter
+KMA Paul,West Indies,Right-hand Bat,Right-arm Medium-fast,Allrounder
+KMDN Kulasekara,Sri Lanka,Right-hand Bat,Right-arm Fast-medium,Bowler
+KP Appanna,India,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+KP Pietersen,England,Right-hand Bat,Right-arm Offbreak,Batter
+KR Mayers,West Indies,Left-hand Bat,Right-arm Medium,Allrounder
+KR Sen,India,Right-hand Bat,Right-arm Fast-medium,Bowler
+KS Bharat,India,Right-hand Bat,None,Wicketkeeper Batter
+KS Rathore,India,Left-hand Bat,None,Wicketkeeper Batter
+KS Sharma,India,Left-hand Bat,Legbreak,Allrounder
+KS Williamson,New Zealand,Right-hand Bat,Right-arm Offbreak,Batter
+KT Maphaka,South Africa,Left-hand Bat,Left-arm Fast,Bowler
+KV Sharma,India,Left-hand Bat,Right-arm Legbreak,Allrounder
+KW Richardson,Australia,Right-hand Bat,Right-arm Fast-medium,Bowler
+Kamran Akmal,Pakistan,Right-hand Bat,None,Wicketkeeper Batter
+Kamran Khan,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+Karanveer Singh,India,Right-hand Bat,Right-arm Legbreak,Bowler
+Karim Janat,Afghanistan,Right-hand Bat,Right-arm Medium-fast,Allrounder
+Kartik Sharma,India,Left-hand Bat,Right-arm Medium,Batter
+Kartik Tyagi,India,Right-hand Bat,Right-arm Fast,Bowler
+Krish Bhagat,United Arab Emirates,Right-hand Bat,Right-arm Medium,Batter
+Kuldeep Yadav,India,Left-hand Bat,Slow Left-arm Chinaman,Bowler
+Kumar Kushagra,India,Right-hand Bat,None,Wicketkeeper Batter
+L Ablish,India,Right-hand Bat,Right-arm Medium,Bowler
+L Balaji,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+L Ngidi,South Africa,Right-hand Bat,Right-arm Fast-medium,Bowler
+L Ronchi,New Zealand,Right-hand Bat,None,Wicketkeeper Batter
+L Wood,England,Left-hand Bat,Left-arm Fast-medium,Bowler
+LA Carseldine,Australia,Left-hand Bat,Left-arm Medium,Batter
+LA Pomersbach,Australia,Left-hand Bat,Right-arm Medium,Batter
+LB Williams,South Africa,Right-hand Bat,Right-arm Fast-medium,Bowler
+LE Plunkett,England,Right-hand Bat,Right-arm Fast,Bowler
+LG Pretorius,South Africa,Right-hand Bat,Right-arm Medium-fast,Wicketkeeper Batter
+LH Ferguson,New Zealand,Right-hand Bat,Right-arm Fast,Bowler
+LI Meriwala,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+LJ Wright,England,Right-hand Bat,Right-arm Medium,Allrounder
+LMP Simmons,West Indies,Right-hand Bat,Right-arm Medium-fast,Batter
+LPC Silva,Sri Lanka,Right-hand Bat,Right-arm Legbreak,Batter
+LR Shukla,India,Right-hand Bat,Right-arm Medium,Allrounder
+LRPL Taylor,New Zealand,Right-hand Bat,Right-arm Offbreak,Batter
+LS Livingstone,England,Right-hand Bat,Right-arm Legbreak,Allrounder
+Lalit Yadav,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+Liton Das,Bangladesh,Right-hand Bat,None,Wicketkeeper Batter
+M Ashwin,India,Right-hand Bat,Right-arm Legbreak,Bowler
+M Jansen,South Africa,Right-hand Bat,Left-arm Fast-medium,Allrounder
+M Kaif,India,Right-hand Bat,Right-arm Offbreak,Batter
+M Kartik,India,Left-hand Bat,Slow Left-arm Orthodox,Bowler
+M Klinger,Australia,Right-hand Bat,Right-arm Legbreak,Batter
+M Manhas,India,Right-hand Bat,Right-arm Offbreak,Batter
+M Markande,India,Right-hand Bat,Right-arm Legbreak,Bowler
+M Morkel,South Africa,Left-hand Bat,Right-arm Fast,Bowler
+M Muralitharan,Sri Lanka,Right-hand Bat,Right-arm Offbreak,Bowler
+M Ntini,South Africa,Right-hand Bat,Right-arm Fast,Bowler
+M Pathirana,Sri Lanka,Right-hand Bat,Right-arm Fast,Bowler
+M Prasidh Krishna,India,Right-hand Bat,Right-arm Fast-medium,Bowler
+M Rawat,India,Right-hand Bat,None,Wicketkeeper Batter
+M Shahrukh Khan,India,Right-hand Bat,Right-arm Offbreak,Batter
+M Siddharth,India,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+M Theekshana,Sri Lanka,Right-hand Bat,Right-arm Offbreak,Bowler
+M Tiwari,India,Right-hand Bat,Right-arm Legbreak,Batter
+M Vijay,India,Right-hand Bat,Right-arm Offbreak,Batter
+M Vohra,India,Right-hand Bat,Right-arm Medium,Batter
+M de Lange,South Africa,Right-hand Bat,Right-arm Fast-medium,Bowler
+MA Agarwal,India,Right-hand Bat,Right-arm Offbreak,Opening Batter
+MA Khote,India,Right-hand Bat,Right-arm Medium,Allrounder
+MA Starc,Australia,Left-hand Bat,Left-arm Fast,Bowler
+MA Wood,England,Right-hand Bat,Right-arm Fast,Bowler
+MB Parmar,India,Right-hand Bat,Right-arm Medium,Bowler
+MC Henriques,Australia,Right-hand Bat,Right-arm Fast-medium,Allrounder
+MC Juneja,India,Right-hand Bat,Right-arm Offbreak,Batter
+MD Choudhary,India,Left-hand Bat,Left-arm Medium,Bowler
+MD Mishra,India,Right-hand Bat,Right-arm Offbreak,Batter
+MD Shanaka,Sri Lanka,Right-hand Bat,Right-arm Medium,Allrounder
+MDKJ Perera,Sri Lanka,Left-hand Bat,None,Wicketkeeper Batter
+MEK Hussey,Australia,Left-hand Bat,Right-arm Medium,Batter
+MF Maharoof,Sri Lanka,Right-hand Bat,Right-arm Fast-medium,Allrounder
+MG Bracewell,New Zealand,Left-hand Bat,Right-arm Offbreak,Allrounder
+MG Johnson,Australia,Left-hand Bat,Left-arm Fast,Bowler
+MG Neser,Australia,Right-hand Bat,Right-arm Medium-fast,Allrounder
+MJ Clarke,Australia,Right-hand Bat,Slow Left-arm Orthodox,Batter
+MJ Guptill,New Zealand,Right-hand Bat,Right-arm Offbreak,Opening Batter
+MJ Henry,New Zealand,Right-hand Bat,Right-arm Fast-medium,Bowler
+MJ Lumb,England,Left-hand Bat,Right-arm Medium,Opening Batter
+MJ McClenaghan,New Zealand,Left-hand Bat,Left-arm Fast-medium,Bowler
+MJ Owen,Australia,Left-hand Bat,Right-arm Medium,Allrounder
+MJ Santner,New Zealand,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+MJ Suthar,India,Left-hand Bat,Slow Left-arm Orthodox,Bowler
+MK Lomror,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+MK Pandey,India,Right-hand Bat,Right-arm Medium,Top-order Batter
+MK Tiwary,India,Right-hand Bat,Legbreak Googly,Batter
+ML Hayden,Australia,Left-hand Bat,Right-arm Medium,Opening Batter
+MM Ali,England,Left-hand Bat,Right-arm Offbreak,Allrounder
+MM Patel,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+MM Sharma,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+MN Samuels,West Indies,Right-hand Bat,Right-arm Offbreak,Allrounder
+MN van Wyk,South Africa,Right-hand Bat,None,Wicketkeeper Batter
+MP Breetzke,South Africa,Right-hand Bat,Right-arm Offbreak,Top-order Batter
+MP Stoinis,Australia,Right-hand Bat,Right-arm Medium,Allrounder
+MP Yadav,India,Right-hand Bat,Right-arm Fast,Bowler
+MR Marsh,Australia,Right-hand Bat,Right-arm Medium-fast,Allrounder
+MS Bhandage,India,Right-hand Bat,Right-arm Medium,Allrounder
+MS Bisla,India,Right-hand Bat,None,Wicketkeeper Batter
+MS Dhoni,India,Right-hand Bat,Right-arm Medium,Wicketkeeper Batter
+MS Gony,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+MS Wade,Australia,Left-hand Bat,Right-arm Medium,Wicketkeeper Batter
+MV Boucher,South Africa,Right-hand Bat,Right-arm Medium,Wicketkeeper Batter
+MW Short,Australia,Right-hand Bat,Right-arm Offbreak,Allrounder
+Mandeep Singh,India,Right-hand Bat,Right-arm Medium,Top-order Batter
+Mashrafe Mortaza,Bangladesh,Right-hand Bat,Right-arm Fast-medium,Bowler
+Mayank Dagar,India,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+Misbah-ul-Haq,Pakistan,Right-hand Bat,Legbreak,Middle-order Batter
+Mohammad Ashraful,Bangladesh,Right-hand Bat,Right-arm Offbreak,Top-order Batter
+Mohammad Asif,Pakistan,Left-hand Bat,Right-arm Medium-fast,Bowler
+Mohammad Hafeez,Pakistan,Right-hand Bat,Right-arm Offbreak,Allrounder
+Mohammad Nabi,Afghanistan,Right-hand Bat,Right-arm Offbreak,Allrounder
+Mohammed Shami,India,Right-hand Bat,Right-arm Fast,Bowler
+Mohammed Siraj,India,Right-hand Bat,Right-arm Fast-medium,Bowler
+Mohit Rathee,India,Right-hand Bat,Legbreak,Allrounder
+Mohsin Khan,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+Monu Kumar,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Mujeeb Ur Rahman,Afghanistan,Right-hand Bat,Right-arm Offbreak,Bowler
+Mukesh Choudhary,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+Mukesh Kumar,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Musheer Khan,India,Right-hand Bat,Slow Left-arm Orthodox,Allrounder
+Mustafizur Rahman,Bangladesh,Left-hand Bat,Left-arm Fast-medium,Bowler
+N Burger,South Africa,Left-hand Bat,Left-arm Fast-medium,Bowler
+N Jagadeesan,India,Right-hand Bat,None,Wicketkeeper Batter
+N Pooran,West Indies,Left-hand Bat,Right-arm Offbreak,Wicketkeeper Batter
+N Rana,India,Left-hand Bat,Right-arm Offbreak,Allrounder
+N Saini,India,Right-hand Bat,Right-arm Fast,Bowler
+N Thushara,Sri Lanka,Right-hand Bat,Right-arm Medium-fast,Bowler
+N Wadhera,India,Left-hand Bat,Legbreak,Batter
+NA Saini,India,Right-hand Bat,Right-arm Fast,Bowler
+NB Singh,India,Right-hand Bat,Right-arm Medium,Bowler
+ND Doshi,India,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+NJ Maddinson,Australia,Left-hand Bat,Slow Left-arm Orthodox,Batter
+NJ Rimmington,Australia,Right-hand Bat,Right-arm Medium-fast,Bowler
+NK Patel,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+NL McCullum,New Zealand,Right-hand Bat,Slow Left-arm Orthodox,Allrounder
+NLTC Perera,Sri Lanka,Left-hand Bat,Right-arm Medium-fast,Allrounder
+NM Coulter-Nile,Australia,Right-hand Bat,Right-arm Fast-medium,Allrounder
+NS Naik,India,Right-hand Bat,None,Wicketkeeper Batter
+NT Ellis,Australia,Right-hand Bat,Right-arm Medium-fast,Bowler
+NV Ojha,India,Right-hand Bat,None,Wicketkeeper Batter
+Naman Dhir,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+Navdeep Saini,India,Right-hand Bat,Right-arm Fast,Bowler
+Naveen-ul-Haq,Afghanistan,Right-hand Bat,Right-arm Medium-fast,Bowler
+Nithish Kumar Reddy,India,Right-hand Bat,Right-arm Medium-fast,Allrounder
+Noor Ahmad,Afghanistan,Right-hand Bat,Slow Left-arm Chinaman,Bowler
+O Thomas,West Indies,Left-hand Bat,Right-arm Fast,Bowler
+OA Shah,England,Right-hand Bat,Right-arm Offbreak,Allrounder
+OC McCoy,West Indies,Left-hand Bat,Left-arm Fast-medium,Bowler
+OF Smith,West Indies,Right-hand Bat,Right-arm Medium-fast,Allrounder
+P Amarnath,India,Right-hand Bat,Right-arm Medium,Bowler
+P Awana,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+P Chopra,India,Right-hand Bat,Legbreak,Batter
+P Dogra,India,Right-hand Bat,Legbreak,Batter
+P Dubey,India,Right-hand Bat,Legbreak,Allrounder
+P Kumar,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+P Negi,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+P Nissanka,Sri Lanka,Right-hand Bat,Right-arm Medium,Batter
+P Parameswaran,India,Right-hand Bat,Left-arm Medium-fast,Bowler
+P Prasanth,India,Right-hand Bat,Right-arm Medium,Bowler
+P Ray Barman,India,Right-hand Bat,Right-arm Legbreak,Bowler
+P Sahu,India,Right-hand Bat,Right-arm Legbreak,Allrounder
+P Simran Singh,India,Right-hand Bat,,Wicketkeeper Batter
+P Suyal,India,Right-hand Bat,Left-arm Medium-fast,Bowler
+PA Patel,India,Left-hand Bat,,Wicketkeeper Batter
+PA Reddy,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+PBB Rajapaksa,Sri Lanka,Left-hand Bat,Right-arm Medium,Batter
+PC Valthaty,India,Right-hand Bat,Right-arm Medium,Allrounder
+PD Collingwood,England,Right-hand Bat,Right-arm Medium,Allrounder
+PD Salt,England,Right-hand Bat,Right-arm Offbreak,Wicketkeeper Batter
+PH Solanki,England,Right-hand Bat,Legbreak Googly,Bowler
+PHKD Mendis,Sri Lanka,Right-hand Bat,Right-arm Legbreak,Wicketkeeper Batter
+PJ Cummins,Australia,Right-hand Bat,Right-arm Fast,Bowler
+PJ Sangwan,India,Right-hand Bat,Left-arm Medium-fast,Bowler
+PK Garg,India,Right-hand Bat,Right-arm Medium,Batter
+PM Sarvesh Kumar,India,Right-hand Bat,Right-arm Medium,Bowler
+PN Mankad,India,Right-hand Bat,Right-arm Medium,Allrounder
+PP Chawla,India,Left-hand Bat,Legbreak Googly,Bowler
+PP Hinge,India,Left-hand Bat,Left-arm Medium,Bowler
+PP Ojha,India,Left-hand Bat,Slow Left-arm Orthodox,Bowler
+PP Shaw,India,Right-hand Bat,Right-arm Offbreak,Batter
+PR Shah,India,Right-hand Bat,Right-arm Offbreak,Batter
+PR Veer,India,Right-hand Bat,Right-arm Legbreak,Allrounder
+PSP Handscomb,Australia,Right-hand Bat,,Wicketkeeper Batter
+PV Tambe,India,Right-hand Bat,Legbreak Googly,Bowler
+PVD Chameera,Sri Lanka,Right-hand Bat,Right-arm Fast-medium,Bowler
+PVSN Raju,India,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+PWA Mulder,South Africa,Right-hand Bat,Right-arm Medium,Allrounder
+PWH de Silva,Sri Lanka,Right-hand Bat,Legbreak Googly,Allrounder
+Pankaj Singh,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Parvez Rasool,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+Prince Yadav,India,Right-hand Bat,Right-arm Medium,Bowler
+Priyansh Arya,India,Left-hand Bat,Right-arm Offbreak,Batter
+Q de Kock,South Africa,Left-hand Bat,,Wicketkeeper Batter
+R Ashwin,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+R Bhatia,India,Right-hand Bat,Right-arm Medium-fast,Allrounder
+R Bishnoi,India,Right-hand Bat,Legbreak Googly,Bowler
+R Dhawan,India,Right-hand Bat,Right-arm Medium-fast,Allrounder
+R Dravid,India,Right-hand Bat,Right-arm Offbreak,Batter
+R Goyal,India,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+R McLaren,South Africa,Left-hand Bat,Right-arm Medium-fast,Allrounder
+R Minz,India,Left-hand Bat,,Wicketkeeper Batter
+R Ninan,India,Right-hand Bat,Right-arm Offbreak,Bowler
+R Parag,India,Right-hand Bat,Right-arm Legbreak,Allrounder
+R Powell,West Indies,Right-hand Bat,Right-arm Medium-fast,Allrounder
+R Rampaul,West Indies,Left-hand Bat,Right-arm Fast-medium,Bowler
+R Ravindra,New Zealand,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+R Sai Kishore,India,Left-hand Bat,Slow Left-arm Orthodox,Bowler
+R Sanjay Yadav,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+R Sathish,India,Right-hand Bat,Right-arm Medium,Allrounder
+R Sharma,India,Right-hand Bat,Right-arm Offbreak,Batter
+R Shepherd,West Indies,Right-hand Bat,Right-arm Medium-fast,Allrounder
+R Shukla,India,Right-hand Bat,Right-arm Medium,Allrounder
+R Tewatia,India,Left-hand Bat,Legbreak Googly,Allrounder
+R Vinay Kumar,India,Right-hand Bat,Right-arm Medium,Bowler
+RA Bawa,India,Right-hand Bat,Right-arm Medium,Allrounder
+RA Jadeja,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+RA Shaikh,India,Right-hand Bat,Right-arm Medium,Bowler
+RA Tripathi,India,Right-hand Bat,Right-arm Medium,Batter
+RD Chahar,India,Right-hand Bat,Legbreak Googly,Bowler
+RD Gaikwad,India,Right-hand Bat,Right-arm Offbreak,Batter
+RD Rickelton,South Africa,Left-hand Bat,Slow Left-arm Orthodox,Wicketkeeper Batter
+RE Levi,South Africa,Right-hand Bat,Right-arm Medium,Batter
+RE van der Merwe,Netherlands,Right-hand Bat,Slow Left-arm Orthodox,Allrounder
+RG More,India,Right-hand Bat,Right-arm Medium,Allrounder
+RG Sharma,India,Right-hand Bat,Right-arm Offbreak,Batter
+RJ Gleeson,England,Right-hand Bat,Right-arm Fast-medium,Bowler
+RJ Harris,Australia,Right-hand Bat,Right-arm Fast-medium,Bowler
+RJ Peterson,South Africa,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+RJ Quiney,Australia,Left-hand Bat,Right-arm Medium,Batter
+RJW Topley,England,Right-hand Bat,Left-arm Fast-medium,Bowler
+RK Bhui,India,Right-hand Bat,Legbreak,Batter
+RK Singh,India,Left-hand Bat,Right-arm Offbreak,Batter
+RM Patidar,India,Right-hand Bat,Right-arm Offbreak,Batter
+RN ten Doeschate,Netherlands,Right-hand Bat,Right-arm Medium-fast,Allrounder
+RP Meredith,Australia,Right-hand Bat,Right-arm Fast,Bowler
+RP Singh,India,Right-hand Bat,Left-arm Fast-medium,Bowler
+RR Bhatkal,India,Right-hand Bat,Right-arm Medium,Allrounder
+RR Bose,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+RR Pant,India,Left-hand Bat,None,Wicketkeeper Batter
+RR Powar,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+RR Raje,India,Right-hand Bat,Right-arm Medium,Bowler
+RR Rossouw,South Africa,Left-hand Bat,Right-arm Offbreak,Batter
+RR Sarwan,West Indies,Right-hand Bat,Legbreak,Batter
+RS Bopara,England,Right-hand Bat,Right-arm Medium,Allrounder
+RS Gavaskar,India,Left-hand Bat,Slow Left-arm Orthodox,Batter
+RS Hangargekar,India,Right-hand Bat,Right-arm Medium-fast,Allrounder
+RS Sodhi,India,Right-hand Bat,Right-arm Medium,Allrounder
+RT Ponting,Australia,Right-hand Bat,Right-arm Medium,Batter
+RV Gomez,India,Right-hand Bat,Right-arm Medium,Allrounder
+RV Patel,India,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+RV Uthappa,India,Right-hand Bat,Right-arm Medium,Wicketkeeper Batter
+RW Price,Zimbabwe,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+Rahmanullah Gurbaz,Afghanistan,Right-hand Bat,None,Wicketkeeper Batter
+Ramandeep Singh,India,Right-hand Bat,Right-arm Medium,Allrounder
+Rashid Khan,Afghanistan,Right-hand Bat,Legbreak Googly,Allrounder
+Rasikh Salam,India,Right-hand Bat,Right-arm Medium,Bowler
+Ravi Bishnoi,India,Right-hand Bat,Legbreak Googly,Bowler
+S Anirudha,India,Right-hand Bat,None,Wicketkeeper Batter
+S Aravind,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+S Arora,India,Right-hand Bat,Right-arm Medium,Bowler
+S Badree,West Indies,Right-hand Bat,Right-arm Legbreak Googly,Bowler
+S Badrinath,India,Right-hand Bat,Right-arm Offbreak,Batter
+S Chanderpaul,West Indies,Left-hand Bat,Right-arm Legbreak,Batter
+S Dhawan,India,Left-hand Bat,Right-arm Offbreak,Batter
+S Dube,India,Left-hand Bat,Right-arm Medium,All-rounder
+S Gopal,India,Right-hand Bat,Right-arm Legbreak,All-rounder
+S Joseph,West Indies,Right-hand Bat,Right-arm Fast-medium,Bowler
+S Kaul,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+S Kaushik,India,Left-hand Bat,Left-arm Chinaman,Bowler
+S Ladda,India,Right-hand Bat,Right-arm Legbreak,Bowler
+S Lamichhane,Nepal,Right-hand Bat,Right-arm Legbreak Googly,Bowler
+S Midhun,India,Right-hand Bat,Right-arm Legbreak,Bowler
+S Nadeem,India,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+S Narwal,India,Right-hand Bat,Right-arm Medium-fast,All-rounder
+S Rana,India,Right-hand Bat,Right-arm Offbreak,All-rounder
+S Randiv,Sri Lanka,Right-hand Bat,Right-arm Offbreak,Bowler
+S Sandeep Warrier,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+S Sohal,India,Right-hand Bat,Right-arm Legbreak,Batter
+S Sreesanth,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+S Sriram,India,Left-hand Bat,Slow Left-arm Orthodox,All-rounder
+S Tyagi,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+S Vidyut,India,Left-hand Bat,Slow Left-arm Orthodox,All-rounder
+SA Abbott,Australia,Right-hand Bat,Right-arm Fast-medium,All-rounder
+SA Asnodkar,India,Right-hand Bat,Right-arm Offbreak,Batter
+SA Yadav,India,Right-hand Bat,Right-arm Medium,Batter
+SB Bangar,India,Right-hand Bat,Right-arm Medium-fast,All-rounder
+SB Dubey,India,Left-hand Bat,Slow Left-arm Orthodox,All-rounder
+SB Jakati,India,Left-hand Bat,Slow Left-arm Orthodox,Bowler
+SB Joshi,India,Left-hand Bat,Slow Left-arm Orthodox,All-rounder
+SB Styris,New Zealand,Right-hand Bat,Right-arm Medium,All-rounder
+SB Wagh,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+SC Ganguly,India,Left-hand Bat,Right-arm Medium,All-rounder
+SC Kuggeleijn,New Zealand,Right-hand Bat,Right-arm Fast-medium,All-rounder
+SD Chitnis,India,Right-hand Bat,Right-arm Offbreak,All-rounder
+SD Hope,West Indies,Right-hand Bat,Right-arm Medium,Wicketkeeper Batter
+SD Lad,India,Right-hand Bat,Right-arm Legbreak,Batter
+SE Bond,New Zealand,Right-hand Bat,Right-arm Fast,Bowler
+SE Marsh,Australia,Left-hand Bat,Slow Left-arm Orthodox,Batter
+SE Rutherford,West Indies,Left-hand Bat,Right-arm Medium-fast,All-rounder
+SH Johnson,Australia,Left-hand Bat,Left-arm Fast,Bowler
+SJ Srivastava,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+SK Raina,India,Left-hand Bat,Right-arm Offbreak,All-rounder
+SK Rasheed,India,Right-hand Bat,Right-arm Legbreak,Batter
+SK Trivedi,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+SK Warne,Australia,Right-hand Bat,Right-arm Legbreak,Bowler
+SL Malinga,Sri Lanka,Right-hand Bat,Right-arm Fast,Bowler
+SM Boland,Australia,Right-hand Bat,Right-arm Fast-medium,Bowler
+SM Curran,England,Left-hand Bat,Left-arm Medium-fast,All-rounder
+SM Harwood,Australia,Right-hand Bat,Right-arm Fast-medium,Bowler
+SM Katich,Australia,Left-hand Bat,Slow Left-arm Chinaman,Batter
+SM Pollock,South Africa,Right-hand Bat,Right-arm Fast-medium,Allrounder
+SMSM Senanayake,Sri Lanka,Right-hand Bat,Right-arm Offbreak,Bowler
+SN Khan,India,Right-hand Bat,Legbreak Googly,Batter
+SN Thakur,India,Right-hand Bat,Right-arm Medium,Allrounder
+SO Hetmyer,West Indies,Left-hand Bat,,Batter
+SP Fleming,New Zealand,Left-hand Bat,,Batter
+SP Goswami,India,Left-hand Bat,,Wicketkeeper
+SP Jackson,India,Right-hand Bat,,Wicketkeeper
+SP Narine,West Indies,Left-hand Bat,Right-arm Offbreak,Allrounder
+SPD Smith,Australia,Right-hand Bat,Legbreak Googly,Batter
+SR Tendulkar,India,Right-hand Bat,"Right-arm Offbreak, Legbreak Googly",Batter
+SR Watson,Australia,Right-hand Bat,Right-arm Fast-medium,Allrounder
+SS Agarwal,India,Right-hand Bat,Right-arm Medium,Batter
+SS Cottrell,West Indies,Right-hand Bat,Left-arm Fast-medium,Bowler
+SS Iyer,India,Right-hand Bat,Right-arm Legbreak,Batter
+SS Mundhe,India,Right-hand Bat,Right-arm Medium,Allrounder
+SS Prabhudessai,India,Right-hand Bat,Right-arm Medium,Batter
+SS Sarkar,Bangladesh,Left-hand Bat,Right-arm Medium-fast,Allrounder
+SS Shaikh,India,Right-hand Bat,,Batter
+SS Tiwary,India,Left-hand Bat,Right-arm Offbreak,Batter
+SSB Magala,South Africa,Right-hand Bat,Right-arm Medium-fast,Bowler
+ST Jayasuriya,Sri Lanka,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+STR Binny,India,Right-hand Bat,Right-arm Medium,Allrounder
+SU Parakh,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+SV Samson,India,Right-hand Bat,,Wicketkeeper
+SW Billings,England,Right-hand Bat,,Wicketkeeper
+SW Tait,Australia,Right-hand Bat,Right-arm Fast,Bowler
+SZ Mulani,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+Sachin Baby,India,Left-hand Bat,Right-arm Offbreak,Batter
+Sakib Hussain,India,Right-hand Bat,Right-arm Medium,Bowler
+Salman Butt,Pakistan,Left-hand Bat,Right-arm Offbreak,Batter
+Sameer Rizvi,India,Right-hand Bat,Right-arm Legbreak,Batter
+Sandeep Sharma,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Sanvir Singh,India,Right-hand Bat,Right-arm Medium,Allrounder
+Saurav Chauhan,India,Left-hand Bat,,Batter
+Sediqullah Atal,Afghanistan,Left-hand Bat,,Batter
+Shahbaz Ahmed,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+Shahid Afridi,Pakistan,Right-hand Bat,Legbreak Googly,Allrounder
+Shakib Al Hasan,Bangladesh,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+Shashank Singh,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+Shivam Mavi,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Shivam Sharma,India,Right-hand Bat,Right-arm Offbreak,Bowler
+Shivam Singh,India,Right-hand Bat,Right-arm Offbreak,Batter
+Shivang Kumar,India,Right-hand Bat,Legbreak Googly,Allrounder
+Shoaib Ahmed,India,Right-hand Bat,Right-arm Medium,Bowler
+Shoaib Akhtar,Pakistan,Right-hand Bat,Right-arm Fast,Bowler
+Shoaib Malik,Pakistan,Right-hand Bat,Right-arm Offbreak,Allrounder
+Shubman Gill,India,Right-hand Bat,Right-arm Offbreak,Batter
+Sikandar Raza,Zimbabwe,Right-hand Bat,Right-arm Offbreak,Allrounder
+Simarjeet Singh,India,Right-hand Bat,Right-arm Medium,Bowler
+Sohail Tanvir,Pakistan,Left-hand Bat,Left-arm Medium-fast,Bowler
+Sumit Kumar,India,Right-hand Bat,Right-arm Medium,Allrounder
+Sunny Gupta,India,Right-hand Bat,Right-arm Offbreak,Bowler
+Sunny Singh,India,Right-hand Bat,Right-arm Medium,Batter
+Suryansh Shedge,India,Right-hand Bat,Right-arm Medium,Allrounder
+Suyash Sharma,India,Right-hand Bat,Legbreak Googly,Bowler
+Swapnil Singh,India,Right-hand Bat,Slow Left-arm Orthodox,Allrounder
+Tom Banton,England,Right-hand Bat,Right-arm Offbreak,Wicketkeeper Batter
+Tyron Henderson,South Africa,Right-hand Bat,Right-arm Fast-medium,Allrounder
+Tom Kohler-Cadmore,England,Right-hand Bat,Right-arm Offbreak,Batter
+Tarun Kohli,India,Right-hand Bat,Right-arm Medium,Allrounder
+T. Natarajan,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+Tabraiz Shamsi,South Africa,Right-hand Bat,Slow Left-arm Chinaman,Bowler
+Tristan Stubbs,South Africa,Right-hand Bat,Right-arm Offbreak,Wicketkeeper Batter
+Tatenda Taibu,Zimbabwe,Right-hand Bat,Right-arm Medium,Wicketkeeper Batter
+Nuwan Thushara,Sri Lanka,Right-hand Bat,Right-arm Medium-fast,Bowler
+Trent Boult,New Zealand,Right-hand Bat,Left-arm Fast-medium,Bowler
+Tim Paine,Australia,Right-hand Bat,Right-arm Medium,Wicketkeeper Batter
+Tim Southee,New Zealand,Right-hand Bat,Right-arm Medium-fast,Bowler
+Tim David,Australia,Right-hand Bat,Right-arm Offbreak,Batter
+Tom Curran,England,Right-hand Bat,Right-arm Fast-medium,Allrounder
+Tim Seifert,New Zealand,Right-hand Bat,Right-arm Medium,Wicketkeeper Batter
+Tirumalasetti Suman,India,Right-hand Bat,Right-arm Offbreak,Batter
+Tillakaratne Dilshan,Sri Lanka,Right-hand Bat,Right-arm Offbreak,Allrounder
+Travis Head,Australia,Left-hand Bat,Right-arm Offbreak,Batter
+Tanmay Srivastava,India,Left-hand Bat,Right-arm Medium,Batter
+TP Sudhindra,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Travis Birt,Australia,Left-hand Bat,Right-arm Medium,Batter
+Tymal Mills,England,Right-hand Bat,Left-arm Fast,Bowler
+Tushar Deshpande,India,Left-hand Bat,Right-arm Medium-fast,Bowler
+Tanush Kotian,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+Tejas Baroka,India,Right-hand Bat,Legbreak Googly,Bowler
+Tilak Varma,India,Left-hand Bat,Right-arm Offbreak,Batter
+Uday Kaul,India,Left-hand Bat,Right-arm Medium,Wicketkeeper Batter
+Udit Birla,India,Right-hand Bat,Right-arm Medium,Batter
+Unmukt Chand,India,Right-hand Bat,Right-arm Offbreak,Batter
+Usman Khawaja,Australia,Left-hand Bat,Right-arm Medium,Batter
+Umesh Yadav,India,Right-hand Bat,Right-arm Fast,Bowler
+Umar Gul,Pakistan,Right-hand Bat,Right-arm Fast-medium,Bowler
+Umran Malik,India,Right-hand Bat,Right-arm Fast,Bowler
+Urvil Patel,India,Right-hand Bat,Right-arm Medium,Wicketkeeper Batter
+Vidyadhar Kaverappa,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Virat Kohli,India,Right-hand Bat,Right-arm Medium,Batter
+Vikas Nigam,India,Right-hand Bat,Legbreak Googly,Bowler
+Virender Pratap Singh,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Vishnu Puthur,India,Right-hand Bat,Slow Left-arm Orthodox,Bowler
+Virender Sehwag,India,Right-hand Bat,Right-arm Offbreak,Batter
+Vijay Shankar,India,Right-hand Bat,Right-arm Medium,Allrounder
+V Suryavanshi,India,Left-hand Bat,Slow Left-arm Orthodox,Batter
+V Viyaskanth,Sri Lanka,Right-hand Bat,Right-arm Legbreak,Bowler
+VG Arora,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+VH Zol,India,Left-hand Bat,Right-arm Offbreak,Batter
+VR Aaron,India,Right-hand Bat,Right-arm Fast,Bowler
+VR Iyer,India,Left-hand Bat,Right-arm Medium,Allrounder
+VRV Singh,India,Right-hand Bat,Right-arm Fast-medium,Bowler
+VS Malik,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+VS Yeligati,India,Right-hand Bat,Right-arm Offbreak,Bowler
+VVS Laxman,India,Right-hand Bat,Right-arm Offbreak,Batter
+VY Mahesh,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Vijaykumar Vyshak,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Virat Singh,India,Left-hand Bat,Right-arm Legbreak,Batter
+Vishnu Vinod,India,Right-hand Bat,,Wicketkeeper Batter
+Vivrant Sharma,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+W Jaffer,India,Right-hand Bat,Right-arm Offbreak,Batter
+W O'Rourke,New Zealand,Right-hand Bat,Right-arm Fast-medium,Bowler
+WA Mota,India,Right-hand Bat,Right-arm Medium-fast,Allrounder
+WD Parnell,South Africa,Left-hand Bat,Left-arm Fast-medium,Allrounder
+WG Jacks,England,Right-hand Bat,Right-arm Offbreak,Allrounder
+WP Saha,India,Right-hand Bat,,Wicketkeeper Batter
+WPUJC Vaas,Sri Lanka,Left-hand Bat,Left-arm Fast-medium,Bowler
+Washington Sundar,India,Left-hand Bat,Right-arm Offbreak,Allrounder
+X Thalaivan Sargunam,India,Right-hand Bat,Right-arm Offbreak,Batter
+XC Bartlett,Australia,Right-hand Bat,Right-arm Fast-medium,Bowler
+Y Gnaneswara Rao,India,Right-hand Bat,Right-arm Medium,Batter
+Y Nagar,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+Y Prithvi Raj,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+Y Venugopal Rao,India,Right-hand Bat,Right-arm Offbreak,Batter
+YA Abdulla,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+YBK Jaiswal,India,Left-hand Bat,Legbreak Googly,Batter
+YK Pathan,India,Right-hand Bat,Right-arm Offbreak,Allrounder
+YS Chahal,India,Right-hand Bat,Right-arm Legbreak,Bowler
+YV Dhull,India,Right-hand Bat,Right-arm Offbreak,Batter
+YV Takawale,India,Right-hand Bat,,Wicketkeeper Batter
+Yash Dayal,India,Left-hand Bat,Left-arm Medium-fast,Bowler
+Yash Raj Punja,United Arab Emirates,Right-hand Bat,Right-arm Medium-fast,Bowler
+Yash Thakur,India,Right-hand Bat,Right-arm Medium-fast,Bowler
+Yashpal Singh,India,Right-hand Bat,Right-arm Medium,Batter
+Younis Khan,Pakistan,Right-hand Bat,Right-arm Medium,Batter
+Yudhvir Singh,India,Right-hand Bat,Right-arm Medium-fast,Allrounder
+Yuvraj Singh,India,Left-hand Bat,Slow Left-arm Orthodox,Allrounder
+Z Khan,India,Right-hand Bat,Left-arm Fast-medium,Bowler
+Zeeshan Ansari,India,Right-hand Bat,Right-arm Legbreak,Bowler

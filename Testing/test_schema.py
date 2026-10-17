@@ -4,20 +4,14 @@ import duckdb
 
 conn = duckdb.connect("ipl.db")
 
-result = conn.execute("""
-SELECT
-    date,
-    team1,
-    team2,
-    winner
-FROM matches
-WHERE TRY_CAST(
-    SUBSTRING(season, 1, 4)
-    AS INTEGER
-) = 2020
-ORDER BY date DESC
-limit 10;
-""").fetchdf()
-print(result)
+conn.execute("""
+copy(SELECT DISTINCT batter AS player from deliveries
+
+union
+
+SELECT DISTINCT bowler AS player from deliveries
+order by player
+) TO 'D:/players.csv' (HEADER,DELIMITER ',')
+""")
 
 conn.close()
