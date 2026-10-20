@@ -56,14 +56,19 @@ class KnowledgeRetriever:
 
             # Rules
             "powerplay": "rules/powerplay.md",
+            "power play": "rules/powerplay.md",
+            "powerply": "rules/powerplay.md",
             "impact player": "rules/impact_player.md",
             "orange cap": "rules/orange_cap.md",
             "purple cap": "rules/purple_cap.md",
             "dls": "rules/dls.md",
+            "duckworth lewis": "rules/dls.md",
             "super over": "rules/super_over.md",
+            "superover": "rules/super_over.md",
 
             # History
             "ipl history": "history/ipl_history.md",
+            "history ipl": "history/ipl_history.md",
             "finals history": "history/ipl_finals_history.md",
             "evolution of ipl": "history/evolution_of_ipl.md",
             "greatest ipl records": "history/greatest_ipl_records.md"

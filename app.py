@@ -25,6 +25,7 @@ from agent.chart_generator import should_generate_chart, get_chart_config, prepa
 from agent.plotly_chart_renderer import render_bar_chart, render_line_chart
 from guardrails.relevance_validator import is_ipl_relevant
 from agent.incomplete_query_detector import detect_incomplete_ipl_query
+from knowledge_agent.knowledge_retriever import KnowledgeRetriever
 
 
 DEBUG_MODE = True
@@ -91,6 +92,7 @@ for key, default_value in SESSION_DEFAULTS.items():
 if "conversation_state" not in st.session_state:
     st.session_state.conversation_state = create_conversation_state()
 
+retriever = KnowledgeRetriever()
 
 try:
     stats = get_database_statistics()
@@ -479,6 +481,13 @@ if current_question:
             st.stop()
 
         question_is_relevant = is_ipl_relevant(current_question)
+        knowledge_document = retriever.find_document(current_question)
+
+        knowledge_content = None
+        print("KNOWLEDGE_DOC: ", knowledge_document)
+        if knowledge_document:
+            knowledge_content = retriever.load_document(current_question)
+
         incomplete = detect_incomplete_ipl_query(current_question)
         entity_result = detect_entity_followup(current_question)
         metric_result = detect_metric_followup(current_question)
@@ -742,6 +751,19 @@ if current_question:
                     "Please ask an IPL statistics question first. "
                     "I need a previous result before I can explain why."
                 )
+        elif knowledge_document:
+            with st.chat_message("user"):
+                st.markdown(current_question)
+
+            with st.chat_message("assistant"):
+                st.markdown(
+                    knowledge_content
+                )
+        elif incomplete.get("is_incomplete", False):
+            render_incomplete_query(
+                current_question,
+                incomplete
+            )
 
         elif not question_is_relevant:
 
