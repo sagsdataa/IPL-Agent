@@ -1,29 +1,38 @@
 # knowledge_router.py
 
-class KnowledgeRouter:
+def detect_knowledge_intent(
+        question: str
+            
+):      
+        """
+        Detect whether the user is asking for descriptive knowledge rather
+        than statistical analysis.
+        """
+      
+        if not question:
+            return False
 
-    def __init__(self):
+        cleaned = (
+                question
+                .lower()
+                .strip()
+        )
 
-        self.knowledge_patterns = [
+        knowledge_patterns = (
 
-            "who is",
-            "tell me about",
-            "about",
-            "what is",
-            "what are",
-            "history of",
-            "explain",
-            "describe"
-        ]
+            "who is ",
+            "tell me about ",
+            "about ",
+            "what is ",
+            "what are ",
+            "history of ",
+            "explain ",
+            "describe ",
+            "profile of ",
+            "meaning of ",
 
-    def is_knowledge_query(
-        self,
-        question
-    ):
+        )
 
-        question = question.lower()
-
-        return any(
-            pattern in question
-            for pattern in self.knowledge_patterns
+        return cleaned.startswith(
+            knowledge_patterns
         )

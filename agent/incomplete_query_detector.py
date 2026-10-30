@@ -105,7 +105,7 @@ def detect_incomplete_ipl_query(question: str):
         From 2020 onward?
         For MI?
     """
-
+    
     if not question or not question.strip():
         return _empty_result()
 
@@ -159,6 +159,7 @@ def detect_incomplete_ipl_query(question: str):
             "is_incomplete": True,
             "type": "entity",
             "value": normalized_entity
+            
         }
 
     # Season-only input.

@@ -26,6 +26,7 @@ from agent.plotly_chart_renderer import render_bar_chart, render_line_chart
 from guardrails.relevance_validator import is_ipl_relevant
 from agent.incomplete_query_detector import detect_incomplete_ipl_query
 from knowledge_agent.knowledge_retriever import KnowledgeRetriever
+from knowledge_agent.knowledge_router import detect_knowledge_intent
 
 
 DEBUG_MODE = True
@@ -320,12 +321,12 @@ def render_full_analysis(answer, result, generated_sql, context):
             if chart_config["type"] == "line":
                 st.plotly_chart(
                     render_line_chart(chart_df),
-                    use_container_width=True,
+                    use_container_width="stretch",
                 )
             elif chart_config["type"] == "bar":
                 st.plotly_chart(
                     render_bar_chart(chart_df),
-                    use_container_width=True,
+                    use_container_width="stretch",
                 )
             else:
                 st.dataframe(chart_df, width="stretch")
@@ -456,9 +457,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+#####################################################################################################
+################ This is the entry point for ask questions from users ##############################
 
 typed_question = st.chat_input("Ask anything about IPL cricket...")
 selected_question = st.session_state.selected_question
+
+#### The below if else block set the question and this question will pass to all relevant check...
 
 if selected_question:
     current_question = selected_question
@@ -468,32 +473,53 @@ elif typed_question:
 else:
     current_question = None
 
+######### The below if else block check for....############### 
+#  1. Call clean_question function for quality checks..############### 
 
 if current_question:
     current_question = clean_question(current_question)
 
     if current_question:
-        if is_acknowledgement(current_question):
+        if is_acknowledgement(current_question):    # This function will check the words as a followup? like..Ok
             with st.chat_message("user"):
                 st.markdown(current_question)
             with st.chat_message("assistant"):
                 st.markdown("Glad that helped. 🏏")
             st.stop()
 
+######################## QUESTIONS RELEVANCE CHECK ###############################
+##################################################################################
+        
         question_is_relevant = is_ipl_relevant(current_question)
+
         knowledge_document = retriever.find_document(current_question)
+
+        knowledge_intent = detect_knowledge_intent(current_question)
 
         knowledge_content = None
         print("KNOWLEDGE_DOC: ", knowledge_document)
+
         if knowledge_document:
             knowledge_content = retriever.load_document(current_question)
-
+        
         incomplete = detect_incomplete_ipl_query(current_question)
         entity_result = detect_entity_followup(current_question)
         metric_result = detect_metric_followup(current_question)
         time_result = detect_time_followup(current_question)
         continuation_result = detect_context_continuation(current_question)
-        has_previous_context = st.session_state.last_context is not None
+        
+
+        if (
+            knowledge_document
+            and knowledge_intent
+        ):
+            capability_route = "knowledge"
+        else:
+            capability_route = "analytics"
+
+        has_previous_context = (
+            st.session_state.last_context is not None
+        )
 
         if DEBUG_MODE:
             print("=" * 60)
@@ -501,11 +527,15 @@ if current_question:
             print("RELEVANT:", question_is_relevant)
             print("INCOMPLETE:", incomplete)
             print("ENTITY:", entity_result)
+
             print("METRIC:", metric_result)
             print("TIME:", time_result)
             print("CONTINUATION:", continuation_result)
             print("STATE:", st.session_state.conversation_state)
             print("=" * 60)
+
+        #   1. TIME FOLLOW-UP WITH PRIOR CONTEXT
+        ########################################################################
 
         if time_result.get("is_time_followup") and has_previous_context:
             rewritten_question = build_time_question(
@@ -550,6 +580,9 @@ if current_question:
                         render_supporting_outputs(result, generated_sql, context)
                     except Exception as error:
                         display_error(error)
+
+        #   2. Metric follow-up with prior context.
+        ########################################################################
 
         elif metric_result.get("is_metric_followup") and has_previous_context:
             rewritten_question = build_metric_question(
@@ -600,6 +633,9 @@ if current_question:
                     except Exception as error:
                         display_error(error)
 
+        #   3. Entity follow-up with prior context.
+        ########################################################################
+
         elif entity_result.get("is_entity_followup") and has_previous_context:
             rewritten_question = build_contextual_question(
                 entity_result,
@@ -649,14 +685,35 @@ if current_question:
                     except Exception as error:
                         display_error(error)
 
+        #   4. KNOWLEDGE QUESTIONS RELATED TO IPL.
+        ########################################################################
+
+        elif (  
+            capability_route == "knowledge"
+            and knowledge_content
+
+        ):
+            with st.chat_message("user"):
+                st.markdown(current_question)
+
+            with st.chat_message("assistant"):
+                st.markdown(
+                    knowledge_content
+                )
+
+        #   5. INCOMPLETE follow-up with prior context.
+        ########################################################################
+
         elif incomplete.get("is_incomplete", False):
             render_incomplete_query(current_question, incomplete)
 
+        #   6. Contextual analytics continuation.
         elif (
             continuation_result.get("is_context_continuation") 
             and has_previous_context
             and question_is_relevant
         ):
+            #   Existing continuation workflow
             rewritten_question = build_context_continuation_question(
                 continuation_result,
                 st.session_state.conversation_state,
@@ -692,6 +749,9 @@ if current_question:
                     except Exception as error:
                         display_error(error)
 
+        #   6. Follow-up requiring missing previous context.
+        ########################################################################
+
         elif (
             question_is_relevant
             and (
@@ -709,6 +769,8 @@ if current_question:
                     "I need previous analytical context before processing this follow-up."
                 )
 
+        #   7. WHY / HOW / EXPLAIN QUESTION
+        ########################################################################
         elif is_followup_question(current_question):
             if (
                 st.session_state.last_question
@@ -751,19 +813,15 @@ if current_question:
                     "Please ask an IPL statistics question first. "
                     "I need a previous result before I can explain why."
                 )
-        elif knowledge_document:
-            with st.chat_message("user"):
-                st.markdown(current_question)
 
-            with st.chat_message("assistant"):
-                st.markdown(
-                    knowledge_content
-                )
-        elif incomplete.get("is_incomplete", False):
-            render_incomplete_query(
-                current_question,
-                incomplete
-            )
+        #elif incomplete.get("is_incomplete", False):
+        #    render_incomplete_query(
+        #        current_question,
+        #        incomplete
+        #    )
+
+        #   8. NOT RELEVANT QUESTIONS...
+        ########################################################################
 
         elif not question_is_relevant:
 
@@ -774,6 +832,10 @@ if current_question:
                     "I couldn't identify an IPL-related concept, player, team, season, "
                     "venue, match, or statistic in the question."
                 )
+
+        #   9. New QUESTIONS...
+        ########################################################################
+
         else:
             with st.chat_message("user"):
                 st.markdown(current_question)
@@ -801,6 +863,7 @@ if current_question:
                             expanded=False,
                         )
 
+                    #   SAVE THE CONTEXT OR SESSION QUESTIONS...
                     save_analysis_state(
                         current_question,
                         generated_sql,
@@ -827,6 +890,6 @@ if current_question:
 
 footer_left, footer_right = st.columns(2)
 with footer_left:
-    st.caption("Powered by Gemini • DuckDB • Streamlit • Plotly")
+    st.caption("Powered by Agentic AI • RAG • Gemini • DuckDB • Streamlit • Plotly")
 with footer_right:
     st.caption(" ")

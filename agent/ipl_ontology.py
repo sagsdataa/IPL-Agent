@@ -31,7 +31,8 @@ IPL_ONTOLOGY = {
 
         "powerplay",
         "middle overs",
-        "death overs"
+        "death overs",
+        "power play",
     ],
 
     "concepts": [
@@ -65,6 +66,8 @@ IPL_ONTOLOGY = {
         "best",
         "top",
         "highest",
-        "most"
+        "most",
+        "gives",
+        "give"
     ]
 }
