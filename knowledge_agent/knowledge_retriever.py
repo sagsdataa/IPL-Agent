@@ -68,6 +68,9 @@ class KnowledgeRetriever:
 
             # History
             "ipl history": "history/ipl_history.md",
+            "history of the ipl": "history/ipl_history.md",
+            "how did the ipl begin": "history/ipl_history.md",
+            "origin of ipl": "history/ipl_history.md",
             "history ipl": "history/ipl_history.md",
             "finals history": "history/ipl_finals_history.md",
             "evolution of ipl": "history/evolution_of_ipl.md",

@@ -32,7 +32,9 @@ def detect_knowledge_intent(
             "meaning of ",
             "ipl history ",
             "IPL history ",
-            
+            "how did ",
+            "when did ",
+            "origin of ",
 
         )
 

@@ -412,19 +412,26 @@ with st.sidebar:
     st.subheader("Popular Questions")
     st.markdown(
         """
-🏏 Who scored the most runs?
+👑 Who is the greatest IPL run scorer?
 
-🎯 Who took the most wickets?
+🎯 Which bowler dominates the wicket charts?
 
-⚡ Best death-over batter?
+⚔️ Most one-sided batter vs bowler matchups?
 
-🔥 Top powerplay wicket takers?
+🔥 Who dominates the death overs?
 
-🏆 Most Player of the Match awards?
+🌍 Best overseas performers in IPL history?
 
-🏟 Which venue hosted the most matches?
+🌀 Which leg spinner has taken the most wickets?
+
+🏟️ Which venue favors chasing teams the most?
+
+🧠 What is the Impact Player rule?
+
+📖 Tell me about MS Dhoni
+
 """
-    )
+)
 
 
 st.markdown("<h1 style='text-align:center;'>🏏 IPL Intelligence Agent</h1>", unsafe_allow_html=True)
