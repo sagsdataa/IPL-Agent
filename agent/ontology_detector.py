@@ -12,6 +12,7 @@ def detect_ontology_elements(question: str):
         "metric": False,
         "phase": False,
         "concept": False,
+        "knowledge": False,
         "role": False,
         "season": False,
         "question": False
@@ -50,6 +51,14 @@ def detect_ontology_elements(question: str):
             detected["concept"] = True
             break
 
+    for concept in IPL_ONTOLOGY["knowledge_concepts"]:
+
+        if concept in question:
+
+            detected["knowledge"] = True
+            break
+
+    
     for word in IPL_ONTOLOGY["question_words"]:
 
         if word in question:

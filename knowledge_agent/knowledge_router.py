@@ -30,6 +30,9 @@ def detect_knowledge_intent(
             "describe ",
             "profile of ",
             "meaning of ",
+            "ipl history ",
+            "IPL history ",
+            
 
         )
 

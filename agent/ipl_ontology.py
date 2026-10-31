@@ -48,6 +48,23 @@ IPL_ONTOLOGY = {
         "player of the match"
     ],
 
+    "knowledge_concepts": [
+        "ipl history",
+        "history of ipl",
+        "ipl origins",
+        "origin of ipl",
+        "ipl evolution",
+        "evolution of ipl",
+        "powerplay",
+        "power play",
+        "impact player",
+        "orange cap",
+        "purple cap",
+        "dls",
+        "duckworth lewis stern",
+        "super over"
+    ],
+    
     "roles": [
 
         "batter",
