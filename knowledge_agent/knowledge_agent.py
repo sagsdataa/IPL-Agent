@@ -7,7 +7,7 @@ from config import (
 
 
 client = genai.Client(
-    api_key=GEMINI_API_KEY
+    api_key = GEMINI_API_KEY
 )
 
 
@@ -246,8 +246,8 @@ RETRIEVED KNOWLEDGE:
 """
 
     response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=prompt,
+        model = MODEL_NAME,
+        contents = prompt,
     )
 
     answer = response.text.strip()
