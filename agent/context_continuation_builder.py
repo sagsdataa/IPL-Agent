@@ -1,12 +1,10 @@
-# agent/context_continuation_builder.py
-
 """
 Context Continuation Builder
 
 Builds a complete analytical question
 from a continuation fragment while
-replacing filters already present
-in the canonical question.
+preserving the previous analytical
+entity, metric, and filters.
 """
 
 import re
@@ -20,20 +18,6 @@ def build_context_continuation_question(
     continuation_result,
     conversation_state,
 ):
-    """
-    Example
-
-    Base:
-        Who scored the most runs in IPL
-        for SRH?
-
-    Follow-up:
-        for Mumbai Indians?
-
-    Output:
-        Who scored the most runs in IPL
-        for Mumbai Indians?
-    """
 
     if not continuation_result:
         return None
@@ -42,39 +26,108 @@ def build_context_continuation_question(
         return None
 
     if not continuation_result.get(
-        "is_context_continuation"
+        "is_context_continuation",
+        False,
     ):
         return None
 
-    base_question = (
-        conversation_state.get(
-            "canonical_question"
-        )
+    # -----------------------------------------
+    # Previous analytical context
+    # -----------------------------------------
+
+    base_question = conversation_state.get(
+        "last_question"
     )
 
     if not base_question:
         return None
 
-    fragment = (
-        continuation_result.get(
-            "fragment"
-        )
+    fragment = continuation_result.get(
+        "fragment"
     )
 
     if not fragment:
         return None
 
-    #
-    # Normalize fragment
-    #
-    fragment = fragment.strip()
+    fragment = (
+        fragment
+        .strip()
+        .rstrip("?.!")
+    )
 
-    #
-    # Team replacement
-    #
-    if fragment.lower().startswith(
-        "for "
-    ):
+    fragment_lower = fragment.lower()
+
+    player = (
+        conversation_state.get("player")
+        or conversation_state.get(
+            "primary_entity"
+        )
+    )
+
+    metric = conversation_state.get(
+        "metric"
+    )
+
+    # ==================================================
+    # AGAINST WHICH TEAM
+    # ==================================================
+
+    if fragment_lower in {
+        "against which team",
+        "against what team",
+        "against whom",
+        "which opposition",
+    }:
+
+        if not player:
+            return None
+
+        # Previous analysis was wickets
+        if metric == "total_wickets":
+
+            return (
+                f"Against which batting team did "
+                f"{player} take the most "
+                f"bowler-attributed wickets?"
+            )
+
+        # Previous analysis was runs
+        if metric == "total_runs":
+
+            return (
+                f"Against which bowling team did "
+                f"{player} score the most runs?"
+            )
+
+        # Previous analysis was sixes
+        if metric == "sixes":
+
+            return (
+                f"Against which bowling team did "
+                f"{player} hit the most sixes?"
+            )
+
+        # Previous analysis was fours
+        if metric == "fours":
+
+            return (
+                f"Against which bowling team did "
+                f"{player} hit the most fours?"
+            )
+
+        # Generic player fallback
+        return (
+            f"{base_question.rstrip('?')} "
+            f"against which team?"
+        )
+
+    # ==================================================
+    # TEAM REPLACEMENT
+    # Example:
+    # For CSK?
+    # ==================================================
+
+    if fragment_lower.startswith("for "):
 
         entity = fragment[4:].strip()
 
@@ -82,14 +135,11 @@ def build_context_continuation_question(
             entity
         )
 
-        #
-        # Remove existing team clause
-        #
         base_question = re.sub(
             r"\s+for\s+[^?]+",
             "",
             base_question,
-            flags=re.IGNORECASE
+            flags=re.IGNORECASE,
         )
 
         return (
@@ -97,12 +147,13 @@ def build_context_continuation_question(
             f"for {entity}?"
         )
 
-    #
-    # Venue replacement
-    #
-    if fragment.lower().startswith(
-        "at "
-    ):
+    # ==================================================
+    # VENUE REPLACEMENT
+    # Example:
+    # At Wankhede?
+    # ==================================================
+
+    if fragment_lower.startswith("at "):
 
         venue = fragment[3:].strip()
 
@@ -114,7 +165,7 @@ def build_context_continuation_question(
             r"\s+at\s+[^?]+",
             "",
             base_question,
-            flags=re.IGNORECASE
+            flags=re.IGNORECASE,
         )
 
         return (
@@ -122,11 +173,12 @@ def build_context_continuation_question(
             f"at {venue}?"
         )
 
-    #
-    # Season replacement
-    #
+    # ==================================================
+    # SEASON REPLACEMENT
+    # ==================================================
+
     season_match = re.search(
-        r"20\d{2}",
+        r"\b20\d{2}\b",
         fragment
     )
 
@@ -135,10 +187,10 @@ def build_context_continuation_question(
         season = season_match.group()
 
         base_question = re.sub(
-            r"in IPL season \d{4}",
+            r"\s+in\s+IPL\s+season\s+\d{4}",
             "",
             base_question,
-            flags=re.IGNORECASE
+            flags=re.IGNORECASE,
         )
 
         return (
@@ -146,31 +198,39 @@ def build_context_continuation_question(
             f"in IPL season {season}?"
         )
 
-    #
-    # Pure entity continuation
-    #
-    if len(fragment.split()) <= 3:
+    # ==================================================
+    # PURE ENTITY CONTINUATION
+    # ==================================================
 
-        normalized_entity = normalize_entity(
+    normalized_entity = normalize_entity(
         fragment
-        )
+    )
+
+    # Only use the entity branch if normalization
+    # actually identified a player/team alias.
+    if (
+        normalized_entity
+        and normalized_entity.lower()
+        != fragment.lower()
+    ):
 
         base_question = re.sub(
-        r"\s+for\s+[^?]+",
-        "",
-        base_question,
-        flags=re.IGNORECASE
+            r"\s+for\s+[^?]+",
+            "",
+            base_question,
+            flags=re.IGNORECASE,
         )
 
         return (
-        f"{base_question.rstrip('?')} "
-        f"for {normalized_entity}?"
+            f"{base_question.rstrip('?')} "
+            f"for {normalized_entity}?"
         )
 
-    #
-    # Fallback
-    #
+    # ==================================================
+    # GENERIC CONTINUATION
+    # ==================================================
+
     return (
-        f"{base_question.rstrip('?')} "
-        f"{fragment}?"
+        f"{base_question.rstrip('?')}. "
+        f"Follow-up request: {fragment}?"
     )

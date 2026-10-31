@@ -61,6 +61,17 @@ ANALYTICAL_PHRASES = {
     "top 10",
 }
 
+CONTEXTUAL_ANALYTICAL_PATTERNS = (
+    r"^against\s+(which|what)\s+team$",
+    r"^against\s+whom$",
+    r"^(which|what)\s+team$",
+    r"^(which|what)\s+season$",
+    r"^(which|what)\s+venue$",
+    r"^at\s+(which|what)\s+venue$",
+    r"^in\s+(which|what)\s+season$",
+)
+
+
 def detect_context_continuation(
     question: str
 ):
@@ -92,6 +103,26 @@ def detect_context_continuation(
     )
 
     words = normalized.split()
+
+    # --------------------------------------------------------------------
+    ############## Explicit analytical continuations ##############
+    # --------------------------------------------------------------------
+
+    for pattern in CONTEXTUAL_ANALYTICAL_PATTERNS:
+
+        if re.fullmatch(
+        pattern,
+        normalized,
+     ):
+
+            return {
+                "is_context_continuation": True,
+                "confidence": 1.0,
+                "fragment": question,
+                "reasons": [
+                    "contextual_analytical_followup"
+                ],
+            }
 
     score = 0.0
     reasons = []
