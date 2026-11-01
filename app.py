@@ -918,6 +918,6 @@ if current_question:
 
 footer_left, footer_right = st.columns(2)
 with footer_left:
-    st.caption("Powered by Agentic AI • RAG • Gemini • DuckDB • Streamlit • Plotly")
+    st.caption("Powered by Agentic AI • RAG • Gemini • Python • DuckDB • Streamlit ")
 with footer_right:
     st.caption(" ")

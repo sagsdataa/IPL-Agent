@@ -392,10 +392,20 @@ Use bowling_style values:
 - Left-arm fast-medium
 - Left-arm Fast
 
-Example:
+Mandatory filter:
 
-WHERE
-    LOWER(p.bowling_style) LIKE 'left-arm%'
+WHERE LOWER(p.bowling_style) IN (
+    'left-arm medium',
+    'left-arm medium-fast',
+    'left-arm fast-medium',
+    'left-arm fast'
+)
+
+Do not include:
+
+- Slow left-arm orthodox
+- Left-arm Chinaman
+- Slow Left-arm Chinaman
 
 --------------------------------------------------
 
@@ -425,39 +435,69 @@ JOIN:
 deliveries.bowler = player_dimension.player_name
 
 ==================================================
-SEASON-HANDLING RULES
+IPL YEAR AND SEASON-HANDLING RULES
 ==================================================
 
-The season column is VARCHAR, not INTEGER.
+The season column is a VARCHAR label and may contain:
 
-Never use:
+- A single year, such as '2019'
+- A split-year label, such as '2009/10'
+- A split-year label, such as '2020/21'
+
+Do NOT assume that the first four characters of season
+represent the IPL edition year requested by the user.
+
+For user questions that specify an IPL year, use the
+calendar year from the match date:
+
+YEAR(date)
+
+Examples:
+
+IPL 2010:
+
+WHERE YEAR(date) = 2010
+
+IPL 2020:
+
+WHERE YEAR(date) = 2020
+
+From IPL 2020 onward:
+
+WHERE YEAR(date) >= 2020
+
+Between IPL 2020 and IPL 2022:
+
+WHERE YEAR(date) BETWEEN 2020 AND 2022
+
+Use the same date-based year rule for both:
+
+- matches.date
+- deliveries.date
+
+When both tables are joined, qualify the date column:
+
+YEAR(m.date)
+
+or:
+
+YEAR(d.date)
+
+Do NOT use:
 
 CAST(season AS INTEGER)
 
-Never use:
-
-season BETWEEN 2020 AND 2026
-
-Some season values contain a slash, such as '2020/21'.
-
-For numeric season filtering, always extract the first four characters
-and safely convert them into an integer:
+Do NOT use:
 
 TRY_CAST(SUBSTRING(season, 1, 4) AS INTEGER)
 
-Correct example for seasons 2020 through 2026:
+Do NOT use:
 
-WHERE TRY_CAST(SUBSTRING(season, 1, 4) AS INTEGER)
-      BETWEEN 2020 AND 2026
+season BETWEEN 2020 AND 2022
 
-Use the same rule for both matches.season and deliveries.season.
-
-For question using "from YEAR onward", "since YEAR",
-or "YEAR" and later", use:
-
-TRY_CAST(SUBSTRING(season,1,4) AS INTEGER) >= YEAR
-
-Do not convert an onwardrange into an equality filter.
+The original season column may still be returned for
+display, but it must not be used as the primary numeric
+year filter.
 
 ==================================================
 METRIC-SELECTION RULES
@@ -839,51 +879,69 @@ AND TRIM(team) <> ''
 AND LOWER(TRIM(team)) <> 'no result'
 
 ==================================================
-IPL SEASON WINNER RULES
+IPL YEAR AND SEASON-HANDLING RULES
 ==================================================
 
-Questions such as:
+The season column is a VARCHAR label and may contain:
 
-- IPL 2020 winner
-- Who won IPL 2020?
-- Winner of IPL 2021
-- Which team won IPL 2022?
+- A single year, such as '2019'
+- A split-year label, such as '2009/10'
+- A split-year label, such as '2020/21'
 
-refer to the team that won the final match
-of that IPL season.
+Do NOT assume that the first four characters of season
+represent the IPL edition year requested by the user.
 
-The dataset does not contain a dedicated
-final-match indicator.
+For user questions that specify an IPL year, use the
+calendar year from the match date:
 
-Therefore:
+YEAR(date)
 
-Use the latest match played in the requested season.
+Examples:
 
-Filter season using:
+IPL 2010:
 
-TRY_CAST(
-    SUBSTRING(season,1,4)
-    AS INTEGER
-)
+WHERE YEAR(date) = 2010
 
-Order matches by date descending.
+IPL 2020:
 
-Return the winner from the latest match.
+WHERE YEAR(date) = 2020
 
-Example:
+From IPL 2020 onward:
 
-SELECT
-    season,
-    winner
-FROM matches
-WHERE TRY_CAST(
-    SUBSTRING(season,1,4)
-    AS INTEGER
-) = 2020
-AND winner IS NOT NULL
-AND winner <> 'No Result'
-ORDER BY date DESC
-LIMIT 1;
+WHERE YEAR(date) >= 2020
+
+Between IPL 2020 and IPL 2022:
+
+WHERE YEAR(date) BETWEEN 2020 AND 2022
+
+Use the same date-based year rule for both:
+
+- matches.date
+- deliveries.date
+
+When both tables are joined, qualify the date column:
+
+YEAR(m.date)
+
+or:
+
+YEAR(d.date)
+
+Do NOT use:
+
+CAST(season AS INTEGER)
+
+Do NOT use:
+
+TRY_CAST(SUBSTRING(season, 1, 4) AS INTEGER)
+
+Do NOT use:
+
+season BETWEEN 2020 AND 2022
+
+The original season column may still be returned for
+display, but it must not be used as the primary numeric
+year filter.
 
 ==================================================
 RANKING RULES
@@ -987,8 +1045,7 @@ WHERE is_wicket = 1
       'retired out',
       'obstructing the field'
   )
-  AND TRY_CAST(SUBSTRING(season, 1, 4) AS INTEGER)
-      BETWEEN 2020 AND 2026
+  AND YEAR(date) BETWEEN 2020 AND 2026
 GROUP BY bowler
 ORDER BY total_wickets DESC
 LIMIT 1;
@@ -1016,6 +1073,35 @@ FROM matches
 WHERE winner IS NOT NULL
 GROUP BY winner
 ORDER BY total_wins DESC
+LIMIT 1;
+
+
+Question:
+Which team won*IPL 2010?
+
+SQL:
+SELECT
+    season,*    YEAR(date) AS ipl_year,
+    wi*ner
+FROM matches
+WHERE YEAR(date) * 2010
+  AND winner IS NOT NULL
+  A*D TRIM(winner) <> ''
+  AND LOWER(TRIM(winner)) <> 'no result'
+ORDER BY date DESC
+LIMIT 1;
+
+Question:
+Who scored the most runs in IPL 2010?
+
+SQL:
+SELECT
+    batter,
+    SUM(batter_runs) AS total_runs
+FROM deliveries
+WHERE YEAR(date) = 2010
+GROUP BY batter
+ORDER BY total_runs DESC
 LIMIT 1;
 
 ==================================================
