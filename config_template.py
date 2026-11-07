@@ -2,7 +2,7 @@
 
 GEMINI_API_KEY = " "
 
-MODEL_NAME = "models/gemini-flash-lite-latest"
+MODEL_NAME = "models/gemini-3.5-flash-lite"
 
 DATABASE_PATH = "ipl.db"
 
