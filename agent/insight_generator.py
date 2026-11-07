@@ -13,7 +13,8 @@ from agent.prompt_templates import (
 #)
 
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-MODEL_NAME = "gemini-flash-lite-latest"
+MODEL_NAME = "gemini-3.5-flash-lite"
+#MODEL_NAME = "models/gemini-flash-lite-latest"
 
 client = genai.Client(
     api_key=GEMINI_API_KEY
