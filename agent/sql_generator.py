@@ -1,7 +1,10 @@
 from google import genai
+import streamlit as st
+#from config import GEMINI_API_KEY, MODEL_NAME
 
-from config import GEMINI_API_KEY, MODEL_NAME
 
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+MODEL_NAME = "gemini-flash-lite-latest"
 
 # --------------------------------------------------
 # GEMINI CLIENT
