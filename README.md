@@ -23,32 +23,27 @@ A conversational analytics application for exploring historical Indian Premier L
 ```text
 User Question
       ↓
-Input Cleaning and Acknowledgement Detection
+Input Cleaning
       ↓
-Relevance and Incomplete-Query Evaluation
+IPL Domain Ontology
       ↓
-Routing Layer
-      ├── Time Follow-Up Resolver
-      ├── Metric Follow-Up Resolver
-      ├── Entity Follow-Up Resolver
-      ├── Explanation Follow-Up
-      └── New Analytical Question
+Capability + Context Routing
       ↓
-Contextual Question Builder
-      ↓
-Gemini SQL Generator
-      ↓
-SQL Safety Validator
-      ↓
-Read-Only DuckDB Execution
-      ↓
-Result and Context Validation
-      ↓
-Grounded Insight Generation
-      ↓
-Conversation-State Update
-      ↓
-Answer + Chart + Data + Generated SQL
+  ┌──────────────┬──────────────┐
+  │              │              │
+Analytics     Knowledge       Follow-Up
+  │              │              │
+Gemini SQL    Retriever      Context Builder
+  │              │              │
+DuckDB        Knowledge       Rewritten
+  │           Repository       Question
+  │              │              │
+Insight       Grounded        Analytics
+Generation    Gemini Answer     Agent
+  │              │              │
+  └──────────────┴──────────────┘
+                 ↓
+            Final Response
 ```
 
 ## Technology Stack
@@ -59,6 +54,18 @@ Answer + Chart + Data + Generated SQL
 - **Analytics database:** DuckDB
 - **Visualization:** Plotly
 - **Data:** IPL matches, deliveries, and player dimension
+
+## IPL Domain Ontology
+The application uses an IPL-specific ontology to provide structured understanding of the cricket domain.
+
+It models:
+
+Metrics: runs, wickets, strike rate, economy
+Phases: powerplay, middle overs, death overs
+Roles: batter, bowler, wicketkeeper, allrounder
+Concepts: season, venue, toss, chasing, defending
+Knowledge concepts: IPL history, DLS, Impact Player, Orange Cap, Purple Cap and Super Over
+
 
 ## Conversational Routing
 
