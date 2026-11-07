@@ -30,7 +30,7 @@ from knowledge_agent.knowledge_router import detect_knowledge_intent
 from knowledge_agent.knowledge_agent import generate_knowledge_answer
 
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 st.set_page_config(
     page_title="IPL Intelligence Agent",
