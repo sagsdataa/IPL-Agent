@@ -59,6 +59,10 @@ class KnowledgeRetriever:
             "power play": "rules/powerplay.md",
             "powerply": "rules/powerplay.md",
             "impact player": "rules/impact_player.md",
+            "impact player rule": "rules/impact_player.md",
+            "what is impact player": "rules/impact_player.md",
+            "what is the impact player rule": "rules/impact_player.md",
+
             "orange cap": "rules/orange_cap.md",
             "purple cap": "rules/purple_cap.md",
             "dls": "rules/dls.md",

@@ -23,11 +23,15 @@ from agent.insight_generator import generate_insight, generate_followup_insight
 from agent.conversation_state import create_conversation_state, update_conversation_state
 from agent.chart_generator import should_generate_chart, get_chart_config, prepare_chart_dataframe
 from agent.plotly_chart_renderer import render_bar_chart, render_line_chart
-from guardrails.relevance_validator import is_ipl_relevant
+from guardrails.relevance_validator import (
+    is_ipl_relevant,
+    detect_ontology_elements,
+)
 from agent.incomplete_query_detector import detect_incomplete_ipl_query
 from knowledge_agent.knowledge_retriever import KnowledgeRetriever
 from knowledge_agent.knowledge_router import detect_knowledge_intent
 from knowledge_agent.knowledge_agent import generate_knowledge_answer
+from knowledge_agent.semantic_knowledge_service import generate_semantic_knowledge_answer
 
 
 DEBUG_MODE = False
@@ -55,14 +59,12 @@ def get_database_statistics():
             SELECT
                 (SELECT COUNT(*) FROM matches) AS match_count,
                 (SELECT COUNT(*) FROM deliveries) AS delivery_count,
-                (SELECT COUNT(DISTINCT season) FROM matches) AS season_count,
+                (SELECT COUNT(DISTINCT YEAR(date)) FROM matches) AS season_count,
                 (
-                    SELECT MIN(TRY_CAST(SUBSTRING(season, 1, 4) AS INTEGER))
-                    FROM matches
+                    SELECT MIN(YEAR(date)) FROM matches
                 ) AS first_season,
                 (
-                    SELECT MAX(TRY_CAST(SUBSTRING(season, 1, 4) AS INTEGER))
-                    FROM matches
+                    SELECT MAX(YEAR(date)) FROM matches
                 ) AS last_season
             """
         ).fetchone()
@@ -101,9 +103,11 @@ try:
 except Exception as error:
     st.error(
         "The IPL database could not be opened. "
-        "Confirm that `ipl.db` is in the same folder as `app.py`."
+        "Please Confirm that the required database "
+        "file is available."
     )
-    st.exception(error)
+    if DEBUG_MODE:
+        st.exception(error)
     st.stop()
 
 coverage = f"{stats['first_season']}–{stats['last_season']}"
@@ -111,14 +115,14 @@ coverage = f"{stats['first_season']}–{stats['last_season']}"
 
 def clean_question(question):
     if question is None:
-        return""
+        return ""
     
     question = question.strip()
 
     # collapse multiple spaces
     question = re.sub(
-        r"\+$",
-        "",
+        r"\s+",
+        " ",
         question
     )
     #Remove trailing punctuation
@@ -143,6 +147,7 @@ def _normalize_short_message(question):
     )
 
 ############################### FOLLOW UP QUESTION #####################################
+
 def is_followup_question(question: str):
     if not question:
         return False
@@ -154,7 +159,8 @@ def is_followup_question(question: str):
     }
     return _normalize_short_message(question) in followup_keywords
 
-############################### ACKNOWLEDGEMENT #####################################
+############################### ACKNOWLEDGEMENT ########################################
+
 def is_acknowledgement(question: str):
     if not question:
         return False
@@ -209,6 +215,25 @@ def save_analysis_state(question, generated_sql, result, insight, context):
         context,
     )
 
+METRIC_NORMALIZATION = {
+        "strike rate": "strike_rate",
+        "strike_rate": "strike_rate",
+
+        "economy": "economy_rate",
+        "economy rate": "economy_rate",
+        "economy_rate": "economy_rate",
+
+        "runs": "total_runs",
+        "total runs": "total_runs",
+        "total_runs": "total_runs",
+
+        "wickets": "total_wickets",
+        "total wickets": "total_wickets",
+        "total_wickets": "total_wickets",
+
+        "sixes": "sixes",
+        "fours": "fours",
+}
 
 def create_direct_answer(question, result):
     if result is None or result.empty:
@@ -233,6 +258,7 @@ def create_direct_answer(question, result):
 
 
 def run_ipl_analysis(question):
+
     generated_sql = generate_sql(question)
     validate_sql(generated_sql)
 
@@ -249,7 +275,8 @@ def run_ipl_analysis(question):
             validate_answer(insight)
             check_hallucination(insight, context)
         except Exception as error:
-            print("Insight generation fallback:", error)
+            if DEBUG_MODE:
+                print("Insight generation fallback:", error)
             insight = create_direct_answer(question, query_result)
     else:
         insight = create_direct_answer(question, query_result)
@@ -264,7 +291,7 @@ def display_error(error):
     if "429" in error_text or "resource_exhausted" in lowered or "quota" in lowered:
         st.error(
             "Gemini's request quota has been reached. "
-            "Use another available model in `config.py` or retry after the quota resets."
+            "Please retry after the quota resets."
         )
     elif "binder error" in lowered:
         st.error("The generated SQL contains a column, table, or datatype mismatch.")
@@ -279,8 +306,9 @@ def display_error(error):
     else:
         st.error("The IPL question could not be processed.")
 
-    with st.expander("View technical error", expanded=False):
-        st.exception(error)
+    if DEBUG_MODE:
+        with st.expander("View technical error", expanded=False):
+            st.exception(error)
 
 
 def render_supporting_outputs(result, generated_sql, context):
@@ -322,12 +350,12 @@ def render_full_analysis(answer, result, generated_sql, context):
             if chart_config["type"] == "line":
                 st.plotly_chart(
                     render_line_chart(chart_df),
-                    use_container_width="stretch",
+                    width="stretch",
                 )
             elif chart_config["type"] == "bar":
                 st.plotly_chart(
                     render_bar_chart(chart_df),
-                    use_container_width="stretch",
+                    width="stretch",
                 )
             else:
                 st.dataframe(chart_df, width="stretch")
@@ -501,13 +529,94 @@ if current_question:
         
         question_is_relevant = is_ipl_relevant(current_question)
 
+        ontology_elements = detect_ontology_elements(current_question)
+
+        normalized_question = (
+            current_question
+            .lower()
+            .strip()
+        )
+
+        knowledge_style_patterns = (
+            r"^what\s+(is|are)\b",
+            r"^who\s+is\b",
+            r"^tell\s+me\s+about\b",
+            r"^explain\b",
+            r"^describe\b",
+            r"^how\s+did\b",
+            r"^when\s+did\b",
+            r"^what\s+restrictions?\b",
+            r"^which\s+award\b",
+            r"^what\s+award\b",
+            r"\brules?\b",
+            r"\bdefinition\b",
+            r"\bmeaning\b",
+        )
+
+        has_knowledge_style_signal = any(
+            re.search(
+                pattern,
+                normalized_question,
+            )
+            for pattern in knowledge_style_patterns
+        )
+
+        analytics_cues = (
+            "best",
+            "top",
+            "highest",
+            "lowest",
+            "most",
+            "least",
+            "total",
+            "average",
+            "avg",
+            "ranking",
+            "rank",
+            "compare",
+            "comparison",
+            "versus",
+            "by season",
+            "performance",
+            "trend",
+            "matchup",
+            "matchups",
+            "stats",
+            "statistics",
+            "record",
+        )
+
+        has_vs_cue = bool(re.search(r"\bvs\.?\b", normalized_question))
+
+        has_ranking_or_analytics_cue = any(
+            re.search(
+                rf"\b{re.escape(cue)}\b",
+                normalized_question,
+            )
+            for cue in analytics_cues
+        )
+
+        has_analytics_signal = (
+            has_ranking_or_analytics_cue
+            or has_vs_cue
+            or ontology_elements.get("season", False)
+            or (
+                ontology_elements.get("metric", False)
+                and not has_knowledge_style_signal
+            )
+        )
+
         knowledge_document = retriever.find_document(current_question)
 
-        knowledge_intent = detect_knowledge_intent(current_question)
+        knowledge_intent = (
+            detect_knowledge_intent(
+                current_question
+            )
+            or has_knowledge_style_signal
+        )
 
         knowledge_content = None
-        print("KNOWLEDGE_DOC: ", knowledge_document)
-
+       
         if knowledge_document:
             knowledge_content = retriever.load_document(current_question)
         
@@ -522,10 +631,33 @@ if current_question:
         if (
             knowledge_document
             and knowledge_intent
+            and not has_analytics_signal
         ):
             capability_route = "knowledge"
         else:
             capability_route = "analytics"
+
+        if (
+            knowledge_document
+            and knowledge_intent
+            and not has_analytics_signal
+        ):
+            effective_route = "exact_knowledge"
+
+        elif (
+            knowledge_intent
+            and not knowledge_content
+            and not has_analytics_signal
+        ):
+            effective_route = "semantic_knowledge"
+
+        elif question_is_relevant:
+            effective_route = "analytics"
+        else:
+            effective_route = "unsupported"
+
+        if DEBUG_MODE:
+            print("EFFECTIVE ROUTE:", effective_route)
 
         has_previous_context = (
             st.session_state.last_context is not None
@@ -535,17 +667,24 @@ if current_question:
             print("=" * 60)
             print("QUESTION:", current_question)
             print("RELEVANT:", question_is_relevant)
+            print("ONTOLOGY:", ontology_elements)
+            print("KNOWLEDGE STYLE:", has_knowledge_style_signal)
+            print("ANALYTICS CUE:", has_ranking_or_analytics_cue)
+            print("ANALYTICS SIGNAL:", has_analytics_signal)
+            print("Knowledge Content:", bool(knowledge_content))
+            print("KNOWLEDGE INTENT:", knowledge_intent)
+            print("KNOWLEDGE DOCUMENT:", knowledge_document)
+            print("CAPABILITY ROUTE:", capability_route)
             print("INCOMPLETE:", incomplete)
             print("ENTITY:", entity_result)
-
             print("METRIC:", metric_result)
             print("TIME:", time_result)
             print("CONTINUATION:", continuation_result)
             print("STATE:", st.session_state.conversation_state)
             print("=" * 60)
 
-        #   1. TIME FOLLOW-UP WITH PRIOR CONTEXT
-        ########################################################################
+#  1. TIME FOLLOW-UP WITH PRIOR CONTEXT
+########################################################################
 
         if time_result.get("is_time_followup") and has_previous_context:
             rewritten_question = build_time_question(
@@ -553,12 +692,13 @@ if current_question:
                 st.session_state.conversation_state,
             )
 
-            print("=" * 20)
-            print("TIME FollowUp")
-            print("TIME result", time_result)
-            print("conversation state:", st.session_state.conversation_state)            
-            print("REWRITTEN QUESTION:", rewritten_question)
-            print("=" * 20)
+            if DEBUG_MODE:
+                print("=" * 20)
+                print("TIME FollowUp")
+                print("TIME result", time_result)
+                print("conversation state:", st.session_state.conversation_state)            
+                print("REWRITTEN QUESTION:", rewritten_question)
+                print("=" * 20)
 
 
             with st.chat_message("user"):
@@ -578,6 +718,7 @@ if current_question:
                         generated_sql, result, insight, context = run_ipl_analysis(
                             rewritten_question
                         )
+
                         st.markdown("### 🏏 Answer")
                         st.markdown(insight)
                         save_analysis_state(
@@ -591,8 +732,8 @@ if current_question:
                     except Exception as error:
                         display_error(error)
 
-        #   2. Metric follow-up with prior context.
-        ########################################################################
+#   2. Metric follow-up with prior context.
+########################################################################
 
         elif metric_result.get("is_metric_followup") and has_previous_context:
             rewritten_question = build_metric_question(
@@ -630,6 +771,45 @@ if current_question:
                         generated_sql, result, insight, context = run_ipl_analysis(
                             rewritten_question
                         )
+
+                        previous_state = (
+                            st.session_state.conversation_state
+                        )
+
+                        detected_metric = metric_result.get(
+                            "metric"
+                        )
+
+                        normalized_metric = None
+                        if detected_metric:
+                            normalized_metric = METRIC_NORMALIZATION.get(
+                                    detected_metric,
+                                    detected_metric,
+                            )
+                                                    
+                        # Preserve the previous player
+                        if not context.get("player"):
+                            context["player"] = (
+                                previous_state.get("player")
+                            )
+
+                        # The follow-up explicitly selected
+                        # this new metric
+                        if normalized_metric:
+                            context["metric"] = normalized_metric
+
+                        # Preserve the main analytical entity
+                        if not context.get("primary_entity"):
+                            context["primary_entity"] = (
+                                context.get("player")
+                                or previous_state.get(
+                                    "primary_entity"
+                                )
+                            )
+
+                        # Make the new intent explicit
+                        context["intent"] = "metric_lookup"
+
                         st.markdown("### 🏏 Answer")
                         st.markdown(insight)
                         save_analysis_state(
@@ -682,6 +862,7 @@ if current_question:
                         generated_sql, result, insight, context = run_ipl_analysis(
                             rewritten_question
                         )
+
                         st.markdown("### 🏏 Answer")
                         st.markdown(insight)
                         save_analysis_state(
@@ -729,13 +910,68 @@ if current_question:
                 except Exception as error:
                     display_error(error)
 
-        #   5. INCOMPLETE follow-up with prior context.
-        ########################################################################
+# ============================================================
+# SEMANTIC KNOWLEDGE FALLBACK
+# ============================================================
+
+        elif (
+            knowledge_intent
+            and not knowledge_content
+            and not has_analytics_signal
+        ):
+
+            with st.chat_message("user"):
+                st.markdown(
+                    current_question
+                )
+
+            with st.chat_message("assistant"):
+
+                try:
+
+                    semantic_response = (
+                        generate_semantic_knowledge_answer(
+                            question=current_question,
+                            top_k=3,
+                            threshold=0.65,
+                        )
+                    )
+
+                    st.markdown(
+                        semantic_response["answer"]
+                    )
+
+                    if (
+                        DEBUG_MODE
+                        and semantic_response["sources"]
+                    ):
+
+                        st.caption(
+                            "Semantic knowledge sources:"
+                        )
+
+                        for source in (
+                            semantic_response["sources"]
+                        ):
+
+                            st.write(
+                                f'{source["title"]} | '
+                                f'{source["section"]} | '
+                                f'{source["score"]:.4f}'
+                            )
+
+                except Exception as error:
+
+                    display_error(error)
+
+#   5. INCOMPLETE follow-up with prior context.
+########################################################################
 
         elif incomplete.get("is_incomplete", False):
             render_incomplete_query(current_question, incomplete)
 
-        #   6. Contextual analytics continuation.
+#   6. Contextual analytics continuation.
+########################################################################
         elif (
             continuation_result.get("is_context_continuation") 
             and has_previous_context
@@ -764,6 +1000,44 @@ if current_question:
                         generated_sql, result, insight, context = run_ipl_analysis(
                             rewritten_question
                         )
+
+                        previous_state = (
+                            st.session_state.conversation_state
+                        )
+
+                        # Preserve player from previous analytical context
+                        if not context.get("player"):
+                            context["player"] = (
+                                previous_state.get("player")
+                            )
+
+                        # Preserve metric
+                        if not context.get("metric"):
+                            context["metric"] = (
+                                previous_state.get("metric")
+                            )
+
+                        # Preserve intent
+                        if not context.get("intent"):
+                            context["intent"] = (
+                                previous_state.get("intent")
+                            )
+
+                        # Preserve primary entity
+                        if not context.get("primary_entity"):
+                            context["primary_entity"] = (
+                                context.get("player")
+                                or previous_state.get("player")
+                                or previous_state.get(
+                                    "primary_entity"
+                                )
+                            )
+
+                        if DEBUG_MODE:
+                            print("=" * 20)
+                            print("context before save:", context)
+                            print("=" * 20)
+
                         st.markdown("### 🏏 Answer")
                         st.markdown(insight)
                         save_analysis_state(
@@ -777,8 +1051,8 @@ if current_question:
                     except Exception as error:
                         display_error(error)
 
-        #   6. Follow-up requiring missing previous context.
-        ########################################################################
+#   6. Follow-up requiring missing previous context.
+########################################################################
 
         elif (
             question_is_relevant
@@ -797,8 +1071,9 @@ if current_question:
                     "I need previous analytical context before processing this follow-up."
                 )
 
-        #   7. WHY / HOW / EXPLAIN QUESTION
-        ########################################################################
+#   7. WHY / HOW / EXPLAIN QUESTION
+########################################################################
+
         elif is_followup_question(current_question):
             if (
                 st.session_state.last_question
@@ -842,14 +1117,8 @@ if current_question:
                     "I need a previous result before I can explain why."
                 )
 
-        #elif incomplete.get("is_incomplete", False):
-        #    render_incomplete_query(
-        #        current_question,
-        #        incomplete
-        #    )
-
-        #   8. NOT RELEVANT QUESTIONS...
-        ########################################################################
+#   8. NOT RELEVANT QUESTIONS...
+########################################################################
 
         elif not question_is_relevant:
 
@@ -861,10 +1130,15 @@ if current_question:
                     "venue, match, or statistic in the question."
                 )
 
-        #   9. New QUESTIONS...
-        ########################################################################
+#   9. New QUESTIONS...
+########################################################################
 
-        else:
+        elif(
+            capability_route == "analytics"
+            and question_is_relevant
+
+        ):
+
             with st.chat_message("user"):
                 st.markdown(current_question)
 
@@ -914,7 +1188,14 @@ if current_question:
                     )
                 except Exception as error:
                     display_error(error)
-
+        else:
+            with st.chat_message("user"):
+                st.markdown(current_question)
+            with st.chat_message("assistant"):
+                st.warning(
+                    "I couldn't identify a supported IPL "
+                    "analytics or knowledge request."
+                )
 
 footer_left, footer_right = st.columns(2)
 with footer_left:
