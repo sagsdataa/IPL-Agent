@@ -21,5 +21,6 @@
 /.streamlit/secrets.toml
 /test_conversation_state_regression.py
 /test_followup.py
-/__pycache__/
-/*.py[cod]
+__pycache__/
+*.py[cod]
+.pytest_cache/
