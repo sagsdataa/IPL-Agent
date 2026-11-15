@@ -1,0 +1,201 @@
+[
+  {
+    "id": "RET-001",
+    "category": "history",
+    "question": "How did the IPL begin?",
+    "expected_title": "IPL History",
+    "expected_section": "Overview",
+    "expected_match": true
+  },
+  {
+    "id": "RET-002",
+    "category": "history",
+    "question": "When was the IPL founded?",
+    "expected_title": "IPL History",
+    "expected_section": "Overview",
+    "expected_match": true
+  },
+  {
+    "id": "RET-003",
+    "category": "history",
+    "question": "How has the IPL evolved over the years?",
+    "expected_title": "Evolution Of IPL",
+    "expected_section": "Timeline",
+    "expected_match": true
+  },
+  {
+    "id": "RET-004",
+    "category": "history",
+    "question": "What were some major events in IPL history?",
+    "expected_title": "Evolution Of IPL",
+    "expected_section": "Significant Events",
+    "expected_match": true
+  },
+
+  {
+    "id": "RET-005",
+    "category": "players",
+    "question": "Describe Dhoni's playing style",
+    "expected_title": "ms_dhoni",
+    "expected_section": "Playing Style",
+    "expected_match": true
+  },
+  {
+    "id": "RET-006",
+    "category": "players",
+    "question": "What kind of player is MS Dhoni?",
+    "expected_title": "ms_dhoni",
+    "expected_section": "Playing Style",
+    "expected_match": true
+  },
+  {
+    "id": "RET-007",
+    "category": "players",
+    "question": "What are Dhoni's major achievements?",
+    "expected_title": "ms_dhoni",
+    "expected_section": "Major achievements",
+    "expected_match": true
+  },
+  {
+    "id": "RET-008",
+    "category": "players",
+    "question": "What makes Rashid Khan's bowling distinctive?",
+    "expected_title": "rashid_khan",
+    "expected_section": "Playing Style",
+    "expected_match": true
+  },
+  {
+    "id": "RET-009",
+    "category": "players",
+    "question": "Tell me about Rohit Sharma's playing style",
+    "expected_title": "rohit_sharma",
+    "expected_section": "Playing Style",
+    "expected_match": true
+  },
+  {
+    "id": "RET-010",
+    "category": "players",
+    "question": "What are Mohammed Shami's major achievements?",
+    "expected_title": "mohammed_shami",
+    "expected_section": "Major achievements",
+    "expected_match": true
+  },
+
+  {
+    "id": "RET-011",
+    "category": "rules",
+    "question": "What restrictions apply during the opening overs?",
+    "expected_title": "PowerPlay",
+    "expected_section": "Key Rules",
+    "expected_match": true
+  },
+  {
+    "id": "RET-012",
+    "category": "rules",
+    "question": "Explain the fielding restrictions at the start of an innings",
+    "expected_title": "PowerPlay",
+    "expected_section": "Key Rules",
+    "expected_match": true
+  },
+  {
+    "id": "RET-013",
+    "category": "rules",
+    "question": "Which award recognizes the leading wicket taker?",
+    "expected_title": "Purple Cap",
+    "expected_section": "Definition",
+    "expected_match": true
+  },
+  {
+    "id": "RET-014",
+    "category": "rules",
+    "question": "What award is given to the tournament's leading run scorer?",
+    "expected_title": "Orange Cap",
+    "expected_section": "Definition",
+    "expected_match": true
+  },
+  {
+    "id": "RET-015",
+    "category": "rules",
+    "question": "How are targets adjusted when rain interrupts a cricket match?",
+    "expected_title": "DLS Method",
+    "expected_section": "Definition",
+    "expected_match": true
+  },
+  {
+    "id": "RET-016",
+    "category": "rules",
+    "question": "Why is the DLS method used?",
+    "expected_title": "DLS Method",
+    "expected_section": "Purpose",
+    "expected_match": true
+  },
+  {
+    "id": "RET-017",
+    "category": "rules",
+    "question": "Explain how the Impact Player rule works",
+    "expected_title": "Impact Player Rule",
+    "expected_section": "Definition",
+    "expected_match": true
+  },
+
+  {
+    "id": "RET-018",
+    "category": "teams",
+    "question": "Tell me about Chennai Super Kings",
+    "expected_title": "Chennai Super Kings",
+    "expected_section": "Basic information",
+    "expected_match": true
+  },
+  {
+    "id": "RET-019",
+    "category": "teams",
+    "question": "Who are some notable Chennai Super Kings players?",
+    "expected_title": "Chennai Super Kings",
+    "expected_section": "Notable Players",
+    "expected_match": true
+  },
+  {
+    "id": "RET-020",
+    "category": "teams",
+    "question": "Tell me about Delhi's IPL franchise",
+    "expected_title": "Delhi Capitals",
+    "acceptable_sections": [
+        "Basic information",
+        "Team History",
+        "Interesting Facts",
+        "Keywords"
+    ],
+    "expected_match": true
+  },
+
+  {
+    "id": "RET-021",
+    "category": "negative",
+    "question": "How does quantum computing work?",
+    "expected_match": false
+  },
+  {
+    "id": "RET-022",
+    "category": "negative",
+    "question": "What is the capital of France?",
+    "expected_match": false
+  },
+  {
+    "id": "RET-023",
+    "category": "negative",
+    "question": "Explain photosynthesis",
+    "expected_match": false
+  },
+  {
+    "id": "RET-024",
+    "category": "negative",
+    "question": "How do electric cars work?",
+    "expected_match": false
+  },
+  {
+    "id": "RET-025",
+    "category": "missing_knowledge",
+    "question": "Tell me about Ruturaj Gaikwad's playing style",
+    "expected_match": false
+  }
+]
