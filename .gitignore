@@ -24,3 +24,7 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+/test_capability_plan_validator.py
+/test_knowledge_adapter.py
+/test_analytics_adapter.py
+/test_capability_executor.py

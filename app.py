@@ -4,14 +4,7 @@ import duckdb
 import streamlit as st
 
 from agent.entity_resolver import detect_entity_followup
-from agent.sql_generator import generate_sql
-from database.query_executor import run_query
-from agent.context_builder import build_context
-from guardrails.sql_validator import validate_sql
-from guardrails.context_validator import validate_context
 from guardrails.answer_validator import validate_answer
-from guardrails.hallucination_checker import check_hallucination
-from guardrails.result_validator import validate_result
 from agent.contextual_question_builder import build_contextual_question
 from agent.metric_resolver import detect_metric_followup
 from agent.metric_question_builder import build_metric_question
@@ -19,7 +12,9 @@ from agent.time_resolver import detect_time_followup
 from agent.time_question_builder import build_time_question
 from agent.context_continuation_resolver import detect_context_continuation
 from agent.context_continuation_builder import build_context_continuation_question
-from agent.insight_generator import generate_insight, generate_followup_insight
+from agent.insight_generator import (
+     generate_followup_insight,
+)
 from agent.conversation_state import create_conversation_state, update_conversation_state
 from agent.chart_generator import should_generate_chart, get_chart_config, prepare_chart_dataframe
 from agent.plotly_chart_renderer import render_bar_chart, render_line_chart
@@ -32,6 +27,9 @@ from knowledge_agent.knowledge_retriever import KnowledgeRetriever
 from knowledge_agent.knowledge_router import detect_knowledge_intent
 from knowledge_agent.knowledge_agent import generate_knowledge_answer
 from knowledge_agent.semantic_knowledge_service import generate_semantic_knowledge_answer
+from agent.analytics_service import (
+    run_analytics_query,
+)
 
 
 DEBUG_MODE = False
@@ -172,37 +170,6 @@ def is_acknowledgement(question: str):
     return _normalize_short_message(question) in acknowledgements
 
 
-def enrich_context_with_result(context, result):
-    enriched = dict(context or {})
-
-    if result is None or result.empty:
-        return enriched
-
-    first_row = result.iloc[0]
-    entity_columns = (
-        "batter", "bowler", "player", "team", "winner", "fielder", "venue"
-    )
-
-    for column in entity_columns:
-        if column not in result.columns:
-            continue
-
-        value = first_row[column]
-        if value is None:
-            continue
-
-        enriched["primary_entity"] = value
-
-        if column in {"batter", "bowler", "player"}:
-            enriched["player"] = value
-        elif column in {"team", "winner"}:
-            enriched["team"] = value
-
-        break
-
-    return enriched
-
-
 def save_analysis_state(question, generated_sql, result, insight, context):
     st.session_state.last_question = question
     st.session_state.last_sql = generated_sql
@@ -235,53 +202,41 @@ METRIC_NORMALIZATION = {
         "fours": "fours",
 }
 
-def create_direct_answer(question, result):
-    if result is None or result.empty:
-        return "The analysis completed successfully, but no matching IPL records were found."
-
-    if len(result) == 1:
-        first_row = result.iloc[0]
-        values = [
-            f"**{column.replace('_', ' ').title()}:** {first_row[column]}"
-            for column in result.columns
-        ]
-        return (
-            f"Based on the IPL dataset, the answer to “{question}” is:\n\n"
-            + "  \n".join(values)
-        )
-
-    return (
-        f"The analysis returned **{len(result):,} results** for the question:\n\n"
-        f"**{question}**\n\n"
-        "The leading results are shown in the Data tab."
-    )
-
-
 def run_ipl_analysis(question):
 
-    generated_sql = generate_sql(question)
-    validate_sql(generated_sql)
+    analytics_result = (
+        run_analytics_query(question)
+    )
+    return (
+        analytics_result["sql"],
+        analytics_result["result"],
+        analytics_result["answer"],
+        analytics_result["context"],
+    )
 
-    query_result = run_query(generated_sql)
+    #generated_sql = generate_sql(question)
+    #validate_sql(generated_sql)
+
+    #query_result = run_query(generated_sql)
     validate_result(query_result)
 
-    context = build_context(question, query_result)
-    context = enrich_context_with_result(context, query_result)
-    validate_context(context)
+    #context = build_context(question, query_result)
+    #context = enrich_context_with_result(context, query_result)
+    #validate_context(context)
 
-    if context.get("needs_insight"):
-        try:
-            insight = generate_insight(question, query_result, context)
-            validate_answer(insight)
-            check_hallucination(insight, context)
-        except Exception as error:
-            if DEBUG_MODE:
-                print("Insight generation fallback:", error)
-            insight = create_direct_answer(question, query_result)
-    else:
-        insight = create_direct_answer(question, query_result)
+    #if context.get("needs_insight"):
+    #    try:
+    #        insight = generate_insight(question, query_result, context)
+    #        validate_answer(insight)
+    #        check_hallucination(insight, context)
+    #    except Exception as error:
+    #        if DEBUG_MODE:
+    #            print("Insight generation fallback:", error)
+    #        insight = create_direct_answer(question, query_result)
+    #else:
+    #    insight = create_direct_answer(question, query_result)
 
-    return generated_sql, query_result, insight, context
+    #return generated_sql, query_result, insight, context
 
 
 def display_error(error):
@@ -316,7 +271,10 @@ def render_supporting_outputs(result, generated_sql, context):
         st.dataframe(result, width="stretch", hide_index=True)
 
     with st.expander("View generated SQL", expanded=False):
-        st.code(generated_sql, language="sql")
+        st.code(
+            generated_sql, 
+            language = "sql",
+        )
 
     with st.expander("View Context Builder Output", expanded=False):
         st.json(context)

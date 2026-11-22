@@ -1,0 +1,412 @@
+[
+  {
+    "id": "PLAN-001",
+    "category": "knowledge",
+    "question": "What is Powerplay?",
+    "expected_route": "knowledge",
+    "expected_capabilities": [
+      "knowledge_search"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-002",
+    "category": "knowledge",
+    "question": "Explain the Impact Player rule.",
+    "expected_route": "knowledge",
+    "expected_capabilities": [
+      "knowledge_search"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-003",
+    "category": "knowledge",
+    "question": "Tell me about MS Dhoni.",
+    "expected_route": "knowledge",
+    "expected_capabilities": [
+      "knowledge_search"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-004",
+    "category": "knowledge",
+    "question": "How did the IPL begin?",
+    "expected_route": "knowledge",
+    "expected_capabilities": [
+      "knowledge_search"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-005",
+    "category": "knowledge",
+    "question": "Which award recognizes the leading wicket taker?",
+    "expected_route": "knowledge",
+    "expected_capabilities": [
+      "knowledge_search"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-006",
+    "category": "knowledge",
+    "question": "Describe Rashid Khan's bowling style.",
+    "expected_route": "knowledge",
+    "expected_capabilities": [
+      "knowledge_search"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-007",
+    "category": "analytics",
+    "question": "Who scored the most runs in IPL?",
+    "expected_route": "analytics",
+    "expected_capabilities": [
+      "analytics_query"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-008",
+    "category": "analytics",
+    "question": "Who is the best Powerplay batter?",
+    "expected_route": "analytics",
+    "expected_capabilities": [
+      "analytics_query"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-009",
+    "category": "analytics",
+    "question": "Show the top 10 IPL wicket takers.",
+    "expected_route": "analytics",
+    "expected_capabilities": [
+      "analytics_query"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-010",
+    "category": "analytics",
+    "question": "Compare Kohli and Bumrah in their head-to-head matchup.",
+    "expected_route": "analytics",
+    "expected_capabilities": [
+      "analytics_query"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-011",
+    "category": "analytics",
+    "question": "Which team won IPL 2015?",
+    "expected_route": "analytics",
+    "expected_capabilities": [
+      "analytics_query"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-012",
+    "category": "analytics",
+    "question": "Show Chennai Super Kings wins by season.",
+    "expected_route": "analytics",
+    "expected_capabilities": [
+      "analytics_query"
+    ],
+    "expected_task_count": 1,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-013",
+    "category": "independent_hybrid",
+    "question": "Tell me about MS Dhoni and show his runs by season.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "knowledge_search",
+      "analytics_query"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {},
+    "expected_entities": [
+      {
+        "entity_type": "player",
+        "canonical_name": "MS Dhoni"
+      }
+    ],
+    "task_question_requirements": {
+      "analytics_query": [
+        "MS Dhoni",
+        "runs",
+        "season"
+      ]
+    }
+  },
+  {
+    "id": "PLAN-014",
+    "category": "independent_hybrid",
+    "question": "Explain Powerplay and show the best Powerplay batters.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "knowledge_search",
+      "analytics_query"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-015",
+    "category": "independent_hybrid",
+    "question": "Tell me about Chennai Super Kings and show their wins by season.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "knowledge_search",
+      "analytics_query"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {},
+    "expected_entities": [
+      {
+        "entity_type": "team",
+        "canonical_name": "Chennai Super Kings"
+      }
+    ],
+    "task_question_requirements": {
+      "analytics_query": [
+        "Chennai Super Kings",
+        "wins",
+        "season"
+      ]
+    }
+  },
+  {
+    "id": "PLAN-016",
+    "category": "independent_hybrid",
+    "question": "Explain the Purple Cap and show the leading IPL wicket takers.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "knowledge_search",
+      "analytics_query"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-017",
+    "category": "independent_hybrid",
+    "question": "Tell me about Rohit Sharma and show his IPL runs by season.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "knowledge_search",
+      "analytics_query"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {},
+    "expected_entities": [
+      {
+        "entity_type": "player",
+        "canonical_name": "Rohit Sharma"
+      }
+    ],
+    "task_question_requirements": {
+      "analytics_query": [
+        "Rohit Sharma",
+        "runs",
+        "season"
+      ]
+    }
+  },
+  {
+    "id": "PLAN-018",
+    "category": "independent_hybrid",
+    "question": "Explain the Orange Cap and list the top IPL run scorers.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "knowledge_search",
+      "analytics_query"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-019",
+    "category": "independent_hybrid",
+    "question": "Describe Delhi Capitals and show their wins in each season.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "knowledge_search",
+      "analytics_query"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {},
+    "expected_entities": [
+      {
+        "entity_type": "team",
+        "canonical_name": "Delhi Capitals"
+      }
+    ],
+    "task_question_requirements": {
+      "analytics_query": [
+        "Delhi Capitals",
+        "wins",
+        "season"
+      ]
+    }
+  },
+  {
+    "id": "PLAN-020",
+    "category": "independent_hybrid",
+    "question": "Explain the DLS method and show how often rain-affected IPL matches occurred by season.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "knowledge_search",
+      "analytics_query"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {}
+  },
+  {
+    "id": "PLAN-021",
+    "category": "dependent_hybrid",
+    "question": "Find the highest IPL run scorer and tell me about that player.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "analytics_query",
+      "knowledge_search"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {
+      "task_2": [
+        "task_1"
+      ]
+    }
+  },
+  {
+    "id": "PLAN-022",
+    "category": "dependent_hybrid",
+    "question": "Identify the leading IPL wicket taker and explain that player's bowling style.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "analytics_query",
+      "knowledge_search"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {
+      "task_2": [
+        "task_1"
+      ]
+    }
+  },
+  {
+    "id": "PLAN-023",
+    "category": "dependent_hybrid",
+    "question": "Find the team with the most IPL titles and tell me about that franchise.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "analytics_query",
+      "knowledge_search"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {
+      "task_2": [
+        "task_1"
+      ]
+    }
+  },
+  {
+    "id": "PLAN-024",
+    "category": "dependent_hybrid",
+    "question": "Identify the best Powerplay batter and provide a profile of that player.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "analytics_query",
+      "knowledge_search"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {
+      "task_2": [
+        "task_1"
+      ]
+    }
+  },
+  {
+    "id": "PLAN-025",
+    "category": "dependent_hybrid",
+    "question": "Find the bowler with the best economy rate and describe that bowler's playing style.",
+    "expected_route": "hybrid",
+    "expected_capabilities": [
+      "analytics_query",
+      "knowledge_search"
+    ],
+    "expected_task_count": 2,
+    "expected_dependencies": {
+      "task_2": [
+        "task_1"
+      ]
+    }
+  },
+  {
+    "id": "PLAN-026",
+    "category": "unsupported",
+    "question": "How does quantum computing work?",
+    "expected_route": "unsupported",
+    "expected_capabilities": [],
+    "expected_task_count": 0,
+    "expected_dependencies": {},
+    "expected_unsupported": true
+  },
+  {
+    "id": "PLAN-027",
+    "category": "unsupported",
+    "question": "What is the capital of France?",
+    "expected_route": "unsupported",
+    "expected_capabilities": [],
+    "expected_task_count": 0,
+    "expected_dependencies": {},
+    "expected_unsupported": true
+  },
+  {
+    "id": "PLAN-028",
+    "category": "unsupported",
+    "question": "Explain photosynthesis.",
+    "expected_route": "unsupported",
+    "expected_capabilities": [],
+    "expected_task_count": 0,
+    "expected_dependencies": {},
+    "expected_unsupported": true
+  },
+  {
+    "id": "PLAN-029",
+    "category": "unsupported",
+    "question": "Show Microsoft's annual revenue.",
+    "expected_route": "unsupported",
+    "expected_capabilities": [],
+    "expected_task_count": 0,
+    "expected_dependencies": {},
+    "expected_unsupported": true
+  },
+  {
+    "id": "PLAN-030",
+    "category": "unsupported",
+    "question": "Forecast tomorrow's weather in Portland.",
+    "expected_route": "unsupported",
+    "expected_capabilities": [],
+    "expected_task_count": 0,
+    "expected_dependencies": {},
+    "expected_unsupported": true
+  }
+]
