@@ -28,3 +28,9 @@ __pycache__/
 /test_knowledge_adapter.py
 /test_analytics_adapter.py
 /test_capability_executor.py
+/test_capability_response_composer.py
+/test_capability_response_validator.py
+/test_capability_response_builder.py
+/test_capability_response_generator.py
+/test_hybrid_pipeline_e2e.py
+/test_capability_response_composer.py

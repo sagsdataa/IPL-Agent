@@ -1,10 +1,3 @@
-# Context Builder for the Agent
-# Analyze the questions and result shape
-# Analyze the structured context
-# Decide whether insights are needed
-
-# agent/context_builder.py
-
 """
 Context Builder
 
@@ -15,12 +8,13 @@ structured analytical context.
 import re
 
 
+# ============================================================
+# QUERY TYPE
+# ============================================================
+
 def detect_query_type(
-    question: str
+    question: str,
 ):
-    """
-    Detect analytical query type.
-    """
 
     if not question:
         return "unknown"
@@ -88,19 +82,20 @@ def detect_query_type(
     return "unknown"
 
 
+# ============================================================
+# SEASON
+# ============================================================
+
 def detect_season(
-    question: str
+    question: str,
 ):
-    """
-    Extract IPL season.
-    """
 
     if not question:
         return None
 
     match = re.search(
-        r"20\d{2}",
-        question
+        r"\b20\d{2}\b",
+        question,
     )
 
     if match:
@@ -109,61 +104,92 @@ def detect_season(
     return None
 
 
+# ============================================================
+# TEAM
+# ============================================================
+
 def detect_team(
-    question: str
+    question: str,
 ):
-    """
-    Detect IPL team from question.
-    """
 
     if not question:
         return None
 
     q = question.lower()
 
-    TEAM_MAP = {
-        # aliases
-        "srh": "Sunrisers Hyderabad",
-        "csk": "Chennai Super Kings",
-        "mi": "Mumbai Indians",
-        "rcb": "Royal Challengers Bangalore",
-        "kkr": "Kolkata Knight Riders",
-        "rr": "Rajasthan Royals",
-        "dc": "Delhi Capitals",
-        "pbks": "Punjab Kings",
+    team_map = {
 
-        # full names
-        "sunrisers hyderabad": "Sunrisers Hyderabad",
-        "chennai super kings": "Chennai Super Kings",
-        "mumbai indians": "Mumbai Indians",
-        "royal challengers bangalore": "Royal Challengers Bangalore",
-        "kolkata knight riders": "Kolkata Knight Riders",
-        "rajasthan royals": "Rajasthan Royals",
-        "delhi capitals": "Delhi Capitals",
-        "punjab kings": "Punjab Kings",
+        # Aliases
+        "srh":
+            "Sunrisers Hyderabad",
+
+        "csk":
+            "Chennai Super Kings",
+
+        "mi":
+            "Mumbai Indians",
+
+        "rcb":
+            "Royal Challengers Bangalore",
+
+        "kkr":
+            "Kolkata Knight Riders",
+
+        "rr":
+            "Rajasthan Royals",
+
+        "dc":
+            "Delhi Capitals",
+
+        "pbks":
+            "Punjab Kings",
+
+        # Full names
+        "sunrisers hyderabad":
+            "Sunrisers Hyderabad",
+
+        "chennai super kings":
+            "Chennai Super Kings",
+
+        "mumbai indians":
+            "Mumbai Indians",
+
+        "royal challengers bangalore":
+            "Royal Challengers Bangalore",
+
+        "kolkata knight riders":
+            "Kolkata Knight Riders",
+
+        "rajasthan royals":
+            "Rajasthan Royals",
+
+        "delhi capitals":
+            "Delhi Capitals",
+
+        "punjab kings":
+            "Punjab Kings",
     }
 
-    #
-    # Prefer longest match first
-    #
+    # Prefer longest match first.
     for key in sorted(
-        TEAM_MAP,
+        team_map,
         key=len,
-        reverse=True
+        reverse=True,
     ):
 
         if key in q:
-            return TEAM_MAP[key]
+            return team_map[key]
 
     return None
 
+
+# ============================================================
+# VENUE
+# ============================================================
+
 def detect_venue(
-    question: str
+    question: str,
 ):
-    """
-    Lightweight venue extraction.
-    Replace later with fuzzy matching.
-    """
 
     if not question:
         return None
@@ -185,19 +211,23 @@ def detect_venue(
     return None
 
 
+# ============================================================
+# PHASE
+# ============================================================
+
 def detect_phase(
-    question: str
+    question: str,
 ):
-    """
-    Detect IPL phase.
-    """
 
     if not question:
         return None
 
     q = question.lower()
 
-    if "powerplay" in q:
+    if (
+        "powerplay" in q
+        or "power play" in q
+    ):
         return "powerplay"
 
     if "death" in q:
@@ -209,12 +239,13 @@ def detect_phase(
     return None
 
 
+# ============================================================
+# ENTITY COLUMN
+# ============================================================
+
 def detect_entity_column(
-    df
+    df,
 ):
-    """
-    Detect entity column.
-    """
 
     candidates = [
         "player",
@@ -224,7 +255,9 @@ def detect_entity_column(
         "batter_name",
         "bowler_name",
         "team",
+        "winner",
         "venue",
+        "fielder",
     ]
 
     for column in candidates:
@@ -235,12 +268,13 @@ def detect_entity_column(
     return None
 
 
+# ============================================================
+# METRIC COLUMN
+# ============================================================
+
 def detect_metric_column(
-    df
+    df,
 ):
-    """
-    Detect primary metric.
-    """
 
     candidates = [
         "total_runs",
@@ -254,6 +288,7 @@ def detect_metric_column(
         "matches_played",
         "matches",
         "wins",
+        "economy_rate",
         "economy",
     ]
 
@@ -265,12 +300,13 @@ def detect_metric_column(
     return None
 
 
+# ============================================================
+# ENTITY TYPE
+# ============================================================
+
 def detect_entity_type(
-    entity_column
+    entity_column,
 ):
-    """
-    Convert entity column into high-level type.
-    """
 
     if entity_column in {
         "player",
@@ -279,10 +315,14 @@ def detect_entity_type(
         "player_name",
         "batter_name",
         "bowler_name",
+        "fielder",
     }:
         return "player"
 
-    if entity_column == "team":
+    if entity_column in {
+        "team",
+        "winner",
+    }:
         return "team"
 
     if entity_column == "venue":
@@ -291,23 +331,78 @@ def detect_entity_type(
     return None
 
 
+# ============================================================
+# NORMALIZE PLANNER ENTITY CONTEXT
+# ============================================================
+
+def normalize_entity_context(
+    entity_context,
+):
+
+    if not entity_context:
+
+        return {
+            "player": None,
+            "team": None,
+            "venue": None,
+        }
+
+    return {
+        "player":
+            entity_context.get(
+                "player"
+            ),
+
+        "team":
+            entity_context.get(
+                "team"
+            ),
+
+        "venue":
+            entity_context.get(
+                "venue"
+            ),
+    }
+
+
+# ============================================================
+# BUILD CONTEXT
+# ============================================================
+
 def build_context(
     question,
     result_df,
+    entity_context=None,
 ):
+
     """
-    Build analytical context.
+    Build structured analytical context.
+
+    Entity precedence:
+
+    1. Entity discovered from the analytics result
+    2. Entity supplied by planner/task context
+    3. Entity detected directly from the question
+
+    The planner/task entity is especially important
+    for aggregation and trend queries where the
+    result DataFrame may not repeat the filtered
+    player/team in every row.
     """
+
+    # --------------------------------------------------------
+    # QUESTION-DERIVED CONTEXT
+    # --------------------------------------------------------
 
     season = detect_season(
         question
     )
 
-    team = detect_team(
+    question_team = detect_team(
         question
     )
 
-    venue = detect_venue(
+    question_venue = detect_venue(
         question
     )
 
@@ -315,41 +410,128 @@ def build_context(
         question
     )
 
+
+    # --------------------------------------------------------
+    # PLANNER / TASK ENTITY CONTEXT
+    # --------------------------------------------------------
+
+    known_entities = (
+        normalize_entity_context(
+            entity_context
+        )
+    )
+
+    player = (
+        known_entities.get(
+            "player"
+        )
+    )
+
+    team = (
+        question_team
+        or known_entities.get(
+            "team"
+        )
+    )
+
+    venue = (
+        question_venue
+        or known_entities.get(
+            "venue"
+        )
+    )
+
+
+    # --------------------------------------------------------
+    # EMPTY RESULT
+    # --------------------------------------------------------
+
     if (
         result_df is None
         or result_df.empty
     ):
+
+        primary_entity = (
+            player
+            or team
+            or venue
+        )
+
         return {
-            "question": question,
-            "query_type": detect_query_type(question),
+            "question":
+                question,
 
-            "season": season,
-            "team": team,
-            "venue": venue,
-            "phase": phase,
+            "query_type":
+                detect_query_type(
+                    question
+                ),
 
-            "row_count": 0,
-            "needs_insight": False,
+            "season":
+                season,
 
-            "top_result": None,
-            "second_result": None,
+            "player":
+                player,
 
-            "entity_column": None,
-            "entity_type": None,
+            "team":
+                team,
 
-            "metric": None,
+            "venue":
+                venue,
 
-            "top_entity": None,
-            "second_entity": None,
+            "phase":
+                phase,
 
-            "top_value": None,
-            "second_value": None,
+            "primary_entity":
+                primary_entity,
 
-            "gap": None,
-            "entities": [],
+            "row_count":
+                0,
+
+            "needs_insight":
+                False,
+
+            "top_result":
+                None,
+
+            "second_result":
+                None,
+
+            "entity_column":
+                None,
+
+            "entity_type":
+                None,
+
+            "metric":
+                None,
+
+            "top_entity":
+                None,
+
+            "second_entity":
+                None,
+
+            "top_value":
+                None,
+
+            "second_value":
+                None,
+
+            "gap":
+                None,
+
+            "entities":
+                [],
         }
 
-    row_count = len(result_df)
+
+    # --------------------------------------------------------
+    # RESULT SHAPE
+    # --------------------------------------------------------
+
+    row_count = len(
+        result_df
+    )
 
     top_result = (
         result_df.iloc[0].to_dict()
@@ -363,93 +545,236 @@ def build_context(
         else None
     )
 
-    entity_column = detect_entity_column(
-        result_df
+
+    # --------------------------------------------------------
+    # RESULT ENTITY
+    # --------------------------------------------------------
+
+    entity_column = (
+        detect_entity_column(
+            result_df
+        )
     )
 
-    entity_type = detect_entity_type(
-        entity_column
+    entity_type = (
+        detect_entity_type(
+            entity_column
+        )
     )
 
-    metric_column = detect_metric_column(
-        result_df
+
+    # --------------------------------------------------------
+    # RESULT METRIC
+    # --------------------------------------------------------
+
+    metric_column = (
+        detect_metric_column(
+            result_df
+        )
     )
+
+
+    # --------------------------------------------------------
+    # TOP ENTITIES
+    # --------------------------------------------------------
 
     top_entity = None
     second_entity = None
 
+    if entity_column:
+
+        top_entity = (
+            top_result.get(
+                entity_column
+            )
+        )
+
+        if second_result:
+
+            second_entity = (
+                second_result.get(
+                    entity_column
+                )
+            )
+
+
+    # --------------------------------------------------------
+    # MERGE RESULT ENTITY INTO CONTEXT
+    # --------------------------------------------------------
+
+    if entity_type == "player":
+
+        player = (
+            top_entity
+            or player
+        )
+
+    elif entity_type == "team":
+
+        team = (
+            top_entity
+            or team
+        )
+
+    elif entity_type == "venue":
+
+        venue = (
+            top_entity
+            or venue
+        )
+
+
+    # --------------------------------------------------------
+    # METRIC VALUES
+    # --------------------------------------------------------
+
     top_value = None
     second_value = None
 
-    if entity_column:
-
-        top_entity = top_result.get(
-            entity_column
-        )
-
-        if second_result:
-
-            second_entity = second_result.get(
-                entity_column
-            )
-
     if metric_column:
 
-        top_value = top_result.get(
-            metric_column
+        top_value = (
+            top_result.get(
+                metric_column
+            )
         )
 
         if second_result:
 
-            second_value = second_result.get(
-                metric_column
+            second_value = (
+                second_result.get(
+                    metric_column
+                )
             )
+
+
+    # --------------------------------------------------------
+    # GAP
+    # --------------------------------------------------------
 
     gap = None
 
     if (
-        isinstance(top_value, (int, float))
-        and isinstance(second_value, (int, float))
+        isinstance(
+            top_value,
+            (int, float),
+        )
+        and isinstance(
+            second_value,
+            (int, float),
+        )
     ):
-        gap = top_value - second_value
+
+        gap = (
+            top_value
+            - second_value
+        )
+
+
+    # --------------------------------------------------------
+    # PRIMARY ENTITY
+    # --------------------------------------------------------
+
+    primary_entity = (
+        top_entity
+        or player
+        or team
+        or venue
+    )
+
+
+    # --------------------------------------------------------
+    # STRUCTURED ENTITY LIST
+    # --------------------------------------------------------
+
+    context_entities = []
+
+    for entity in [
+        top_entity,
+        second_entity,
+        player,
+        team,
+        venue,
+    ]:
+
+        if (
+            entity is not None
+            and entity
+            not in context_entities
+        ):
+
+            context_entities.append(
+                entity
+            )
+
+
+    # --------------------------------------------------------
+    # FINAL CONTEXT
+    # --------------------------------------------------------
 
     return {
-        "question": question,
+        "question":
+            question,
 
-        "query_type": detect_query_type(
-            question
-        ),
+        "query_type":
+            detect_query_type(
+                question
+            ),
 
-        "season": season,
-        "team": team,
-        "venue": venue,
-        "phase": phase,
+        "season":
+            season,
 
-        "row_count": row_count,
-        "needs_insight": True,
+        "player":
+            player,
 
-        "top_result": top_result,
-        "second_result": second_result,
+        "team":
+            team,
 
-        "entity_column": entity_column,
-        "entity_type": entity_type,
+        "venue":
+            venue,
 
-        "metric": metric_column,
+        "phase":
+            phase,
 
-        "top_entity": top_entity,
-        "second_entity": second_entity,
+        "primary_entity":
+            primary_entity,
 
-        "top_value": top_value,
-        "second_value": second_value,
+        "row_count":
+            row_count,
 
-        "gap": gap,
+        "needs_insight":
+            True,
 
-        "entities": [
-            entity
-            for entity in [
-                top_entity,
-                second_entity,
-            ]
-            if entity is not None
-        ],
+        "top_result":
+            top_result,
+
+        "second_result":
+            second_result,
+
+        "entity_column":
+            entity_column,
+
+        "entity_type":
+            entity_type,
+
+        "metric":
+            metric_column,
+
+        "top_entity":
+            top_entity,
+
+        "second_entity":
+            second_entity,
+
+        "top_value":
+            top_value,
+
+        "second_value":
+            second_value,
+
+        "gap":
+            gap,
+
+        "entities":
+            context_entities,
     }
